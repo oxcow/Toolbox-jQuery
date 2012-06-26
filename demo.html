@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Tools Plugins Demo</title>
+<style type="text/css">
+body {
+	background-color: #eee;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 1px;
+	border: 0px solid #000;
+	width: 100%;
+}
+
+code {
+	color: teal;
+}
+
+.txtid {
+	color: pink;
+	font-size: 20px;
+}
+</style>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.tools.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$("#charLenDemo").jCharLenCount(-10);
+		$("#charLenDemo1").jCharLenCount(200); // 最大输入200字
+		$("#charLenDemo2").jCharLenCount(null);
+		$("#charLenDemo3").jCharLenCount('123');
+
+		$("#titleDemo").jtitle('this is a jtitle test');
+
+		$("#titleDemo1").jtitle('this is a jtitle test', {
+			css : {
+				width : 300,
+				height : 200
+			}
+		});
+		$("#titleDemo2").jtitle($("#txtid"), {
+			css : {
+				width : 220,
+				height : 300,
+				bgcolor : 'teal',
+				opacity : 0.9,
+				padding : '10px 10px'
+			},
+			openmouseleave : false,
+			className : 'txtid'
+		});
+		var txt = '清圣祖仁皇帝爱新觉罗·玄烨（1654.5.4~1722.12.20），即康熙帝，'
+				+ '清朝第四位皇帝、清定都北京后第二位皇帝。' + '年号康熙：康，安宁；熙，兴盛－－取万民康宁、天下熙盛的意思。'
+				+ '他8岁登基，在位61年，是中国历史上在位时间最长的皇帝。'
+				+ '他是我国统一的多民族国家的捍卫者，奠下了清朝兴盛的根基，'
+				+ '开创出康乾盛世的大局面，是一位英明的君主、伟大的政治家。' + '谥号合天弘运文武睿哲恭俭宽裕孝敬诚信功德大成仁皇';
+		$('#titleDemo3').jtitle(txt, {
+			css : {
+				width : 220,
+				height : 320
+			}
+		});
+	});
+</script>
+</head>
+<body>
+	<h1>jQuery Tools Plugins Demo</h1>
+	<ol>
+		<li><a href="#jcharlencount">输入框字数统计</a></li>
+		<li><a href="#jtitle">元素提示消息</a></li>
+	</ol>
+	<h2 id='jcharlencount'>jCharLenCount(maxLen)</h2>
+
+	<table>
+		<tr>
+			<td><textarea rows="4" cols="60" id='charLenDemo'></textarea></td>
+			<td>禁止输入</td>
+			<td><code>
+					$("#charLenDemo").jCharLenCount(0);<br />//$("#charLenDemo").jCharLenCount(-10);
+				</code></td>
+		</tr>
+		<tr>
+			<td><textarea rows="4" cols="60" id='charLenDemo1'></textarea></td>
+			<td>最大输入200字</td>
+			<td><code>$("#charLenDemo1").jCharLenCount(200);</code></td>
+		</tr>
+		<tr>
+			<td><textarea rows="4" cols="60" id='charLenDemo2'></textarea></td>
+			<td>统计输入数量</td>
+			<td><code>
+					$("#charLenDemo2").jCharLenCount();<br />//$("#charLenDemo2").jCharLenCount(null);
+				</code></td>
+		</tr>
+		<tr>
+			<td><textarea rows="4" cols="60" id='charLenDemo3'></textarea></td>
+			<td>error</td>
+			<td><code> $("#charLenDemo3").jCharLenCount('123'); </code></td>
+		</tr>
+	</table>
+
+	<h2 id='jtitle'>jtitle(title, options)</h2>
+
+	<table>
+		<tr>
+			<td width='40%'><p id='titleDemo'>titleDemo</p></td>
+			<td><pre>
+					<code>
+$("#titleDemo").jtitle('this is a jtitle test');
+				</code>
+				</pre></td>
+		</tr>
+		<tr>
+			<td><p id='titleDemo1'>titleDemo1</p></td>
+			<td><pre>
+					<code>
+$("#titleDemo1").jtitle('this is a jtitle test', { 
+	css : { width : 300, height : 200 
+	} 
+});
+					</code>
+				</pre></td>
+		</tr>
+		<tr>
+			<td><p id='titleDemo2'>titleDemo2</p></td>
+			<td><pre>
+					<code>
+$("#titleDemo2").jtitle($("#txtid"), {
+	css : {
+		width : 200,
+		height : 100,
+		bgcolor : 'teal',
+		opacity : 0.9,
+		padding : '10px 10px'
+	},
+	openmouseleave : false,
+	className : 'txtid'
+});
+					</code>
+				</pre></td>
+		</tr>
+		<tr>
+			<td><p id='titleDemo3'>titleDemo3</p></td>
+			<td><pre>
+					<code>
+var txt = '清圣祖仁皇帝爱新觉罗·玄烨（1654.5.4~1722.12.20），即康熙帝，'
+		+ '清朝第四位皇帝、清定都北京后第二位皇帝。' + '年号康熙：康，安宁；熙，兴盛－－取万民康宁、天下熙盛的意思。'
+		+ '他8岁登基，在位61年，是中国历史上在位时间最长的皇帝。'
+		+ '他是我国统一的多民族国家的捍卫者，奠下了清朝兴盛的根基，'
+		+ '开创出康乾盛世的大局面，是一位英明的君主、伟大的政治家。' + '谥号合天弘运文武睿哲恭俭宽裕孝敬诚信功德大成仁皇';
+$('#titleDemo3').jtitle(txt, {
+	css : {
+		width : 220,
+		height : 320
+	}
+});
+					</code>
+				</pre></td>
+		</tr>
+	</table>
+
+
+	<div id="txtid" style="display: none">John Resig,
+		jQuery的创始人和技术领袖，目前在Mozilla担任JavaScript工具开发工程师。著有《Pro JavaScript
+		Techniques》（即《精通JavaScript》）等经典JavaScript书籍。正在撰写《Secrets of the
+		JavaScript Ninja》（即《JavaScript忍者的秘密》），预计将在2011年正式出版</div>
+</body>
+</html>
