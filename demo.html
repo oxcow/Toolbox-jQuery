@@ -63,6 +63,14 @@ code {
 				height : 320
 			}
 		});
+		$('#titleDemo4').jtitle($('#imgs'), {
+			css : {
+				width : 128,
+				height : 200,
+				bgcolor : 'teal'
+			},
+			openmouseleave : false
+		});
 	});
 </script>
 </head>
@@ -159,6 +167,24 @@ $('#titleDemo3').jtitle(txt, {
 					</code>
 				</pre></td>
 		</tr>
+		<tr>
+			<td><p id='titleDemo4'>titleDemo4(显示标题为图片元素)</p></td>
+			<td><pre>
+					<code>
+$('#titleDemo4').jtitle($('#imgs'), {
+	css : {
+		width : 128,
+		height : 200,
+		bgcolor : 'teal'
+	},
+	openmouseleave : false
+});
+&lt;div id='imgs' style="display: none"&gt;
+	&lt;img src="http://imgsrc.baidu.com/baike/abpic/item/3bc6f7500be8ca081138c233.jpg"&gt;
+&lt;/div&gt;
+					</code>
+				</pre></td>
+		</tr>
 	</table>
 
 
@@ -166,5 +192,10 @@ $('#titleDemo3').jtitle(txt, {
 		jQuery的创始人和技术领袖，目前在Mozilla担任JavaScript工具开发工程师。著有《Pro JavaScript
 		Techniques》（即《精通JavaScript》）等经典JavaScript书籍。正在撰写《Secrets of the
 		JavaScript Ninja》（即《JavaScript忍者的秘密》），预计将在2011年正式出版</div>
+
+	<div id='imgs' style="display: none">
+		<img
+			src="http://imgsrc.baidu.com/baike/abpic/item/3bc6f7500be8ca081138c233.jpg">
+	</div>
 </body>
 </html>
