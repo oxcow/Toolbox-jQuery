@@ -19,7 +19,7 @@
  */
 ;
 (function($) {
-	$.fn.jCharLenCount = function(maxLen) {
+	$.fn.charLenCount = function(maxLen) {
 		if ('string' === typeof (maxLen)) {
 			alert('$("' + this.selector + '")绑定jCharLenCount方法失败(参数类型有误)');
 			return;
@@ -88,7 +88,7 @@
 		$(this).trigger("keyup");
 	};
 
-	$.fn.jcharlencount = $.fn.jCharLenCount;
+	$.fn.charlencount = $.fn.charLenCount;
 
 	// 默认字符溢出处理函数
 	function charLenOverflowEvt(obj, maxLen) {
@@ -104,103 +104,4 @@
 		return maxLen === null || maxLen === undefined ? charLen : charLen
 				+ '/' + maxLen;
 	}
-})(jQuery);
-
-function windows() {
-	return {
-		clientW : document.documentElement.clientWidth,
-		clientH : document.documentElement.clientHeight,
-		scrollW : document.documentElement.scrollWidth,
-		scrollH : document.documentElement.scrollHeight,
-		scrollL : document.documentElement.scrollLeft
-				|| document.body.scrollLeft,
-		scrollT : document.documentElement.scrollTop || document.body.scrollTop
-	};
-}
-/*
- * jQuery jtitle Plugin 用来显示元素提示消息,相当于html中某些元素的的title属性
- * 
- * @author: leeyee
- * 
- * @requires jQuery v1.1.2 or later
- * 
- * 
- * jtitle(title,options)带有两个参数。其中，
- * 
- * title ： 显示内容或为jQuery选择器。当为jQuery选择器时，该插件将显示该选择器的html()元素内容
- * 
- * options ： 主要用来设置该插件的显示样式。
- * 
- */
-(function($) {
-	$.fn.jtitle = function(title, options) {
-
-		if (title instanceof jQuery) {
-			title = $(title).html();
-		}
-
-		var opts = $.extend(true, {}, $.fn.jtitle.defaults, options);
-
-		var $eid = this.attr('id');
-
-		this.mouseenter(function(e) {
-			var win = windows();
-			
-			$("#_title_" + $eid).detach();
-
-			var x = e.clientX + win.scrollL;
-			var y = e.clientY + win.scrollT;
-
-			if (e.clientX + opts.css.width > win.clientW) {
-				x = Math.max(0, x - opts.css.width - 6);
-			}
-			if (y + opts.css.height > win.scrollH) {
-				y = Math.max(0, y - opts.css.height - 6);
-			}
-
-			var $div = $("<div id='_title_" + $eid + "'>").css({
-				'z-index' : '1000',
-				'position' : 'absolute',
-				'border' : 'none',
-				'border-radius' : '10px',
-				'-moz-border-radius' : '10px',
-				'-webkit-border-radius' : '10px',
-				'box-shadow' : '5px 2px 6px #000',
-				'-moz-box-shadow' : '5px 2px 6px #000',
-				'-webkit-box-shadow' : '5px 2px 6px #000',
-				'left' : x + 6,
-				'top' : y + 6,
-				'width' : opts.css.width,
-				'height' : opts.css.height,
-				'background-color' : opts.css.bgcolor,
-				'opacity' : opts.css.opacity,
-				'padding' : opts.css.padding
-			}).addClass(opts.className);
-
-			$div.click(function() {
-				$(this).detach();
-			});
-
-			$(this).css({
-			// 'cursor' : 'pointer'
-			}).after($div.append(title));
-		});
-		// 开启鼠标离开事件
-		if (opts.openmouseleave) {
-			this.mouseleave(function() {
-				$("#_title_" + $eid).detach();
-			});
-		}
-	};
-	$.fn.jtitle.defaults = {
-		css : {
-			width : 'auto',
-			height : 'auto',
-			bgcolor : '#FFFFCC',
-			opacity : 0.8,
-			padding : '8px 8px',
-		},
-		className : null,
-		openmouseleave : true
-	};
 })(jQuery);

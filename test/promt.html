@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Tools Plugins Demo</title>
+<style type="text/css">
+body {
+	background-color: #eee;
+	font-size: 18px;
+}
+
+.tag {
+	font-weight: bold;
+	font-style: italic;
+	color: red;
+}
+
+.tag_c {
+	display: none
+}
+
+.kangxi {
+	font-size: 12px;
+	color: lime;
+}
+
+.kangxi p {
+	margin: 0px 0px;
+	padding: 2px 2px
+}
+
+dl {
+	margin: 20px 20px;
+	padding: 10px 10px;
+}
+
+dt {
+	font-weight: bold;
+	color: teal;
+}
+
+dt,dd {
+	padding: 10px 10px;
+}
+</style>
+<script type="text/javascript" src="../libs/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="../src/jquery.prompt.js"></script>
+<script type="text/javascript">
+	$(function() {
+
+		$('#jQuery').prompt($("#jquery_c"), {
+			css : {
+				width : 500,
+				opacity : 0.9
+			}
+		});
+		$("#demo1").prompt('中划线代表该文字被删除');
+		$("#demo2").prompt($('#demo2_c'), {
+			css : {
+				height : 200,
+				opacity : 0.9
+			},
+			openmouseleave : false
+		});
+		var txt = '清圣祖仁皇帝爱新觉罗·玄烨（1654.5.4~1722.12.20），即康熙帝，'
+				+ '清朝第四位皇帝、清定都北京后第二位皇帝。' + '年号康熙：康，安宁；熙，兴盛－－取万民康宁、天下熙盛的意思。'
+				+ '他8岁登基，在位61年，是中国历史上在位时间最长的皇帝。'
+				+ '他是我国统一的多民族国家的捍卫者，奠下了清朝兴盛的根基，'
+				+ '开创出康乾盛世的大局面，是一位英明的君主、伟大的政治家。' + '谥号合天弘运文武睿哲恭俭宽裕孝敬诚信功德大成仁皇';
+
+		$("#demo2_1").prompt(txt, {
+			css : {
+				width : 500,
+				height : 140
+			}
+		});
+
+		$("#demo3").prompt($('#demo3_c'), {
+			css : {
+				width : 400,
+				height : 540,
+				opacity : 0.9,
+				bgcolor : 'teal',
+				padding : '10px 0px 2px 10px'
+			},
+			className : 'kangxi',
+			openmouseleave : false
+		});
+	});
+</script>
+</head>
+<body>
+	<h2>jQuery Prompt Plugin Test</h2>
+	<blockquote>
+		<p>
+			这是一段测试文字，用来测试就 <label id='jQuery' class='tag'>jQuery</label>
+			插件Prompt.
+		</p>
+		<p>Prompt是由来显示元素提示信息的插件，其功能类似于html某些元素的title属性。但Prompt比起title来更美观，功能也比原有的title强大。</p>
+		<p>Prompt基于div+css来实现了</p>
+	</blockquote>
+
+	<dl>
+		<dt>Demo1</dt>
+		<dd>使用prompt的默认值，简单显示一行文字</dd>
+		<dd>
+			<del class='tag' id="demo1">删除文字</del>
+		</dd>
+		<dt>Demo2</dt>
+		<dd>使用prompt显示一张页面上隐藏的图片,并禁止鼠标离开事件</dd>
+		<dd>
+			清圣祖仁皇帝<label id='demo2' class='tag'>爱新觉罗·玄烨</label>——<label
+				id='demo2_1' class='tag'>康熙</label>
+		</dd>
+		<dt>Demo3</dt>
+		<dd>使用prompt显示隐藏文字及其文字样式</dd>
+		<dd>
+
+			清圣祖仁皇帝爱新觉罗·玄烨（1654.5.4~1722.12.20），即<label id='demo3' class='tag'>康熙帝</label>，清朝第四位皇帝、清定都北京后第二位皇帝。年号康熙：康，安宁；熙，兴盛－－取万民康宁、天下熙盛的意思。他8岁登基，在位61年，是中国历史上在位时间最长的皇帝。他是我国统一的多民族国家的捍卫者，奠下了清朝兴盛的根基，开创出康乾盛世的大局面，是一位英明的君主、伟大的政治家。谥号合天弘运文武睿哲恭俭宽裕孝敬诚信功德大成仁皇帝
+
+		</dd>
+	</dl>
+
+
+	<div id='jquery_c' class='tag_c'>
+		<b>jQuery</b> is a new kind of JavaScript Library.<br />jQuery is a
+		fast and concise JavaScript Library that simplifies HTML document
+		traversing, event handling, animating, and Ajax interactions for rapid
+		web development. <br />jQuery is designed to change the way that you
+		write JavaScript.
+	</div>
+	<div id='demo2_c' class='tag_c'>
+		<img
+			src="http://imgsrc.baidu.com/baike/abpic/item/3bc6f7500be8ca081138c233.jpg">
+	</div>
+	<div id='demo3_c' class='tag_c'>
+		姓名：爱新觉罗·玄烨
+		<p>民族： 满族
+		<p>血统：满族、蒙古族和满族包衣汉人（见包衣人）的混血（他的父亲顺治是满族人，他的奶奶是蒙古族人，他的母亲是满族包衣汉人）
+		<p>年号：康熙 爱新觉罗·玄烨
+		<p>生辰：顺治十一年三月十八日（1654年5月4日）
+		<p>出生地：北京紫禁城景仁宫
+		<p>排行：顺治帝第三子
+		<p>祖母：孝庄皇太后
+		<p>父亲：爱新觉罗·福临
+		<p>母亲：孝康章皇后佟佳氏
+		<p>初婚：11岁
+		<p>原配：孝诚仁皇后赫舍里氏
+		<p>配偶：皇后：4人、皇贵妃：3人、贵妃：1人、妃：11人、嫔：9人、贵人：13人、庶妃：4人、常在：9人、答应：9人
+		<p>子女：35子，20女（写上宗谱的有24子11女）
+		<p>即位时间：顺治十八年正月十九日（1661年2月17日）
+		<p>即位年龄：8岁
+		<p>在位年数：61年
+		<p>卒年：康熙六十一年十一月十三日（1722年12月20日）
+		<p>享年：69岁
+		<p>出生地：北京景仁宫
+		<p>死亡地：北京畅春园
+		<p>庙号：清圣祖
+		<p>谥号：合天弘运文武睿哲恭俭宽裕孝敬诚信功德大成仁皇帝。简称仁皇帝
+		<p>陵寝：景陵
+		<p>历史地位：中国大一统时期在位时间最长的皇帝
+		<p>继位人：爱新觉罗·胤禛（雍正帝）
+		<p>太子：胤礽（两立两废）
+		<p>最不幸的事：8岁丧父，10岁丧母
+	</div>
+</body>
+</html>
