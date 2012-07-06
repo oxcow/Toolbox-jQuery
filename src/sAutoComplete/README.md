@@ -16,4 +16,4 @@
 		    <option value='Php'>Php</option>
 	    	<option value='.Net'>.Net</option>
 	    </select>
-**使用说明**: 请参看[simpleAutoComplete.html](../../simpleAutoComplete.html)
+**使用说明**: 请参看[simpleAutoComplete.html](../test/../../simpleAutoComplete.html)
