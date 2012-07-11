@@ -11,43 +11,23 @@
 	}
 
 	var $sAutoComplete = {
-		// TODO need to modify var name
 		datas : null,
 		bindObj : null,
-		// TODO add datasource. eg : xml、json etc.
 		originData : [],// 数据源
-		// 匹配数据
-		matchData : [],
-		// 基于匹配数据的当前显示元素<ul><li>..</ul>
-		element : null,
-		// 当前选中的元素<li></li>
-		active : null,
-		// 显示匹配数据
-		displayMatchData : function() {
-			this.bindObj.find("~ul").remove();
-			var self = this;
-			if (this.matchData.length !== 0) {
-				var $ul = $("<ul>");
-				$.each(this.matchData, function(idx, val) {
-					var $li = $("<li>").attr('tabindex', idx).text(val.v);
-					$li.bind("click", function() {
-						self.close();
-					}).mouseenter(function() {
-						self.activate($(this));
-					}).mouseleave(function() {
-						self.deactivate();
-					});
-					$ul.append($li);
-				});
-				this.element = $ul;
-				this.active = null;
-				this.bindObj.after($ul);
-			}
+		chooseData : [],// 选中的数据
+		suggestData : [],// 建议匹配数据
+		element : null,// 基于匹配数据的当前显示元素<ul><li>..</ul>
+		active : null,// 当前选中的元素<li></li>
+		setChooseData : function() {
+			var k = this.active.attr('tabindex');
+			var data = this.suggestData[k];
+			this.chooseData = this.chooseData ? this.chooseData : [];
+			this.chooseData[0] = data ? data : "";
 		},
 		/**
 		 * 显示选中元素
 		 */
-		activate : function(item) {
+		activate : function(event, item) {
 			this.deactivate();
 			if (this.hasScroll()) {
 				// 显示元素相对于父元素的高度
@@ -63,7 +43,12 @@
 				}
 			}
 			this.active = item.eq(0).addClass('auto_selected_li');
+			// 记录数据
+			if (/^key/.test(event.type)) {
+				this.setChooseData();
+			}
 		},
+
 		deactivate : function() {
 			if (!this.active) {
 				return;
@@ -80,16 +65,20 @@
 		 *            当移动到边界时，下一个或者上一个数据选择器 ：last|:first
 		 */
 		move : function(direct, edge, event) {
+			if (!this.element) {
+				this.displaySuggestData();
+				return;
+			}
 			if (!this.active) {
-				this.activate(this.element.children(edge));
+				this.activate(event, this.element.children(edge));
 				return;
 			}
 			// 调用nextAll()/prevAll()方法
 			var next = this.active[direct + "All"]().eq(0);
 			if (next.length) {
-				this.activate(next);
+				this.activate(event, next);
 			} else {
-				this.activate(this.element.children(edge));
+				this.activate(event, this.element.children(edge));
 			}
 			this.selected();
 		},
@@ -106,31 +95,16 @@
 			this.move("prev", ":last", event);
 		},
 		selected : function() {
-			if (this.active && this.active.eq(0)) {
+			if (this.active && this.active.eq(0)) { // 存在激活元素
 				this.bindObj.val(this.active.eq(0).text());
-				var id = parseInt(this.active.eq(0).attr('tabindex'));
-				
-				//TODO: need to fixed 
-				this.datas.val(this.matchData[id].k);
+				this.setChooseData();
+				this.datas.val(this.chooseData[0].k);
 			} else {
-				this.datas.val('');
-			}
-
-		},
-		/**
-		 * 查询
-		 */
-		search : function() {
-			var $inval = this.bindObj.val();
-			$inval = escapeRegex($inval);
-			var reg = new RegExp("^" + $inval, "i");
-			this.matchData = [];
-			for ( var i = 0; i < this.originData.length; i++) {
-				if (reg.test(this.originData[i].v)) {
-					this.matchData.push(this.originData[i]);
+				// 当前选择值不为空。适应选中后再次打开下拉，但未选择的情况
+				if (!this.chooseData || !this.chooseData[0]) {
+					this.datas.val('');
 				}
 			}
-			return this;
 		},
 		// 滚动条
 		hasScroll : function() {
@@ -139,9 +113,61 @@
 		},
 		// 关闭搜索
 		close : function() {
-			this.selected();
-			this.element.remove();
-			this.deactivate();
+			if (this.element && this.element.is(":visible")) {
+				this.selected();
+				this.element.hide();
+			}
+		},
+		/**
+		 * 建议查询
+		 */
+		suggest : function() {
+			this.chooseData = [];
+			var $inval = this.bindObj.val();
+			$inval = escapeRegex($inval);
+			var reg = new RegExp("^" + $inval, "i");
+			this.suggestData = [];
+			for ( var i = 0; i < this.originData.length; i++) {
+				if (reg.test(this.originData[i].v)) {
+					this.suggestData.push(this.originData[i]);
+				}
+			}
+			return this;
+		},
+		// 显示匹配数据
+		displaySuggestData : function() {
+			var $ul = this.bindObj.find("~ul");
+			if (!$ul || $ul.length == 0) {
+				$ul = $("<ul>");
+			}
+			$ul.show();
+			$ul.find("li").remove();
+
+			var self = this;
+			if (this.suggestData.length !== 0) {
+				$.each(this.suggestData, function(idx, val) {
+					var $li = $("<li>").attr('tabindex', idx).text(val.v);
+					$li.bind("click", function() {
+						self.close();
+					}).mouseenter(function(event) {
+						self.activate(event, $(this));
+					}).mouseleave(function() {
+						self.deactivate();
+					});
+					$ul.append($li);
+					// 判断当前是否已有选中值
+					if (self.chooseData && self.chooseData[0]
+							&& self.chooseData[0].k == val.k) {
+						self.active = $li;
+					}
+				});
+				this.element = $ul;
+				this.bindObj.after($ul);
+
+				if (this.active) { // 激活已经选择的项，并滚动到当前可见位置
+					this.active.trigger('mouseenter');
+				}
+			}
 		}
 	};
 
@@ -157,35 +183,41 @@
 		$autoComplete.datas = datasource;
 
 		$.each(datasource.find("option"), function(id, ele) {
-			// $autoComplete.originData[id] = new Object();
-			// $autoComplete.originData[id].k = $.trim($(ele).val());
-			// $autoComplete.originData[id].v = $.trim($(ele).text());
 			$autoComplete.originData[id] = {
 				k : $.trim($(ele).val()),
 				v : $.trim($(ele).text())
 			};
-			$autoComplete.matchData = $autoComplete.originData;
+			$autoComplete.suggestData = $autoComplete.originData;
 		});
-
-		this.bind('focus', function(event) {
-			$autoComplete.displayMatchData();
+		this.bind('click', function() {
+			$autoComplete.displaySuggestData();
+		});
+		this.bind('foucs', function(event) {
+			$autoComplete.suggest().displaySuggestData();
 		});
 		this.bind('blur', function() {
-			$autoComplete.close();
+			setTimeout(function() {
+				$autoComplete.close();
+			}, 10);
+
 		});
 		this.bind("keyup", function(event) {
 			switch (event.which) {
+			case 9: // tab
+				this.foucs;
+				break;
 			case 13:// 回车
 				$autoComplete.close();
+				return false;
 				break;
 			case 38:// 向上
-				$autoComplete.previous();
+				$autoComplete.previous(event);
 				break;
 			case 40:// 向下
-				$autoComplete.next();
+				$autoComplete.next(event);
 				break;
 			default:
-				$autoComplete.search().displayMatchData();
+				$autoComplete.suggest().displaySuggestData();
 			}
 		});
 
