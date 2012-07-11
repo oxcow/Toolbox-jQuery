@@ -71,4 +71,8 @@ jQuery Toolbox主要提供基于jQuery的javascript小工具插件。
             className : 'txtid'
         });
 
+###sAutoComplete(datasource)
+简单输入自动提示。请参看[sAutoComplete](./src/sAutoComplete)
+
+
 [返回顶部](#top)
