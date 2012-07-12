@@ -87,7 +87,7 @@
 			height : 'auto',
 			bgcolor : '#FFFFCC',
 			opacity : 0.8,
-			padding : '8px 8px',
+			padding : '8px 8px'
 		},
 		className : null,
 		openmouseleave : true
