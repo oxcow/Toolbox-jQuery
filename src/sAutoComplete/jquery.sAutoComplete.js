@@ -187,8 +187,10 @@
 				k : $.trim($(ele).val()),
 				v : $.trim($(ele).text())
 			};
-			$autoComplete.suggestData = $autoComplete.originData;
 		});
+		
+		$autoComplete.suggestData = $autoComplete.originData;
+		
 		this.bind('click', function() {
 			$autoComplete.displaySuggestData();
 		});
