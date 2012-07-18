@@ -10,17 +10,45 @@
 	src="../src/sAutoComplete/jquery.sAutoComplete.js"></script>
 <script type="text/javascript">
 	$(function() {
-		$("#auto_search").sAutoComplete($("#data1"));
-		$("#auto_search1").sAutoComplete($("#data2"));
+		$("#auto_search").sAutoComplete($("#data1"), {
+			css : {
+				width : 200,
+				height : 20
+			}
+		});
+		$("#auto_search1").sAutoComplete($("#data2"), {
+			dataType : 'select'
+		});
 		$("#auto_search2").sAutoComplete($("#data3"));
+
+		//json 
+		var jsons = '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}';
+		var jsons1 = '{"1" : "java1","2" : "javascript1","3" : "C1","4" : "C++1"}';
+		$('#auto_search_json').sAutoComplete(jsons, {
+			dataType : 'json'
+		});
+		$('#auto_search_json1').sAutoComplete(jsons1, {
+			dataType : 'json'
+		});
+
+		var ay = [ 'ruby', 'lisp', 'lua', 'robbet' ];
+		var ay1 = [ 'ruby1', 'lisp1', 'lua1', 'robbet1' ];
+		$("#auto_search_array").sAutoComplete(ay, {
+			dataType : 'array'
+		});
+		$("#auto_search_array1").sAutoComplete(ay1, {
+			dataType : 'array'
+		});
 	});
 </script>
 </head>
 <body>
-	
-	<input type='search' id='auto_search' autocomplete="off"/>
-	
-	<input type='text' id='auto_search1' autocomplete="off" />
+
+	<h1>结合 select 使用</h1>
+
+	<input type='search' id='auto_search' autocomplete="off" />
+
+	<input type='text' id='auto_search1' autocomplete="off"/>
 
 	<input type='text' id='auto_search2' autocomplete="off" />
 
@@ -413,5 +441,12 @@
 		<option value="t_48">那个个_48</option>
 		<option value="t_49">那个个_49</option>
 	</select>
+	<h1>json数据格式</h1>
+	<input type='search' id='auto_search_json' autocomplete="off" />
+	<input type='text' id='auto_search_json1' autocomplete="off" />
+
+	<h1>数组数据格式</h1>
+	<input type='search' id='auto_search_array' autocomplete="off" />
+	<input type='text' id='auto_search_array1' autocomplete="off" />
 </body>
 </html>
