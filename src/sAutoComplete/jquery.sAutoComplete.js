@@ -232,7 +232,6 @@
 				};
 			});
 		}
-
 		if (opts.dataType === 'array') {
 			for ( var idx = 0; idx < datasource.length; idx++) {
 				$autoComplete.originData[idx] = {
