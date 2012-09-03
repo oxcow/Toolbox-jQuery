@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>jQuery Simple AutoComplete</title>
+		<link rel="stylesheet" type="text/css"
+		href="../src/sAutoComplete/css/jquery.sAutoComplete.css" />
+		<script type="text/javascript" src="../libs/jquery-1.7.2.js"></script>
+		<style type="text/css">
+			#seleting {
+				border: 1px solid teal;
+				width: 400px;
+				height: 300px;
+			}
+			ul {
+				padding-left: 4px;
+			}
+			ul li {
+				margin: 1px 10px 1px 10px;
+				width: 80px;
+				float: left;
+				list-style-type: none;
+				border: 0px solid teal;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		</style>
+		<script type="text/javascript">
+			function escapeRegex(value) {
+				return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+			}
+
+			//基本数据
+			var data = [];
+			//过滤后的数据
+			var filterData = [];
+
+			var initData = function(selectid) {
+				$.each($("#" + selectid).find("option"), function(idx, elem) {
+					data[idx] = {
+						k : $(elem).val(),
+						v : $(elem).text()
+					};
+				});
+			}
+			var showData = function(data) {
+				$("#seleting").find('ul').detach();
+				var $ul = $("<ul>");
+				for (var i = 0; i < data.length; i++) {
+					var $li = $("<li>").attr("_val_", data[i].k).html(data[i].v).click(function() {
+						$("#data1").val($(this).attr("_val_"));
+					});
+					$ul.append($li);
+				}
+				$("#seleting").append($ul);
+			}
+			var filter = function(val) {
+				var reg = new RegExp("^" + val, "i");
+				filterData = [];
+				for (var i = 0; i < data.length; i++) {
+					var v = data[i].v;
+					if (reg.test(v)) {
+						filterData.push(data[i]);
+					}
+				}
+				showData(filterData);
+			}
+			$("#bigsel_auto_search").change(function() {
+
+			});
+			$(function() {
+				initData("data1");
+				showData(data);
+
+				$("#bigsel_auto_search").keyup(function() {
+					var ipt = escapeRegex($(this).val());
+					filter(ipt);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="seleting">
+			<input type='search' id='bigsel_auto_search' autocomplete="off"/>
+			<div id="bigsel_page">
+				<a>共100条数据</a><a>上一页</a><a>下一页</a>
+			</div>
+		</div>
+		<select name='sel1' id='data1'>
+			<option value=''>请选择</option>
+			<option value='Java'>Java</option>
+			<option value='Javascript'>Javascript</option>
+			<option value='Php'>Php</option>
+			<option value='.Net'>.Net</option>
+			<option value='C#'>C#</option>
+			<option value='Ajax'>Ajax</option>
+			<option value='Perl'>Perl</option>
+			<option value='Ruby On Rails'>Ruby on Rails</option>
+			<option value='Object-C'>Object-C</option>
+			<option value='Python'>Python</option>
+			<option value='C'>C</option>
+			<option value='C++'>C++</option>
+			<option value='D'>D</option>
+			<option value='PL/SQL'>PL/SQL</option>
+			<option value='Groovy'>Groovy</option>
+			<option value='Matlab'>Matlab</option>
+			<option value='Lisp'>Lisp</option>
+			<option value='jQuery'>jQuery</option>
+			<option value='dojo'>Dojo</option>
+			<option value='Logo'>Logo</option>
+			<option value='Ada'>Ada</option>
+			<option value='Pascal'>Pascal</option>
+			<option value='Bash'>Bash</option>
+			<option value='VBScript'>VBScript</option>
+		</select>
+		<style type="text/css">
+			#bigSelect {
+				border: 1px solid teal;
+				width: 400px;
+				height: 300px;
+				z-index: 200;
+				position: absolute;
+				top: 200px;
+				left: 500px;
+				background-color: #008080;
+				opacity: 0.6;
+				border: none;
+				border-radius: 10px;
+				-moz-border-radius: 10px;
+				-webkit-border-radius: 10px;
+				box-shadow: 5px 2px 6px #000;
+				-moz-box-shadow: 5px 2px 6px #000;
+				-webkit-box-shadow: 5px 2px 6px #000;
+			}
+			#bigSelect_search {
+				margin: 5px 2px 1px 4px;
+				padding: 1px 2px;
+				width: 240px;
+				height: 22px;
+			}
+			#bigSelect_content {
+				border: 1px solid pink;
+				height: 220px;
+				margin: 4px 4px;
+			}
+		</style>
+		<div id="bigSelect">
+			<input id="bigSelect_search" type='search' autocomplete="off" />
+			<div id="bigSelect_content">
+				<ul>
+					<li>
+						VBScript
+					</li>
+					<li>
+						VBScript
+					</li>
+					<li>
+						VBScript
+					</li>
+					<li>
+						VBScript
+					</li>
+					<li>
+						VBScript
+					</li>
+					<li>
+						VBScript
+					</li>
+					<li>
+						VBScript
+					</li>
+				</ul>
+			</div>
+			<div id="bigSelect_page">
+				<a href="">首页</a><a href="">上一页</a>第
+				<input type="text" size="2"/>
+				页/20页 <a href="">下一页</a>
+				<a href="">尾页</a>
+			</div>
+		</div>
+	</body>
+</html>
