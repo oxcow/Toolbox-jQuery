@@ -5,6 +5,7 @@
 	function escapeRegex(value) {
 		return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 	}
+
 	// 包装div外壳
 	function wrapDivShell(obj) {
 		$(obj).wrap($("<div>").addClass('auto_div_shell'));
@@ -13,11 +14,11 @@
 	var $sAutoComplete = {
 		datas : null,
 		bindObj : null,
-		originData : [],// 数据源
-		chooseData : [],// 选中的数据
-		suggestData : [],// 建议匹配数据
-		element : null,// 基于匹配数据的当前显示元素<ul><li>..</ul>
-		active : null,// 当前选中的元素<li></li>
+		originData : [], // 数据源
+		chooseData : [], // 选中的数据
+		suggestData : [], // 建议匹配数据
+		element : null, // 基于匹配数据的当前显示元素<ul><li>..</ul>
+		active : null, // 当前选中的元素<li></li>
 		setChooseData : function() {
 			var k = this.active.attr('tabindex');
 			var data = this.suggestData[k];
@@ -38,8 +39,7 @@
 					this.element.scrollTop(scroll + offset);
 				} else if (offset >= elementHeight - item.height()) {
 					// 滚动过的高度+(显示元素高度-下拉框高度)+显示元素本身高度
-					this.element.scrollTop(scroll + (offset - elementHeight)
-							+ item.height());
+					this.element.scrollTop(scroll + (offset - elementHeight) + item.height());
 				}
 			}
 			this.active = item.eq(0).addClass('auto_selected_li');
@@ -58,7 +58,7 @@
 		},
 		/**
 		 * 上下移动选中数据
-		 * 
+		 *
 		 * @param direct
 		 *            移动方向 next|prev
 		 * @param edge
@@ -95,7 +95,7 @@
 			this.move("prev", ":last", event);
 		},
 		selected : function() {
-			if (this.active && this.active.eq(0)) { // 存在激活元素
+			if (this.active && this.active.eq(0)) {// 存在激活元素
 				this.bindObj.val(this.active.eq(0).text());
 				this.setChooseData();
 				this.datas.val(this.chooseData[0].k);
@@ -109,7 +109,7 @@
 		// 滚动条
 		hasScroll : function() {
 			return this.element.height() < this.element[$.fn.prop ? "prop"
-					: "attr"]("scrollHeight");
+			: "attr"]("scrollHeight");
 		},
 		// 关闭搜索
 		close : function() {
@@ -127,7 +127,7 @@
 			$inval = escapeRegex($inval);
 			var reg = new RegExp("^" + $inval, "i");
 			this.suggestData = [];
-			for ( var i = 0; i < this.originData.length; i++) {
+			for (var i = 0; i < this.originData.length; i++) {
 				if (reg.test(this.originData[i].v)) {
 					this.suggestData.push(this.originData[i]);
 				}
@@ -156,15 +156,14 @@
 					});
 					$ul.append($li);
 					// 判断当前是否已有选中值
-					if (self.chooseData && self.chooseData[0]
-							&& self.chooseData[0].k == val.k) {
+					if (self.chooseData && self.chooseData[0] && self.chooseData[0].k == val.k) {
 						self.active = $li;
 					}
 				});
 				this.element = $ul;
 				this.bindObj.after($ul);
 
-				if (this.active) { // 激活已经选择的项，并滚动到当前可见位置
+				if (this.active) {// 激活已经选择的项，并滚动到当前可见位置
 					this.active.trigger('mouseenter');
 				}
 			}
@@ -203,24 +202,28 @@
 		});
 		this.bind("keyup", function(event) {
 			switch (event.which) {
-			case 9: // tab
-				this.foucs;
-				break;
-			case 13:// 回车
-				$autoComplete.close();
-				return false;
-				break;
-			case 38:// 向上
-				$autoComplete.previous(event);
-				break;
-			case 40:// 向下
-				$autoComplete.next(event);
-				break;
-			default:
-				$autoComplete.suggest().displaySuggestData();
+				case 9:
+					// tab
+					this.foucs
+					break;
+				case 13:
+					// 回车
+					$autoComplete.close();
+					return false;
+					break;
+				case 38:
+					// 向上
+					$autoComplete.previous(event);
+					break;
+				case 40:
+					// 向下
+					$autoComplete.next(event);
+					break;
+				default:
+					$autoComplete.suggest().displaySuggestData();
 			}
 		});
 
 	};
 
-})(jQuery);
+})(jQuery); 
