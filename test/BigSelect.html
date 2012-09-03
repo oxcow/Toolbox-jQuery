@@ -16,11 +16,11 @@
 				padding-left: 4px;
 			}
 			ul li {
-				margin: 1px 10px 1px 10px;
-				width: 80px;
+				margin: 1px 2px;
+				width: 120px;
 				float: left;
 				list-style-type: none;
-				border: 0px solid teal;
+				border: 0px solid red;
 				text-decoration: underline;
 				cursor: pointer;
 			}
@@ -44,15 +44,17 @@
 				});
 			}
 			var showData = function(data) {
-				$("#seleting").find('ul').detach();
+				$("#bigSelect_content").find('ul').detach();
 				var $ul = $("<ul>");
 				for (var i = 0; i < data.length; i++) {
 					var $li = $("<li>").attr("_val_", data[i].k).html(data[i].v).click(function() {
 						$("#data1").val($(this).attr("_val_"));
 					});
 					$ul.append($li);
+					if (i == 26)
+						break;
 				}
-				$("#seleting").append($ul);
+				$("#bigSelect_content").append($ul);
 			}
 			var filter = function(val) {
 				var reg = new RegExp("^" + val, "i");
@@ -72,7 +74,7 @@
 				initData("data1");
 				showData(data);
 
-				$("#bigsel_auto_search").keyup(function() {
+				$("#bigSelect_search").keyup(function() {
 					var ipt = escapeRegex($(this).val());
 					filter(ipt);
 				});
@@ -80,12 +82,6 @@
 		</script>
 	</head>
 	<body>
-		<div id="seleting">
-			<input type='search' id='bigsel_auto_search' autocomplete="off"/>
-			<div id="bigsel_page">
-				<a>共100条数据</a><a>上一页</a><a>下一页</a>
-			</div>
-		</div>
 		<select name='sel1' id='data1'>
 			<option value=''>请选择</option>
 			<option value='Java'>Java</option>
@@ -112,6 +108,17 @@
 			<option value='Pascal'>Pascal</option>
 			<option value='Bash'>Bash</option>
 			<option value='VBScript'>VBScript</option>
+			<option value='hb'>河北</option>
+			<option value='hn'>河南</option>
+			<option value='fj'>福建</option>
+			<option value='gd'>广东</option>
+			<option value='ssx'>山西</option>
+			<option value='bj'>北京</option>
+			<option value='sd'>山东</option>
+			<option value='tj'>天津</option>
+			<option value='hz'>杭州</option>
+			<option value='hongkang'>香港</option>
+
 		</select>
 		<style type="text/css">
 			#bigSelect {
@@ -123,8 +130,7 @@
 				top: 200px;
 				left: 500px;
 				background-color: #008080;
-				opacity: 0.6;
-				border: none;
+				opacity: 0.9;
 				border-radius: 10px;
 				-moz-border-radius: 10px;
 				-webkit-border-radius: 10px;
@@ -133,49 +139,51 @@
 				-webkit-box-shadow: 5px 2px 6px #000;
 			}
 			#bigSelect_search {
-				margin: 5px 2px 1px 4px;
+				margin: 8px 2px 1px 4px;
 				padding: 1px 2px;
 				width: 240px;
-				height: 22px;
+				height: 24px;
+				border-radius: 12px;
+				-moz-border-radius: 12px;
+				-webkit-border-radius: 12px;
+				box-shadow: 5px 2px 6px #000;
+				-moz-box-shadow: 5px 2px 6px #000;
+				-webkit-box-shadow: 5px 2px 6px #000;
 			}
 			#bigSelect_content {
-				border: 1px solid pink;
+				margin: 3px 4px;
+				padding: 2px 2px;
+				border: 0px solid pink;
 				height: 220px;
-				margin: 4px 4px;
+				overflow: hidden;
+			}
+			#bigSelect_page {
+				font-size: 16px;
+				margin-right: 2px;
+				text-align: right;
+			}
+			#bigSelect_page span {
+				margin: 2px 2px;
+			}
+			#bigSelect_page input {
+				width: 20px;
 			}
 		</style>
 		<div id="bigSelect">
-			<input id="bigSelect_search" type='search' autocomplete="off" />
+			<div>
+				<input id="bigSelect_search" type='search' autocomplete="off" />
+			</div>
 			<div id="bigSelect_content">
-				<ul>
-					<li>
-						VBScript
-					</li>
-					<li>
-						VBScript
-					</li>
-					<li>
-						VBScript
-					</li>
-					<li>
-						VBScript
-					</li>
-					<li>
-						VBScript
-					</li>
-					<li>
-						VBScript
-					</li>
-					<li>
-						VBScript
-					</li>
-				</ul>
+
 			</div>
 			<div id="bigSelect_page">
-				<a href="">首页</a><a href="">上一页</a>第
-				<input type="text" size="2"/>
-				页/20页 <a href="">下一页</a>
-				<a href="">尾页</a>
+				<span><a href="" title="首页">&lt;&lt;</a></span>
+				<span><a href="" title="下一页">&lt;</a></span>
+				<span>第
+					<input type="text" maxlength="2"/>
+					页/20页</span>
+				<span> <a href="" title="上一页">&gt;</a></span>
+				<span><a href="" title="末页">&gt;&gt;</a></span>
 			</div>
 		</div>
 	</body>
