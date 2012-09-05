@@ -11,12 +11,45 @@
 		return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 	}
 
-	var Database = {
-		//基本数据
-		data : [],
-		//过滤后的数据
-		filterData : [],
+	var SerialVersionUID = null;
+	/**
+	 * 数据存储对象
+	 */
+	var DataSource = {
+		/**
+		 * 数据集
+		 */
+		dataSet : [],
+		/**
+		 * 匹配数据
+		 */
+		matchData : [],
+		/**
+		 * 设置来自select元素的数据集
+		 */
+		setDataSetFromSelect : function(selectObj) {
+			$.each(selectObj.find("option"), function(idx, elem) {
+				DataSource.dataSet[idx] = {
+					k : $(elem).val(),
+					v : $(elem).text()
+				};
+			});
+		}
+	};
+
+	function DataSource() {
+		this.dataSet = [];
+		this.matchDate = [];
+		this.setDataSetFromSelect = function(selectObj) {
+			$.each(selectObj.find("option"), function(idx, elem) {
+				DataSource.dataSet[idx] = {
+					k : $(elem).val(),
+					v : $(elem).text()
+				};
+			});
+		}
 	}
+
 	/**
 	 * 分页对象
 	 */
@@ -24,7 +57,7 @@
 		/**
 		 * 默认分页大小
 		 */
-		DEFAULT_SIZE : 10,
+		DEFAULT_SIZE : 20,
 		/**
 		 * 当前页
 		 */
@@ -50,7 +83,7 @@
 			this.data = aData;
 			this.TOTAL_SIZE = aData.length;
 			this.TOTAL_PAGE = Math.ceil(this.TOTAL_SIZE / this.DEFAULT_SIZE);
-			this.display();
+			this.CURRENT_PAGE = 1;
 		},
 		/**
 		 * 分页数据起始索引
@@ -102,11 +135,11 @@
 		},
 		/**
 		 * 直接跳转
-		 * @param {number} page_num 页码
+		 * @param {Number} page_num 页码
 		 */
 		jumpto : function(page_num) {
-			if (page_num >= this.CURRENT_PAGE && page_num <= this.TOTAL_PAGE) {
-				this.CURRENT_PAGE = page_num;
+			if (page_num > 0 && page_num <= this.TOTAL_PAGE) {
+				this.CURRENT_PAGE = parseInt(page_num);
 				this.display();
 			}
 		},
@@ -114,36 +147,37 @@
 		 * 展示分页
 		 */
 		display : function() {
-			showdata($("#bigSelect_content"));
-			showpage($("#bigSelect_page"));
-		},
+			showdata($("#bigSelect_content_" + SerialVersionUID));
+			showpage($("#bigSelect_page_" + SerialVersionUID));
+		}
 	};
 	/**
 	 *	创建BigSelect框架
 	 */
-	function createBigSelectFrmDiv() {
-		var $bigSelect = $("<div>").attr("id", "bigSelect");
+	function createBigSelectFrmDiv(options) {
+		var $bigSelect = $("<div>").addClass("bigSelect").attr("id", "bigSelect_" + SerialVersionUID);
 
-		var $search = $("<input type='search' autocomplete='off' />").attr("id", "bigSelect_search");
+		var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", "bigSelect_search_" + SerialVersionUID);
 
 		$search.keyup(function() {
-			var ipt = escapeRegex($(this).val());
+			var ipt = escapeRegex($.trim($(this).val()));
 			var reg = new RegExp("^" + ipt, "i");
-			Database.filterData = [];
-			for (var i = 0; i < Database.data.length; i++) {
-				var v = Database.data[i].v;
+			DataSource.matchData = [];
+			for (var i = 0; i < DataSource.dataSet.length; i++) {
+				var v = DataSource.dataSet[i].v;
 				if (reg.test(v)) {
-					Database.filterData.push(Database.data[i]);
+					DataSource.matchData.push(DataSource.dataSet[i]);
 				}
 			}
-			Page.init(Database.filterData);
+			Page.init(DataSource.matchData);
+			Page.display();
 		});
 
-		var $content = $("<div>").attr('id', "bigSelect_content");
+		var $content = $("<div>").addClass("bigSelect_content").attr('id', "bigSelect_content_" + SerialVersionUID);
 
 		showdata($content);
 
-		var $page = $("<div>").attr("id", "bigSelect_page");
+		var $page = $("<div>").addClass("bigSelect_page").attr("id", "bigSelect_page_" + SerialVersionUID);
 
 		showpage($page);
 
@@ -190,6 +224,7 @@
 
 				var $pre_span = $("<span>");
 				var $pre_link = $("<a href='javascript:void(0);' title='上一页'>上一页</a>");
+
 				$pre_link.click(function() {
 					Page.previous();
 				});
@@ -233,19 +268,23 @@
 	}
 
 
-	$.fn.bigSelect = function() {
+	$.fn.bigSelect = function(options) {
 
-		$.each(this.find("option"), function(idx, elem) {
-			Database.data[idx] = {
-				k : $(elem).val(),
-				v : $(elem).text()
-			};
-		});
+		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
 
-		Page.init(Database.data);
+		SerialVersionUID = this.attr('id') + +new Date();
 
-		var $bigSel = createBigSelectFrmDiv();
+		DataSource.setDataSetFromSelect(this);
+
+		Page.init(DataSource.dataSet);
+
+		var $bigSel = createBigSelectFrmDiv(opts);
 
 		this.after($bigSel);
-	}
+
+	};
+
+	$.fn.bigSelect.defaults = {
+
+	};
 })(jQuery);

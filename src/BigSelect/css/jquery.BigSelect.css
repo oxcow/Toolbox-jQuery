@@ -1,56 +1,56 @@
-#bigSelect {
-	border: 1px solid teal;
-	width: 400px;
-	height: 300px;
-	z-index: 200;
-	position: absolute;
-	top: 200px;
-	left: 500px;
-	background-color: #eeeeee;
-	opacity: 0.9;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	box-shadow: 5px 2px 6px #000;
-	-moz-box-shadow: 5px 2px 6px #000;
-	-webkit-box-shadow: 5px 2px 6px #000;
+.bigSelect {
+	border:1px solid teal;
+	width:400px;
+	height:300px;
+	z-index:200;
+	position:absolute;
+	/*display:inline-block;
+	 *display:inline;*/
+	background-color:#eeeeee;
+	opacity:0.9;
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	box-shadow:5px 2px 6px #000;
+	-moz-box-shadow:5px 2px 6px #000;
+	-webkit-box-shadow:5px 2px 6px #000;
 }
-#bigSelect_search {
-	margin: 8px 2px 1px 4px;
-	padding: 1px 2px;
-	width: 240px;
-	height: 24px;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
+.bigSelect_search {
+	margin:8px 2px 1px 6px;
+	padding:1px 2px;
+	width:240px;
+	height:24px;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
 }
-#bigSelect_content {
-	margin: 3px 4px;
-	padding: 2px 2px;
-	border: 0px solid teal;
-	height: 220px;
-	overflow: hidden;
+.bigSelect_content {
+	margin:3px 4px;
+	padding:2px 2px;
+	border:0px solid teal;
+	height:220px;
+	overflow:hidden;
 }
-#bigSelect_content ul {
-	padding-left: 4px;
+.bigSelect_content ul {
+	padding-left:4px;
 }
-#bigSelect_content ul li {
-	margin: 1px 2px;
-	width: 120px;
-	float: left;
-	list-style-type: none;
-	border: 0px solid red;
-	text-decoration: underline;
-	cursor: pointer;
+.bigSelect_content ul li {
+	margin:1px 2px;
+	width:120px;
+	float:left;
+	list-style-type:none;
+	border:0px solid red;
+	text-decoration:underline;
+	cursor:pointer;
 }
-#bigSelect_page {
-	font-size: 12px;
-	margin-right: 2px;
-	text-align: right;
+.bigSelect_page {
+	font-size:12px;
+	margin-right:2px;
+	text-align:right;
 }
-#bigSelect_page span {
-	margin: 2px 2px;
+.bigSelect_page span {
+	margin:2px 2px;
 }
-#bigSelect_page input {
-	width: 20px;
+.bigSelect_page input {
+	width:20px;
 }
