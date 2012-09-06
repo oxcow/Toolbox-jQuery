@@ -70,7 +70,7 @@
 	 * 分页对象
 	 * @param {Number} pageSize 分页大小.默认一页20条数据
 	 */
-	function Page(pageSize) {
+	function Page() {
 		/**
 		 * 序列号
 		 */
@@ -78,7 +78,7 @@
 		/**
 		 * 默认分页大小
 		 */
-		this.DEFAULT_SIZE = pageSize || 20;
+		this.DEFAULT_SIZE = 20;
 		/**
 		 * 当前页
 		 */
@@ -100,11 +100,13 @@
 		/**
 		 * 初始函数
 		 */
-		this.init = function(aData) {
+		this.init = function(aData, pageSize) {
 			this.data = aData;
+			this.DEFAULT_SIZE = pageSize || this.DEFAULT_SIZE;
 			this.TOTAL_SIZE = aData.length;
 			this.TOTAL_PAGE = Math.ceil(this.TOTAL_SIZE / this.DEFAULT_SIZE);
 			this.CURRENT_PAGE = 1;
+			return this;
 		};
 		/**
 		 * 分页数据起始索引
@@ -122,221 +124,229 @@
 		 * 下一页
 		 */
 		this.next = function() {
-			if (this.CURRENT_PAGE != this.TOTAL_PAGE) {++this.CURRENT_PAGE;
-				this.display();
-			}
-
+			if (this.CURRENT_PAGE != this.TOTAL_PAGE)
+				++this.CURRENT_PAGE;
 		};
 		/**
 		 * 上一页
 		 */
 		this.previous = function() {
-			if (this.CURRENT_PAGE !== 1) {--this.CURRENT_PAGE;
-				this.display();
-			}
+			if (this.CURRENT_PAGE !== 1)
+				--this.CURRENT_PAGE;
 		};
 		/**
 		 * 首页
 		 */
 		this.first = function() {
-			if (this.CURRENT_PAGE !== 1) {
+			if (this.CURRENT_PAGE !== 1)
 				this.CURRENT_PAGE = 1;
-				this.display();
-			}
 		};
 		/**
 		 * 末页
 		 */
 		this.last = function() {
-			if (this.CURRENT_PAGE != this.TOTAL_PAGE) {
+			if (this.CURRENT_PAGE !== this.TOTAL_PAGE)
 				this.CURRENT_PAGE = this.TOTAL_PAGE;
-				this.display();
-			}
-
 		};
 		/**
 		 * 直接跳转
 		 * @param {Number} page_num 页码
 		 */
 		this.jumpto = function(page_num) {
-			if (page_num > 0 && page_num <= this.TOTAL_PAGE) {
+			if (page_num > 0 && page_num <= this.TOTAL_PAGE)
 				this.CURRENT_PAGE = parseInt(page_num);
-				this.display();
+		};
+		/**
+		 * 显示分页数据
+		 *
+		 * @param {BigSelectFrame} bigSelectFrame BigSelect HTML框架对象
+		 */
+		this.showPagedata = function(bigSelectFrame) {
+			$dataPlacement = $("#" + bigSelectFrame.bigSelectContentId);
+			$dataPlacement.find('ul').detach();
+			var $ul = $("<ul>");
+			for (var i = this.start(); i < this.end(); i++) {
+				var $li = $("<li>").attr("_val_", this.data[i].k).html(this.data[i].v);
+				$li.click(function() {
+					$("#data1").val($(this).attr("_val_"));
+					setTimeout(function() {
+						$("#" + bigSelectFrame.bigSelectId).hide("slow", function() {
+							$(this).detach();
+						});
+					}, 10);
+				});
+				$ul.append($li);
 			}
+			$dataPlacement.append($ul);
+		};
+
+		/**
+		 * 显示分页工具条
+		 *
+		 * @param {BigSelectFrame} bigSelectFrame BigSelect HTML框架对象
+		 */
+		this.pageToolbar = function(bigSelectFrame) {
+
+			var parent = this;
+
+			var $offsetObj = $("#" + bigSelectFrame.bigSelectPageId);
+
+			//移除已有的分页工具条
+			$offsetObj.find("span").detach();
+
+			$total = $("<span>共 " + this.TOTAL_SIZE + " 条数据 </span>");
+			$offsetObj.append($total);
+
+			if (this.TOTAL_PAGE != 1) {
+				//首页,上一页
+				if (this.CURRENT_PAGE > 1) {
+					var $first_span = $("<span>");
+					var $first_link = $("<a href='javascript:void(0);' title='首页'>首页</a>");
+
+					$first_link.click(function() {
+						parent.first();
+						bigSelectFrame.display(parent);
+					});
+
+					$offsetObj.append($first_span.append($first_link));
+
+					var $pre_span = $("<span>");
+					var $pre_link = $("<a href='javascript:void(0);' title='上一页'>上一页</a>");
+
+					$pre_link.click(function() {
+						parent.previous();
+						bigSelectFrame.display(parent);
+					});
+
+					$offsetObj.append($pre_span.append($pre_link));
+				}
+				// 跳转输入
+				var $jump_span = $("<span>第</span>");
+				var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
+
+				$jump_input.bind("keydown", function(event) {
+					if (event.which == 13) {
+						parent.jumpto(this.value);
+						bigSelectFrame.display(parent);
+					}
+				});
+				var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
+				$offsetObj.append($jump);
+
+				//下一页 ,末页
+				if (this.CURRENT_PAGE < this.TOTAL_PAGE) {
+					var $next_span = $("<span>");
+					var $next_link = $("<a href='javascript:void(0);' title='下一页'>下一页</a>");
+
+					$next_link.click(function() {
+						parent.next();
+						bigSelectFrame.display(parent);
+					});
+
+					$offsetObj.append($next_span.append($next_link));
+
+					var $last_span = $("<span>");
+					var $last_link = $("<a href='javascript:void(0);' title='末页'>末页</a>");
+					$last_link.click(function() {
+						parent.last();
+						bigSelectFrame.display(parent);
+					});
+					$offsetObj.append($last_span.append($last_link));
+				}
+			}
+		}
+	};
+	/**
+	 * BigSelect HTML框架
+	 */
+	function BigSelectFrame() {
+		/**
+		 *	BigSelect 编号
+		 */
+		this.bsNO = +new Date();
+		/**
+		 * BigSelect 框架ID
+		 */
+		this.bigSelectId = 'bigSelect_' + this.bsNO;
+		/**
+		 * BigSelect 查询输入框ID
+		 */
+		this.bigSelectSearchId = 'bigSelect_search_' + this.bsNO;
+		/**
+		 * BigSelect 数据展示框ID
+		 */
+		this.bigSelectContentId = 'bigSelect_content_' + this.bsNO;
+		/**
+		 * BigSelect 分页展示框ID
+		 */
+		this.bigSelectPageId = 'bigSelect_page_' + this.bsNO;
+
+		/**
+		 * New base BigSelect
+		 *
+		 * @param {jQuery Object} $offset 目标元素对象
+		 * @param {String} method 目标元素方法。$offset[method].eg: $offset['append'] etc.
+		 * @return {BigSelectFrame}
+		 * 	&lt;div class='bigSelect' id=''&gt;
+		 * 		&lt;input type='search' autocomplete='off' id=''/&gt;
+		 * 		&lt;div class='bigSelect_content'	id=''&gt;&lt;/div&gt;
+		 * 		&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
+		 * 	&lt;/div&gt;
+		 */
+		this.create = function($offset, method) {
+
+			var $bigSelect = $("<div>").addClass("bigSelect").attr("id", this.bigSelectId);
+
+			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
+
+			var $content = $("<div>").addClass("bigSelect_content").attr('id', this.bigSelectContentId);
+
+			var $page = $("<div>").addClass("bigSelect_page").attr("id", this.bigSelectPageId);
+
+			$bigSelect.append($search).append($content).append($page);
+
+			$offset[method]($bigSelect);
+
+			return this;
 		};
 		/**
 		 * 显示数据及分页信息
 		 */
-		this.display = function() {
-			showdata($("#bigSelect_content_" + this.serialVersionUID), this);
-			showpage($("#bigSelect_page_" + this.serialVersionUID), this);
+		this.display = function(page) {
+			page.showPagedata(this);
+			page.pageToolbar(this);
 		};
-	};
-	/**
-	 * 创建BigSelect框架
-	 *
-	 * @param {DataSource} dataSource 数据源对象
-	 * @param {Page} page 分页对象
-	 * @param {Object} options 可选参数
-	 */
-	function createBigSelectFrmDiv(dataSource, page, options) {
-
-		var $bigSelect = $("<div>").addClass("bigSelect").attr("id", "bigSelect_" + page.serialVersionUID);
-
-		var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", "bigSelect_search_" + page.serialVersionUID);
-
-		$search.keyup(function() {
-			var ipt = escapeRegex($.trim($(this).val()));
-			var reg = new RegExp("^" + ipt, "i");
-			page.init(dataSource["getDataSetFrom"+options.dataType](reg));
-			page.display();
-		});
-
-		var $content = $("<div>").addClass("bigSelect_content").attr('id', "bigSelect_content_" + page.serialVersionUID);
-
-		showdata($content, page);
-
-		var $page = $("<div>").addClass("bigSelect_page").attr("id", "bigSelect_page_" + page.serialVersionUID);
-
-		showpage($page, page);
-
-		return $bigSelect.append($search).append($content).append($page);
 	}
 
-	/**
-	 * 展示数据
-	 *
-	 * @param {Object} $dataPlacement 数据展示DOM位置
-	 * @param {Page} page 分页对象
-	 */
-	function showdata($dataPlacement, page) {
-		$dataPlacement.find('ul').detach();
-		var $ul = $("<ul>");
-		for (var i = page.start(); i < page.end(); i++) {
-			var $li = $("<li>").attr("_val_", page.data[i].k).html(page.data[i].v);
-			$li.click(function() {
-				$("#data1").val($(this).attr("_val_"));
-				setTimeout(function() {
-					$("#bigSelect_" + page.serialVersionUID).hide("slow", function() {
-						$(this).detach();
-					});
-				}, 10);
-			});
-			$ul.append($li);
-		}
-		$dataPlacement.append($ul);
-	}
-
-	/**
-	 * 显示分页信息
-	 *
-	 * @param {Object} $page 分页显示DOM位置
-	 */
-	function showpage($pagePlacement, page) {
-		//移除分页显示
-		$pagePlacement.find("span").detach();
-
-		$total = $("<span>共 " + page.TOTAL_SIZE + " 条数据 </span>");
-		$pagePlacement.append($total);
-
-		if (page.TOTAL_PAGE != 1) {
-			//首页,上一页
-			if (page.CURRENT_PAGE > 1) {
-				var $first_span = $("<span>");
-				var $first_link = $("<a href='javascript:void(0);' title='首页'>首页</a>");
-
-				$first_link.click(function() {
-					page.first();
-				});
-
-				$pagePlacement.append($first_span.append($first_link));
-
-				var $pre_span = $("<span>");
-				var $pre_link = $("<a href='javascript:void(0);' title='上一页'>上一页</a>");
-
-				$pre_link.click(function() {
-					page.previous();
-				});
-
-				$pagePlacement.append($pre_span.append($pre_link));
-			}
-			// 跳转输入
-			var $jump_span = $("<span>第</span>");
-			var $jump_input = $("<input type='text' maxlength='2' value='" + page.CURRENT_PAGE + "'/>");
-
-			$jump_input.bind("keydown", function(event) {
-				if (event.which == 13) {
-					page.jumpto(this.value);
-				}
-			});
-			var $jump = $jump_span.append($jump_input).append("/" + page.TOTAL_PAGE + "页");
-			$pagePlacement.append($jump);
-
-			//下一页 ,末页
-			if (page.CURRENT_PAGE < page.TOTAL_PAGE) {
-				var $next_span = $("<span>");
-				var $next_link = $("<a href='javascript:void(0);' title='下一页'>下一页</a>");
-
-				$next_link.click(function() {
-					page.next();
-				});
-
-				$pagePlacement.append($next_span.append($next_link));
-
-				var $last_span = $("<span>");
-				var $last_link = $("<a href='javascript:void(0);' title='末页'>末页</a>");
-				$last_link.click(function() {
-					page.last();
-				});
-				$pagePlacement.append($last_span.append($last_link));
-			}
-		}
-	}
-
-	var Factory = {
-		isExist : function() {
-
-		},
-		BigSelect : function(obj, options) {
-			var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
-
-			var dataSource = new DataSource();
-			dataSource["setDataSetFrom"+options.dataType](obj);
-
-			var page = new Page(opts.pagesize);
-			page.init(dataSource.dataSet);
-
-			var $bigSel = createBigSelectFrmDiv(dataSource, page, opts);
-
-			obj.after($bigSel);
-		}
-	}
 
 	$.fn.bigSelect = function(ds, options) {
-		var obj = this;
+
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
+
+		var bigSelectDivFrame = new BigSelectFrame().create(this, "after");
 
 		var dataSource = new DataSource();
 
 		if (opts.dataType === 'Array') {
 			dataSource.setDataSetFromArray(ds);
 		} else {
-			dataSource.setDataSetFromSelect(obj);
+			dataSource.setDataSetFromSelect(this);
 		}
 
-		var page = new Page(opts.pagesize);
-		page.init(dataSource.dataSet);
+		var page = new Page().init(dataSource.dataSet, opts.pagesize);
 
-		var $bigSel = createBigSelectFrmDiv(dataSource, page, opts);
+		bigSelectDivFrame.display(page);
 
-		obj.after($bigSel);
-		// this.click(function() {
-		// Factory.BigSelect(self, options);
-		// });
+		$("#" + bigSelectDivFrame.bigSelectSearchId).keyup(function() {
+			var ipt = escapeRegex($.trim($(this).val()));
+			var reg = new RegExp("^" + ipt, "i");
+			page.init(dataSource["getDataSetFrom"+opts.dataType](reg));
+			bigSelectDivFrame.display(page);
+		});
 	};
 
 	$.fn.bigSelect.defaults = {
-		pagesize : 20,
+		pagesize : 10,
 		dataType : 'Select'
 	};
 })(jQuery);
