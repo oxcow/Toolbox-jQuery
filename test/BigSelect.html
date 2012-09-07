@@ -8,161 +8,69 @@
 		<script type="text/javascript" src="../src/BigSelect/jquery.BigSelect.js"></script>
 		<script type="text/javascript">
 			$(function() {
-				$("#data1").bigSelect();
-				$("#data2").bigSelect();
-				$("#iptc").bigSelect(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'], {
-					dataType : 'Array'
+				$(".data1").bigSelect({
+					id : 'mysel'
 				});
+				$("#data2").bigSelect();
+
 			});
 		</script>
 	</head>
 	<body>
-		<input type="text" id="iptc"/>
-		<select name='sel1' id='data1'>
-			<option value=''>请选择</option>
-			<option value='Java'>Java</option>
-			<option value='Javascript'>Javascript</option>
-			<option value='Php'>Php</option>
-			<option value='.Net'>.Net</option>
-			<option value='C#'>C#</option>
-			<option value='Ajax'>Ajax</option>
-			<option value='Perl'>Perl</option>
-			<option value='Ruby On Rails'>Ruby on Rails</option>
-			<option value='Object-C'>Object-C</option>
-			<option value='Python'>Python</option>
-			<option value='C'>C</option>
-			<option value='C++'>C++</option>
-			<option value='D'>D</option>
-			<option value='PL/SQL'>PL/SQL</option>
-			<option value='Groovy'>Groovy</option>
-			<option value='Matlab'>Matlab</option>
-			<option value='Lisp'>Lisp</option>
-			<option value='jQuery'>jQuery</option>
-			<option value='dojo'>Dojo</option>
-			<option value='Logo'>Logo</option>
-			<option value='Ada'>Ada</option>
-			<option value='Pascal'>Pascal</option>
-			<option value='Bash'>Bash</option>
-			<option value='VBScript'>VBScript</option>
-			<option value='hb'>河北</option>
-			<option value='hn'>河南</option>
-			<option value='fj'>福建</option>
-			<option value='gd'>广东</option>
-			<option value='ssx'>山西</option>
-			<option value='bj'>北京</option>
-			<option value='sd'>山东</option>
-			<option value='tj'>天津</option>
-			<option value='hz'>杭州</option>
-			<option value='hongkang'>香港</option>
-		</select>
-
-		<select name='sel2' id='data2'>
-			<option value='tj'>天津</option>
-			<option value="test_0">string_0</option>
-			<option value="test_1">string_1</option>
-			<option value="test_2">string_2</option>
-			<option value="test_3">string_3</option>
-			<option value="test_4">string_4</option>
-			<option value="test_5">string_5</option>
-			<option value="test_6">string_6</option>
-			<option value="test_7">string_7</option>
-			<option value="test_8">string_8</option>
-			<option value="test_9">string_9</option>
-			<option value="test_10">string_10</option>
-			<option value="test_11">string_11</option>
-			<option value="test_12">string_12</option>
-			<option value="test_13">string_13</option>
-			<option value="test_14">string_14</option>
-			<option value="test_15">string_15</option>
-			<option value="test_16">atring_16</option>
-			<option value="test_17">atring_17</option>
-			<option value="test_18">atring_18</option>
-			<option value="test_19">string_19</option>
-			<option value="test_20">string_20</option>
-			<option value="test_21">string_21</option>
-			<option value="test_22">string_22</option>
-			<option value="test_23">btring_23</option>
-			<option value="test_24">string_24</option>
-			<option value="test_25">btring_25</option>
-			<option value="test_26">string_26</option>
-			<option value="test_27">string_27</option>
-			<option value="test_28">btring_28</option>
-			<option value="test_29">string_29</option>
-			<option value="test_30">string_30</option>
-			<option value="test_31">string_31</option>
-			<option value="test_32">string_32</option>
-			<option value="test_33">string_33</option>
-			<option value="test_34">string_34</option>
-			<option value="test_35">string_35</option>
-			<option value="test_36">string_36</option>
-			<option value="test_37">string_37</option>
-			<option value="test_38">string_38</option>
-			<option value="test_39">string_39</option>
-			<option value="test_40">string_40</option>
-			<option value="test_41">string_41</option>
-			<option value="test_42">string_42</option>
-			<option value="test_43">string_43</option>
-			<option value="test_44">string_44</option>
-			<option value="test_45">string_45</option>
-			<option value="test_46">string_46</option>
-			<option value="test_47">string_47</option>
-			<option value="test_48">string_48</option>
-			<option value="test_49">string_49</option>
-			<option value="test_50">string_50</option>
-			<option value="test_51">string_51</option>
-			<option value="test_52">string_52</option>
-			<option value="test_53">string_53</option>
-			<option value="test_54">string_54</option>
-			<option value="test_55">string_55</option>
-			<option value="test_56">string_56</option>
-			<option value="test_57">string_57</option>
-			<option value="test_58">string_58</option>
-			<option value="test_59">string_59</option>
-			<option value="test_60">string_60</option>
-			<option value="test_61">string_61</option>
-			<option value="test_62">string_62</option>
-			<option value="test_63">string_63</option>
-			<option value="test_64">string_64</option>
-			<option value="test_65">string_65</option>
-			<option value="test_66">string_66</option>
-			<option value="test_67">string_67</option>
-			<option value="test_68">string_68</option>
-			<option value="test_69">string_69</option>
-			<option value="test_70">string_70</option>
-			<option value="test_71">string_71</option>
-			<option value="test_72">string_72</option>
-			<option value="test_73">string_73</option>
-			<option value="test_74">string_74</option>
-			<option value="test_75">string_75</option>
-			<option value="test_76">string_76</option>
-			<option value="test_77">string_77</option>
-			<option value="test_78">string_78</option>
-			<option value="test_79">string_79</option>
-			<option value="test_80">string_80</option>
-			<option value="test_81">string_81</option>
-			<option value="test_82">string_82</option>
-			<option value="test_83">string_83</option>
-			<option value="test_84">string_84</option>
-			<option value="test_85">string_85</option>
-			<option value="test_86">string_86</option>
-			<option value="test_87">string_87</option>
-			<option value="test_88">string_88</option>
-			<option value="test_89">string_89</option>
-			<option value="test_90">string_90</option>
-			<option value="test_91">string_91</option>
-			<option value="test_92">string_92</option>
-			<option value="test_93">string_93</option>
-			<option value="test_94">string_94</option>
-			<option value="test_95">string_95</option>
-			<option value="test_96">string_96</option>
-			<option value="test_97">string_97</option>
-			<option value="test_98">string_98</option>
-			<option value="test_99">string_99</option>
-			<option value='hb'>河北</option>
-			<option value='hn'>河南</option>
-			<option value='fj'>福建</option>
-			<option value='gd'>广东</option>
-			<option value='ssx'>山西</option>
-		</select>
+		<form name="bigSelectFrm" method="get">
+			<table border='1' width='80%' align='center'>
+				<tr>
+					<td>喜欢语言</td>
+					<td>
+					<select name='sel1' class='data1'>
+						<option value=''>请选择</option>
+						<option value='Java'>Java</option>
+						<option value='Javascript'>Javascript</option>
+						<option value='Php'>Php</option>
+						<option value='.Net'>.Net</option>
+						<option value='C#'>C#</option>
+						<option value='Ajax'>Ajax</option>
+						<option value='Perl'>Perl</option>
+						<option value='Ruby On Rails'>Ruby on Rails</option>
+						<option value='Object-C'>Object-C</option>
+						<option value='Python'>Python</option>
+						<option value='C'>C</option>
+						<option value='C++'>C++</option>
+						<option value='D'>D</option>
+						<option value='PL/SQL'>PL/SQL</option>
+						<option value='Groovy'>Groovy</option>
+						<option value='Matlab'>Matlab</option>
+						<option value='Lisp'>Lisp</option>
+						<option value='jQuery'>jQuery</option>
+						<option value='dojo'>Dojo</option>
+						<option value='Logo'>Logo</option>
+						<option value='Ada'>Ada</option>
+						<option value='Pascal'>Pascal</option>
+						<option value='Bash'>Bash</option>
+						<option value='VBScript'>VBScript</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>所在省份</td>
+					<td>
+					<select name='sel2' id='data2'>
+						<option value='tj'>天津</option>
+						<option value='hb'>河北</option>
+						<option value='hn'>河南</option>
+						<option value='fj'>福建</option>
+						<option value='gd'>广东</option>
+						<option value='ssx'>山西</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>
+					<input type="submit" value="submit"/>
+					</td>
+					<td>
+					<input type="reset" value="reset"	/>
+					</td>
+				</tr>
+			</table>
+		</form>
 	</body>
 </html>

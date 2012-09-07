@@ -45,40 +45,24 @@
 			}
 			return matchDate;
 		};
-
-		this.setDataSetFromArray = function(array) {
-			for (var i = 0; i < array.length; i++) {
-				this.dataSet[i] = {
-					k : array[i],
-					v : array[i]
-				};
-			}
-		};
-		this.getDataSetFromArray = function(reg) {
-			var matchDate = [];
-			for (var i = 0; i < this.dataSet.length; i++) {
-				var v = this.dataSet[i].v;
-				if (reg.test(v)) {
-					matchDate.push(this.dataSet[i]);
-				}
-			}
-			return matchDate;
-		}
 	}
 
 	/**
 	 * 分页对象
+	 *
+	 * @param {Array} data 被分页所有数据集合.默认为[].
 	 * @param {Number} pageSize 分页大小.默认一页20条数据
+	 *
 	 */
-	function Page() {
+	function Page(data, pagesize) {
 		/**
-		 * 序列号
+		 * 分页数据
 		 */
-		this.serialVersionUID = +new Date();
+		this.data = data || [];
 		/**
 		 * 默认分页大小
 		 */
-		this.DEFAULT_SIZE = 20;
+		this.DEFAULT_SIZE = pagesize || 20;
 		/**
 		 * 当前页
 		 */
@@ -86,27 +70,21 @@
 		/**
 		 * 总记录数
 		 */
-		this.TOTAL_SIZE = 0;
+		this.TOTAL_SIZE = data.length || 1;
 		/**
 		 * 总页数
 		 */
-		this.TOTAL_PAGE = 0;
-
-		/**
-		 * 分页数据
-		 */
-		this.data = [];
+		this.TOTAL_PAGE = Math.ceil(this.TOTAL_SIZE / this.DEFAULT_SIZE);
 
 		/**
 		 * 初始函数
 		 */
-		this.init = function(aData, pageSize) {
+		this.reset = function(aData, pageSize) {
 			this.data = aData;
 			this.DEFAULT_SIZE = pageSize || this.DEFAULT_SIZE;
 			this.TOTAL_SIZE = aData.length;
 			this.TOTAL_PAGE = Math.ceil(this.TOTAL_SIZE / this.DEFAULT_SIZE);
 			this.CURRENT_PAGE = 1;
-			return this;
 		};
 		/**
 		 * 分页数据起始索引
@@ -168,7 +146,7 @@
 			for (var i = this.start(); i < this.end(); i++) {
 				var $li = $("<li>").attr("_val_", this.data[i].k).html(this.data[i].v);
 				$li.click(function() {
-					$("#data1").val($(this).attr("_val_"));
+					bigSelectFrame.caller.val($(this).attr("_val_"));
 					setTimeout(function() {
 						$("#" + bigSelectFrame.bigSelectId).hide("slow", function() {
 							$(this).detach();
@@ -185,7 +163,7 @@
 		 *
 		 * @param {BigSelectFrame} bigSelectFrame BigSelect HTML框架对象
 		 */
-		this.pageToolbar = function(bigSelectFrame) {
+		this.showPageToolbar = function(bigSelectFrame) {
 
 			var parent = this;
 
@@ -258,34 +236,54 @@
 	};
 	/**
 	 * BigSelect HTML框架
+	 *
+	 * @param {Object} caller 该类的调用对象
+	 *
 	 */
-	function BigSelectFrame() {
+	function BigSelectFrame(caller) {
 		/**
-		 *	BigSelect 编号
+		 * 该类的调用对象
 		 */
-		this.bsNO = +new Date();
+		this.caller = caller;
+
+		/**
+		 *  获取BigSelect编号
+		 *
+		 *  @return BigSelect编号
+		 */
+		this.getBsNo = function() {
+			var id = this.caller.attr("id");
+			//如果调用该方法的DOM对象id属性为空,则为其随机生成一个id
+			if (!id) {
+				id = +new Date();
+				this.caller.attr("id", id);
+			}
+			return id;
+		};
 		/**
 		 * BigSelect 框架ID
 		 */
-		this.bigSelectId = 'bigSelect_' + this.bsNO;
+		this.bigSelectId = 'bigSelect_' + this.getBsNo();
 		/**
 		 * BigSelect 查询输入框ID
 		 */
-		this.bigSelectSearchId = 'bigSelect_search_' + this.bsNO;
+		this.bigSelectSearchId = 'bigSelect_search_' + this.getBsNo();
 		/**
 		 * BigSelect 数据展示框ID
 		 */
-		this.bigSelectContentId = 'bigSelect_content_' + this.bsNO;
+		this.bigSelectContentId = 'bigSelect_content_' + this.getBsNo();
 		/**
 		 * BigSelect 分页展示框ID
 		 */
-		this.bigSelectPageId = 'bigSelect_page_' + this.bsNO;
+		this.bigSelectPageId = 'bigSelect_page_' + this.getBsNo();
 
+		this.isExistBsNo = function() {
+			var $obj = $("#bigSelect_"+this.getBsNo());
+			return $obj &&　$obj.length !=0 ;
+		};
 		/**
 		 * New base BigSelect
 		 *
-		 * @param {jQuery Object} $offset 目标元素对象
-		 * @param {String} method 目标元素方法。$offset[method].eg: $offset['append'] etc.
 		 * @return {BigSelectFrame}
 		 * 	&lt;div class='bigSelect' id=''&gt;
 		 * 		&lt;input type='search' autocomplete='off' id=''/&gt;
@@ -293,8 +291,8 @@
 		 * 		&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
 		 * 	&lt;/div&gt;
 		 */
-		this.create = function($offset, method) {
-
+		this.create = function() {
+			
 			var $bigSelect = $("<div>").addClass("bigSelect").attr("id", this.bigSelectId);
 
 			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
@@ -305,48 +303,62 @@
 
 			$bigSelect.append($search).append($content).append($page);
 
-			$offset[method]($bigSelect);
+			$bigSelect.attr("title", "双击关闭");
+			$bigSelect.dblclick(function() {
+				$bigSelect.hide("slow", function() {
+					$(this).detach();
+				});
+			});
 
-			return this;
+			return $bigSelect;
 		};
 		/**
 		 * 显示数据及分页信息
 		 */
 		this.display = function(page) {
 			page.showPagedata(this);
-			page.pageToolbar(this);
+			page.showPageToolbar(this);
 		};
 	}
 
+	var BigSelectFactory = {
+		create : function(obj, options) {
+			var dataSource = new DataSource();
+			dataSource.setDataSetFromSelect(obj);
 
-	$.fn.bigSelect = function(ds, options) {
+			var page = new Page(dataSource.dataSet, options.pagesize);
 
+			var bigSelectFrame = new BigSelectFrame(obj, options.id);
+			
+			if(bigSelectFrame.isExistBsNo()) return null;
+			
+			obj.after(bigSelectFrame.create());
+
+			bigSelectFrame.display(page);
+
+			$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
+				var ipt = escapeRegex($.trim($(this).val()));
+				var reg = new RegExp("^" + ipt, "i");
+				page.reset(dataSource.getDataSetFromSelect(reg));
+				bigSelectFrame.display(page);
+			});
+		}
+	}
+
+	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
 
-		var bigSelectDivFrame = new BigSelectFrame().create(this, "after");
+		var $label = $("<label>").attr("for", this.attr("id")).text("过滤");
 
-		var dataSource = new DataSource();
+		this.after($label);
 
-		if (opts.dataType === 'Array') {
-			dataSource.setDataSetFromArray(ds);
-		} else {
-			dataSource.setDataSetFromSelect(this);
-		}
-
-		var page = new Page().init(dataSource.dataSet, opts.pagesize);
-
-		bigSelectDivFrame.display(page);
-
-		$("#" + bigSelectDivFrame.bigSelectSearchId).keyup(function() {
-			var ipt = escapeRegex($.trim($(this).val()));
-			var reg = new RegExp("^" + ipt, "i");
-			page.init(dataSource["getDataSetFrom"+opts.dataType](reg));
-			bigSelectDivFrame.display(page);
+		var parent = this;
+		$label.bind("click", function() {
+			BigSelectFactory.create(parent, opts);
 		});
 	};
 
 	$.fn.bigSelect.defaults = {
-		pagesize : 10,
-		dataType : 'Select'
+		pagesize : 10
 	};
 })(jQuery);
