@@ -50,8 +50,10 @@
 	/**
 	 * 分页对象
 	 *
-	 * @param {Array} data 被分页所有数据集合.默认为[].
-	 * @param {Number} pageSize 分页大小.默认一页20条数据
+	 * @param {Array}
+	 *            data 被分页所有数据集合.默认为[].
+	 * @param {Number}
+	 *            pageSize 分页大小.默认一页20条数据
 	 *
 	 */
 	function Page(data, pagesize) {
@@ -128,7 +130,9 @@
 		};
 		/**
 		 * 直接跳转
-		 * @param {Number} page_num 页码
+		 *
+		 * @param {Number}
+		 *            page_num 页码
 		 */
 		this.jumpto = function(page_num) {
 			if (page_num > 0 && page_num <= this.TOTAL_PAGE)
@@ -137,7 +141,8 @@
 		/**
 		 * 显示分页数据
 		 *
-		 * @param {BigSelectFrame} bigSelectFrame BigSelect HTML框架对象
+		 * @param {BigSelectFrame}
+		 *            bigSelectFrame BigSelect HTML框架对象
 		 */
 		this.showPagedata = function(bigSelectFrame) {
 			$dataPlacement = $("#" + bigSelectFrame.bigSelectContentId);
@@ -161,7 +166,8 @@
 		/**
 		 * 显示分页工具条
 		 *
-		 * @param {BigSelectFrame} bigSelectFrame BigSelect HTML框架对象
+		 * @param {BigSelectFrame}
+		 *            bigSelectFrame BigSelect HTML框架对象
 		 */
 		this.showPageToolbar = function(bigSelectFrame) {
 
@@ -169,14 +175,14 @@
 
 			var $offsetObj = $("#" + bigSelectFrame.bigSelectPageId);
 
-			//移除已有的分页工具条
+			// 移除已有的分页工具条
 			$offsetObj.find("span").detach();
 
 			$total = $("<span>共 " + this.TOTAL_SIZE + " 条数据 </span>");
 			$offsetObj.append($total);
 
 			if (this.TOTAL_PAGE != 1) {
-				//首页,上一页
+				// 首页,上一页
 				if (this.CURRENT_PAGE > 1) {
 					var $first_span = $("<span>");
 					var $first_link = $("<a href='javascript:void(0);' title='首页'>首页</a>");
@@ -211,7 +217,7 @@
 				var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
 				$offsetObj.append($jump);
 
-				//下一页 ,末页
+				// 下一页 ,末页
 				if (this.CURRENT_PAGE < this.TOTAL_PAGE) {
 					var $next_span = $("<span>");
 					var $next_link = $("<a href='javascript:void(0);' title='下一页'>下一页</a>");
@@ -232,28 +238,34 @@
 					$offsetObj.append($last_span.append($last_link));
 				}
 			}
-		}
-	};
+		};
+	}
+
+	;
 	/**
 	 * BigSelect HTML框架
 	 *
-	 * @param {Object} caller 该类的调用对象
+	 * @param {Object}
+	 *            caller 该类的调用对象
 	 *
 	 */
-	function BigSelectFrame(caller) {
+	function BigSelectFrame(caller,options) {
 		/**
 		 * 该类的调用对象
 		 */
 		this.caller = caller;
-
 		/**
-		 *  获取BigSelect编号
+		 * 参数 
+		 */
+		this.opts = options;
+		/**
+		 * 获取BigSelect编号
 		 *
-		 *  @return BigSelect编号
+		 * @return BigSelect编号
 		 */
 		this.getBsNo = function() {
 			var id = this.caller.attr("id");
-			//如果调用该方法的DOM对象id属性为空,则为其随机生成一个id
+			// 如果调用该方法的DOM对象id属性为空,则为其随机生成一个id
 			if (!id) {
 				id = +new Date();
 				this.caller.attr("id", id);
@@ -278,22 +290,26 @@
 		this.bigSelectPageId = 'bigSelect_page_' + this.getBsNo();
 
 		this.isExistBsNo = function() {
-			var $obj = $("#bigSelect_"+this.getBsNo());
-			return $obj &&　$obj.length !=0 ;
+			var $obj = $("#bigSelect_" + this.getBsNo());
+			return ($obj) && ($obj.length != 0);
 		};
 		/**
 		 * New base BigSelect
 		 *
 		 * @return {BigSelectFrame}
+		 *
 		 * 	&lt;div class='bigSelect' id=''&gt;
 		 * 		&lt;input type='search' autocomplete='off' id=''/&gt;
 		 * 		&lt;div class='bigSelect_content'	id=''&gt;&lt;/div&gt;
 		 * 		&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
 		 * 	&lt;/div&gt;
+		 *
 		 */
 		this.create = function() {
-			
-			var $bigSelect = $("<div>").addClass("bigSelect").attr("id", this.bigSelectId);
+
+			var $bigSelect = $("<div>").attr("id", this.bigSelectId).addClass("bigSelect").css({
+				'width' : this.opts.width
+			});
 
 			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
 
@@ -328,10 +344,11 @@
 
 			var page = new Page(dataSource.dataSet, options.pagesize);
 
-			var bigSelectFrame = new BigSelectFrame(obj, options.id);
-			
-			if(bigSelectFrame.isExistBsNo()) return null;
-			
+			var bigSelectFrame = new BigSelectFrame(obj, options);
+
+			if (bigSelectFrame.isExistBsNo())
+				return null;
+
 			obj.after(bigSelectFrame.create());
 
 			bigSelectFrame.display(page);
@@ -343,12 +360,12 @@
 				bigSelectFrame.display(page);
 			});
 		}
-	}
+	};
 
 	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
 
-		var $label = $("<label>").attr("for", this.attr("id")).text("过滤");
+		var $label = $("<label>").attr("for", this.attr("id")).text(">");
 
 		this.after($label);
 
@@ -359,6 +376,7 @@
 	};
 
 	$.fn.bigSelect.defaults = {
-		pagesize : 10
+		pagesize : 10,
+		width : 400
 	};
 })(jQuery);
