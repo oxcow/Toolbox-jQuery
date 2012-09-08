@@ -1,21 +1,21 @@
 /*
  * jQuery jCharLenCount/jcharlencount Plugin 用来统计textarea/input[type=text]元素的输入字符数量
- * 
- * 
+ *
+ *
  * @author: leeyee
  * @requires jQuery v1.1.2 or later
- * 
+ *
  * jCharLenCount(maxLen)带有一个参数.该参数用来定义该元素最大输入字符长度
  *
- * 
+ *
  * maxLen可取以下值:
- * 
+ *
  *  小于等于 0 : 该对象不允许输入. eg:jCharLenCount(0)
  * 	大于 0 : 该对象允许输入的最大字符数量，超过将只保留输入的[0,maxLen]个.eg:jCharLenCount(100)
  * 	等于 null : 只对该对象进行输入字符数量统计. eg:jCharLenCount(null)
  * 	未定义 : 只对该对象进行输入字符数量统计.eg:jCharLenCount()
  * 	字符串或者字符串数字 ： 提示非法输入，绑定失败. eg:jCharLenCount('test')
- * 
+ *
  */
 ;
 (function($) {
@@ -24,9 +24,11 @@
 			alert('$("' + this.selector + '")绑定jCharLenCount方法失败(参数类型有误)');
 			return;
 		}
-		maxLen = maxLen >= 0 ? maxLen : 0; // 负数一律当0来处理
+		maxLen = maxLen >= 0 ? maxLen : 0;
+		// 负数一律当0来处理
 
-		var init_char_len = countcharLen(this);// 获取出示长度
+		var init_char_len = countcharLen(this);
+		// 获取出示长度
 
 		// var opts = $.extend({}, $.fn.jcountchar.defaults, options);
 
@@ -95,13 +97,14 @@
 		$(obj).val($(obj).val().substring(0, maxLen));
 		$(obj).next('div').text(maxLen);
 	}
+
 	// 统计当前字符长度
 	function countcharLen(obj) {
 		return $(obj).val() ? $(obj).val().length : 0;
 	}
 
 	function char_len_str(charLen, maxLen) {
-		return maxLen === null || maxLen === undefined ? charLen : charLen
-				+ '/' + maxLen;
+		return maxLen === null || maxLen === undefined ? charLen : charLen + '/' + maxLen;
 	}
-})(jQuery);
+
+})(jQuery); 

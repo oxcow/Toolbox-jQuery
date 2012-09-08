@@ -1,452 +1,452 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>jQuery Simple AutoComplete</title>
-<link rel="stylesheet" type="text/css"
-	href="../src/sAutoComplete/css/jquery.sAutoComplete.css" />
-<script type="text/javascript" src="../libs/jquery-1.7.2.js"></script>
-<script type="text/javascript"
-	src="../src/sAutoComplete/jquery.sAutoComplete.js"></script>
-<script type="text/javascript">
-	$(function() {
-		$("#auto_search").sAutoComplete($("#data1"), {
-			css : {
-				width : 200,
-				height : 20
-			}
-		});
-		$("#auto_search1").sAutoComplete($("#data2"), {
-			dataType : 'select'
-		});
-		$("#auto_search2").sAutoComplete($("#data3"));
+	<head>
+		<meta charset="UTF-8">
+		<title>jQuery Simple AutoComplete</title>
+		<link rel="stylesheet" type="text/css"
+		href="../src/sAutoComplete/css/jquery.sAutoComplete.css" />
+		<script type="text/javascript" src="../libs/jquery-1.7.2.js"></script>
+		<script type="text/javascript"
+		src="../src/sAutoComplete/jquery.sAutoComplete.js"></script>
+		<script type="text/javascript">
+			$(function() {
+				$("#auto_search").sAutoComplete($("#data1"), {
+					css : {
+						width : 200,
+						height : 20
+					}
+				});
+				$("#auto_search1").sAutoComplete($("#data2"), {
+					dataType : 'select'
+				});
+				$("#auto_search2").sAutoComplete($("#data3"));
 
-		//json 
-		var jsons = '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}';
-		var jsons1 = '{"1" : "java1","2" : "javascript1","3" : "C1","4" : "C++1"}';
-		$('#auto_search_json').sAutoComplete(jsons, {
-			dataType : 'json'
-		});
-		$('#auto_search_json1').sAutoComplete(jsons1, {
-			dataType : 'json'
-		});
+				//json
+				var jsons = '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}';
+				var jsons1 = '{"1" : "java1","2" : "javascript1","3" : "C1","4" : "C++1"}';
+				$('#auto_search_json').sAutoComplete(jsons, {
+					dataType : 'json'
+				});
+				$('#auto_search_json1').sAutoComplete(jsons1, {
+					dataType : 'json'
+				});
 
-		var ay = [ 'ruby', 'lisp', 'lua', 'robbet' ];
-		var ay1 = [ 'ruby1', 'lisp1', 'lua1', 'robbet1' ];
-		$("#auto_search_array").sAutoComplete(ay, {
-			dataType : 'array'
-		});
-		$("#auto_search_array1").sAutoComplete(ay1, {
-			dataType : 'array'
-		});
-	});
-</script>
-</head>
-<body>
+				var ay = ['ruby', 'lisp', 'lua', 'robbet'];
+				var ay1 = ['ruby1', 'lisp1', 'lua1', 'robbet1'];
+				$("#auto_search_array").sAutoComplete(ay, {
+					dataType : 'array'
+				});
+				$("#auto_search_array1").sAutoComplete(ay1, {
+					dataType : 'array'
+				});
+			});
+		</script>
+	</head>
+	<body>
 
-	<h1>结合 select 使用</h1>
+		<h1>结合 select 使用</h1>
 
-	<input type='search' id='auto_search' autocomplete="off" />
+		<input type='search' id='auto_search' autocomplete="off" />
 
-	<input type='text' id='auto_search1' autocomplete="off"/>
+		<input type='text' id='auto_search1' autocomplete="off"/>
 
-	<input type='text' id='auto_search2' autocomplete="off" />
+		<input type='text' id='auto_search2' autocomplete="off" />
 
+		<select name='sel1' id='data1'>
+			<option value=''>请选择</option>
+			<option value='Java'>Java</option>
+			<option value='Javascript'>Javascript</option>
+			<option value='Php'>Php</option>
+			<option value='.Net'>.Net</option>
+			<option value='C#'>C#</option>
+			<option value='Ajax'>Ajax</option>
+			<option value='Perl'>Perl</option>
+			<option value='Ruby On Rails'>Ruby on Rails</option>
+			<option value='Object-C'>Object-C</option>
+			<option value='Python'>Python</option>
+			<option value='C'>C</option>
+			<option value='C++'>C++</option>
+			<option value='D'>D</option>
+			<option value='PL/SQL'>PL/SQL</option>
+			<option value='Groovy'>Groovy</option>
+			<option value='Matlab'>Matlab</option>
+			<option value='Lisp'>Lisp</option>
+			<option value='jQuery'>jQuery</option>
+			<option value='dojo'>Dojo</option>
+			<option value='Logo'>Logo</option>
+			<option value='Ada'>Ada</option>
+			<option value='Pascal'>Pascal</option>
+			<option value='Bash'>Bash</option>
+			<option value='VBScript'>VBScript</option>
+		</select>
 
-	<select name='sel1' id='data1'>
-		<option value=''>请选择</option>
-		<option value='Java'>Java</option>
-		<option value='Javascript'>Javascript</option>
-		<option value='Php'>Php</option>
-		<option value='.Net'>.Net</option>
-		<option value='C#'>C#</option>
-		<option value='Ajax'>Ajax</option>
-		<option value='Perl'>Perl</option>
-		<option value='Ruby On Rails'>Ruby on Rails</option>
-		<option value='Object-C'>Object-C</option>
-		<option value='Python'>Python</option>
-		<option value='C'>C</option>
-		<option value='C++'>C++</option>
-		<option value='D'>D</option>
-		<option value='PL/SQL'>PL/SQL</option>
-		<option value='Groovy'>Groovy</option>
-		<option value='Matlab'>Matlab</option>
-		<option value='Lisp'>Lisp</option>
-		<option value='jQuery'>jQuery</option>
-		<option value='dojo'>Dojo</option>
-		<option value='Logo'>Logo</option>
-		<option value='Ada'>Ada</option>
-		<option value='Pascal'>Pascal</option>
-		<option value='Bash'>Bash</option>
-		<option value='VBScript'>VBScript</option>
-	</select>
+		<select name='sel2' id='data2'>
+			<option value='tj'>天津</option>
+			<option value="test_0">string_0</option>
+			<option value="test_1">string_1</option>
+			<option value="test_2">string_2</option>
+			<option value="test_3">string_3</option>
+			<option value="test_4">string_4</option>
+			<option value="test_5">string_5</option>
+			<option value="test_6">string_6</option>
+			<option value="test_7">string_7</option>
+			<option value="test_8">string_8</option>
+			<option value="test_9">string_9</option>
+			<option value="test_10">string_10</option>
+			<option value="test_11">string_11</option>
+			<option value="test_12">string_12</option>
+			<option value="test_13">string_13</option>
+			<option value="test_14">string_14</option>
+			<option value="test_15">string_15</option>
+			<option value="test_16">atring_16</option>
+			<option value="test_17">atring_17</option>
+			<option value="test_18">atring_18</option>
+			<option value="test_19">string_19</option>
+			<option value="test_20">string_20</option>
+			<option value="test_21">string_21</option>
+			<option value="test_22">string_22</option>
+			<option value="test_23">btring_23</option>
+			<option value="test_24">string_24</option>
+			<option value="test_25">btring_25</option>
+			<option value="test_26">string_26</option>
+			<option value="test_27">string_27</option>
+			<option value="test_28">btring_28</option>
+			<option value="test_29">string_29</option>
+			<option value="test_30">string_30</option>
+			<option value="test_31">string_31</option>
+			<option value="test_32">string_32</option>
+			<option value="test_33">string_33</option>
+			<option value="test_34">string_34</option>
+			<option value="test_35">string_35</option>
+			<option value="test_36">string_36</option>
+			<option value="test_37">string_37</option>
+			<option value="test_38">string_38</option>
+			<option value="test_39">string_39</option>
+			<option value="test_40">string_40</option>
+			<option value="test_41">string_41</option>
+			<option value="test_42">string_42</option>
+			<option value="test_43">string_43</option>
+			<option value="test_44">string_44</option>
+			<option value="test_45">string_45</option>
+			<option value="test_46">string_46</option>
+			<option value="test_47">string_47</option>
+			<option value="test_48">string_48</option>
+			<option value="test_49">string_49</option>
+			<option value="test_50">string_50</option>
+			<option value="test_51">string_51</option>
+			<option value="test_52">string_52</option>
+			<option value="test_53">string_53</option>
+			<option value="test_54">string_54</option>
+			<option value="test_55">string_55</option>
+			<option value="test_56">string_56</option>
+			<option value="test_57">string_57</option>
+			<option value="test_58">string_58</option>
+			<option value="test_59">string_59</option>
+			<option value="test_60">string_60</option>
+			<option value="test_61">string_61</option>
+			<option value="test_62">string_62</option>
+			<option value="test_63">string_63</option>
+			<option value="test_64">string_64</option>
+			<option value="test_65">string_65</option>
+			<option value="test_66">string_66</option>
+			<option value="test_67">string_67</option>
+			<option value="test_68">string_68</option>
+			<option value="test_69">string_69</option>
+			<option value="test_70">string_70</option>
+			<option value="test_71">string_71</option>
+			<option value="test_72">string_72</option>
+			<option value="test_73">string_73</option>
+			<option value="test_74">string_74</option>
+			<option value="test_75">string_75</option>
+			<option value="test_76">string_76</option>
+			<option value="test_77">string_77</option>
+			<option value="test_78">string_78</option>
+			<option value="test_79">string_79</option>
+			<option value="test_80">string_80</option>
+			<option value="test_81">string_81</option>
+			<option value="test_82">string_82</option>
+			<option value="test_83">string_83</option>
+			<option value="test_84">string_84</option>
+			<option value="test_85">string_85</option>
+			<option value="test_86">string_86</option>
+			<option value="test_87">string_87</option>
+			<option value="test_88">string_88</option>
+			<option value="test_89">string_89</option>
+			<option value="test_90">string_90</option>
+			<option value="test_91">string_91</option>
+			<option value="test_92">string_92</option>
+			<option value="test_93">string_93</option>
+			<option value="test_94">string_94</option>
+			<option value="test_95">string_95</option>
+			<option value="test_96">string_96</option>
+			<option value="test_97">string_97</option>
+			<option value="test_98">string_98</option>
+			<option value="test_99">string_99</option>
+			<option value='hb'>河北</option>
+			<option value='hn'>河南</option>
+			<option value='fj'>福建</option>
+			<option value='gd'>广东</option>
+			<option value='ssx'>山西</option>
+		</select>
 
-	<select name='sel2' id='data2'>
-		<option value='tj'>天津</option>
-		<option value="test_0">string_0</option>
-		<option value="test_1">string_1</option>
-		<option value="test_2">string_2</option>
-		<option value="test_3">string_3</option>
-		<option value="test_4">string_4</option>
-		<option value="test_5">string_5</option>
-		<option value="test_6">string_6</option>
-		<option value="test_7">string_7</option>
-		<option value="test_8">string_8</option>
-		<option value="test_9">string_9</option>
-		<option value="test_10">string_10</option>
-		<option value="test_11">string_11</option>
-		<option value="test_12">string_12</option>
-		<option value="test_13">string_13</option>
-		<option value="test_14">string_14</option>
-		<option value="test_15">string_15</option>
-		<option value="test_16">atring_16</option>
-		<option value="test_17">atring_17</option>
-		<option value="test_18">atring_18</option>
-		<option value="test_19">string_19</option>
-		<option value="test_20">string_20</option>
-		<option value="test_21">string_21</option>
-		<option value="test_22">string_22</option>
-		<option value="test_23">btring_23</option>
-		<option value="test_24">string_24</option>
-		<option value="test_25">btring_25</option>
-		<option value="test_26">string_26</option>
-		<option value="test_27">string_27</option>
-		<option value="test_28">btring_28</option>
-		<option value="test_29">string_29</option>
-		<option value="test_30">string_30</option>
-		<option value="test_31">string_31</option>
-		<option value="test_32">string_32</option>
-		<option value="test_33">string_33</option>
-		<option value="test_34">string_34</option>
-		<option value="test_35">string_35</option>
-		<option value="test_36">string_36</option>
-		<option value="test_37">string_37</option>
-		<option value="test_38">string_38</option>
-		<option value="test_39">string_39</option>
-		<option value="test_40">string_40</option>
-		<option value="test_41">string_41</option>
-		<option value="test_42">string_42</option>
-		<option value="test_43">string_43</option>
-		<option value="test_44">string_44</option>
-		<option value="test_45">string_45</option>
-		<option value="test_46">string_46</option>
-		<option value="test_47">string_47</option>
-		<option value="test_48">string_48</option>
-		<option value="test_49">string_49</option>
-		<option value="test_50">string_50</option>
-		<option value="test_51">string_51</option>
-		<option value="test_52">string_52</option>
-		<option value="test_53">string_53</option>
-		<option value="test_54">string_54</option>
-		<option value="test_55">string_55</option>
-		<option value="test_56">string_56</option>
-		<option value="test_57">string_57</option>
-		<option value="test_58">string_58</option>
-		<option value="test_59">string_59</option>
-		<option value="test_60">string_60</option>
-		<option value="test_61">string_61</option>
-		<option value="test_62">string_62</option>
-		<option value="test_63">string_63</option>
-		<option value="test_64">string_64</option>
-		<option value="test_65">string_65</option>
-		<option value="test_66">string_66</option>
-		<option value="test_67">string_67</option>
-		<option value="test_68">string_68</option>
-		<option value="test_69">string_69</option>
-		<option value="test_70">string_70</option>
-		<option value="test_71">string_71</option>
-		<option value="test_72">string_72</option>
-		<option value="test_73">string_73</option>
-		<option value="test_74">string_74</option>
-		<option value="test_75">string_75</option>
-		<option value="test_76">string_76</option>
-		<option value="test_77">string_77</option>
-		<option value="test_78">string_78</option>
-		<option value="test_79">string_79</option>
-		<option value="test_80">string_80</option>
-		<option value="test_81">string_81</option>
-		<option value="test_82">string_82</option>
-		<option value="test_83">string_83</option>
-		<option value="test_84">string_84</option>
-		<option value="test_85">string_85</option>
-		<option value="test_86">string_86</option>
-		<option value="test_87">string_87</option>
-		<option value="test_88">string_88</option>
-		<option value="test_89">string_89</option>
-		<option value="test_90">string_90</option>
-		<option value="test_91">string_91</option>
-		<option value="test_92">string_92</option>
-		<option value="test_93">string_93</option>
-		<option value="test_94">string_94</option>
-		<option value="test_95">string_95</option>
-		<option value="test_96">string_96</option>
-		<option value="test_97">string_97</option>
-		<option value="test_98">string_98</option>
-		<option value="test_99">string_99</option>
-		<option value='hb'>河北</option>
-		<option value='hn'>河南</option>
-		<option value='fj'>福建</option>
-		<option value='gd'>广东</option>
-		<option value='ssx'>山西</option>
-	</select>
+		<select name='sel3' id='data3'>
+			<option value="x_0">xbcd_0</option>
+			<option value="x_1">xbcd_1</option>
+			<option value="x_2">xbcd_2</option>
+			<option value="x_3">xbcd_3</option>
+			<option value="x_4">xbcd_4</option>
+			<option value="x_5">xbcd_5</option>
+			<option value="x_6">xbcd_6</option>
+			<option value="x_7">xbcd_7</option>
+			<option value="x_8">xbcd_8</option>
+			<option value="x_9">xbcd_9</option>
+			<option value="x_10">xbcd_10</option>
+			<option value="x_11">xbcd_11</option>
+			<option value="x_12">xbcd_12</option>
+			<option value="x_13">xbcd_13</option>
+			<option value="x_14">xbcd_14</option>
+			<option value="x_15">xbcd_15</option>
+			<option value="x_16">xbcd_16</option>
+			<option value="x_17">xbcd_17</option>
+			<option value="x_18">xbcd_18</option>
+			<option value="x_19">xbcd_19</option>
+			<option value="x_20">xbcd_20</option>
+			<option value="x_21">xbcd_21</option>
+			<option value="x_22">xbcd_22</option>
+			<option value="x_23">xbcd_23</option>
+			<option value="x_24">xbcd_24</option>
+			<option value="x_25">xbcd_25</option>
+			<option value="x_26">xbcd_26</option>
+			<option value="x_27">xbcd_27</option>
+			<option value="x_28">xbcd_28</option>
+			<option value="x_29">xbcd_29</option>
+			<option value="x_30">xbcd_30</option>
+			<option value="x_31">xbcd_31</option>
+			<option value="x_32">xbcd_32</option>
+			<option value="x_33">xbcd_33</option>
+			<option value="x_34">xbcd_34</option>
+			<option value="x_35">xbcd_35</option>
+			<option value="x_36">xbcd_36</option>
+			<option value="x_37">xbcd_37</option>
+			<option value="x_38">xbcd_38</option>
+			<option value="x_39">xbcd_39</option>
+			<option value="x_40">xbcd_40</option>
+			<option value="x_41">xbcd_41</option>
+			<option value="x_42">xbcd_42</option>
+			<option value="x_43">xbcd_43</option>
+			<option value="x_44">xbcd_44</option>
+			<option value="x_45">xbcd_45</option>
+			<option value="x_46">xbcd_46</option>
+			<option value="x_47">xbcd_47</option>
+			<option value="x_48">xbcd_48</option>
+			<option value="x_49">xbcd_49</option>
+			<option value="Y_0">YCA_0</option>
+			<option value="Y_1">YCA_1</option>
+			<option value="Y_2">YCA_2</option>
+			<option value="Y_3">YCA_3</option>
+			<option value="Y_4">YCA_4</option>
+			<option value="Y_5">YCA_5</option>
+			<option value="Y_6">YCA_6</option>
+			<option value="Y_7">YCA_7</option>
+			<option value="Y_8">YCA_8</option>
+			<option value="Y_9">YCA_9</option>
+			<option value="Y_10">YCA_10</option>
+			<option value="Y_11">YCA_11</option>
+			<option value="Y_12">YCA_12</option>
+			<option value="Y_13">YCA_13</option>
+			<option value="Y_14">YCA_14</option>
+			<option value="Y_15">YCA_15</option>
+			<option value="Y_16">YCA_16</option>
+			<option value="Y_17">YCA_17</option>
+			<option value="Y_18">YCA_18</option>
+			<option value="Y_19">YCA_19</option>
+			<option value="Y_20">YCA_20</option>
+			<option value="Y_21">YCA_21</option>
+			<option value="Y_22">YCA_22</option>
+			<option value="Y_23">YCA_23</option>
+			<option value="Y_24">YCA_24</option>
+			<option value="Y_25">YCA_25</option>
+			<option value="Y_26">YCA_26</option>
+			<option value="Y_27">YCA_27</option>
+			<option value="Y_28">YCA_28</option>
+			<option value="Y_29">YCA_29</option>
+			<option value="Y_30">YCA_30</option>
+			<option value="Y_31">YCA_31</option>
+			<option value="Y_32">YCA_32</option>
+			<option value="Y_33">YCA_33</option>
+			<option value="Y_34">YCA_34</option>
+			<option value="Y_35">YCA_35</option>
+			<option value="Y_36">YCA_36</option>
+			<option value="Y_37">YCA_37</option>
+			<option value="Y_38">YCA_38</option>
+			<option value="Y_39">YCA_39</option>
+			<option value="Y_40">YCA_40</option>
+			<option value="Y_41">YCA_41</option>
+			<option value="Y_42">YCA_42</option>
+			<option value="Y_43">YCA_43</option>
+			<option value="Y_44">YCA_44</option>
+			<option value="Y_45">YCA_45</option>
+			<option value="Y_46">YCA_46</option>
+			<option value="Y_47">YCA_47</option>
+			<option value="Y_48">YCA_48</option>
+			<option value="Y_49">YCA_49</option>
+			<option value="m_0">WzA_0</option>
+			<option value="m_1">WzA_1</option>
+			<option value="m_2">WzA_2</option>
+			<option value="m_3">WzA_3</option>
+			<option value="m_4">WzA_4</option>
+			<option value="m_5">WzA_5</option>
+			<option value="m_6">WzA_6</option>
+			<option value="m_7">WzA_7</option>
+			<option value="m_8">WzA_8</option>
+			<option value="m_9">WzA_9</option>
+			<option value="m_10">WzA_10</option>
+			<option value="m_11">WzA_11</option>
+			<option value="m_12">WzA_12</option>
+			<option value="m_13">WzA_13</option>
+			<option value="m_14">WzA_14</option>
+			<option value="m_15">WzA_15</option>
+			<option value="m_16">WzA_16</option>
+			<option value="m_17">WzA_17</option>
+			<option value="m_18">WzA_18</option>
+			<option value="m_19">WzA_19</option>
+			<option value="m_20">WzA_20</option>
+			<option value="m_21">WzA_21</option>
+			<option value="m_22">WzA_22</option>
+			<option value="m_23">WzA_23</option>
+			<option value="m_24">WzA_24</option>
+			<option value="m_25">WzA_25</option>
+			<option value="m_26">WzA_26</option>
+			<option value="m_27">WzA_27</option>
+			<option value="m_28">WzA_28</option>
+			<option value="m_29">WzA_29</option>
+			<option value="m_30">WzA_30</option>
+			<option value="m_31">WzA_31</option>
+			<option value="m_32">WzA_32</option>
+			<option value="m_33">WzA_33</option>
+			<option value="m_34">WzA_34</option>
+			<option value="m_35">WzA_35</option>
+			<option value="m_36">WzA_36</option>
+			<option value="m_37">WzA_37</option>
+			<option value="m_38">WzA_38</option>
+			<option value="m_39">WzA_39</option>
+			<option value="m_40">WzA_40</option>
+			<option value="m_41">WzA_41</option>
+			<option value="m_42">WzA_42</option>
+			<option value="m_43">WzA_43</option>
+			<option value="m_44">WzA_44</option>
+			<option value="m_45">WzA_45</option>
+			<option value="m_46">WzA_46</option>
+			<option value="m_47">WzA_47</option>
+			<option value="m_48">WzA_48</option>
+			<option value="m_49">WzA_49</option>
+			<option value="v_0">这个_0</option>
+			<option value="v_1">这个_1</option>
+			<option value="v_2">这个_2</option>
+			<option value="v_3">这个_3</option>
+			<option value="v_4">这个_4</option>
+			<option value="v_5">这个_5</option>
+			<option value="v_6">这个_6</option>
+			<option value="v_7">这个_7</option>
+			<option value="v_8">这个_8</option>
+			<option value="v_9">这个_9</option>
+			<option value="v_10">这个_10</option>
+			<option value="v_11">这个_11</option>
+			<option value="v_12">这个_12</option>
+			<option value="v_13">这个_13</option>
+			<option value="v_14">这个_14</option>
+			<option value="v_15">这个_15</option>
+			<option value="v_16">这个_16</option>
+			<option value="v_17">这个_17</option>
+			<option value="v_18">这个_18</option>
+			<option value="v_19">这个_19</option>
+			<option value="v_20">这个_20</option>
+			<option value="v_21">这个_21</option>
+			<option value="v_22">这个_22</option>
+			<option value="v_23">这个_23</option>
+			<option value="v_24">这个_24</option>
+			<option value="v_25">这个_25</option>
+			<option value="v_26">这个_26</option>
+			<option value="v_27">这个_27</option>
+			<option value="v_28">这个_28</option>
+			<option value="v_29">这个_29</option>
+			<option value="v_30">这个_30</option>
+			<option value="v_31">这个_31</option>
+			<option value="v_32">这个_32</option>
+			<option value="v_33">这个_33</option>
+			<option value="v_34">这个_34</option>
+			<option value="v_35">这个_35</option>
+			<option value="v_36">这个_36</option>
+			<option value="v_37">这个_37</option>
+			<option value="v_38">这个_38</option>
+			<option value="v_39">这个_39</option>
+			<option value="v_40">这个_40</option>
+			<option value="v_41">这个_41</option>
+			<option value="v_42">这个_42</option>
+			<option value="v_43">这个_43</option>
+			<option value="v_44">这个_44</option>
+			<option value="v_45">这个_45</option>
+			<option value="v_46">这个_46</option>
+			<option value="v_47">这个_47</option>
+			<option value="v_48">这个_48</option>
+			<option value="v_49">这个_49</option>
+			<option value="t_0">那个个_0</option>
+			<option value="t_1">那个个_1</option>
+			<option value="t_2">那个个_2</option>
+			<option value="t_3">那个个_3</option>
+			<option value="t_4">那个个_4</option>
+			<option value="t_5">那个个_5</option>
+			<option value="t_6">那个个_6</option>
+			<option value="t_7">那个个_7</option>
+			<option value="t_8">那个个_8</option>
+			<option value="t_9">那个个_9</option>
+			<option value="t_10">那个个_10</option>
+			<option value="t_11">那个个_11</option>
+			<option value="t_12">那个个_12</option>
+			<option value="t_13">那个个_13</option>
+			<option value="t_14">那个个_14</option>
+			<option value="t_15">那个个_15</option>
+			<option value="t_16">那个个_16</option>
+			<option value="t_17">那个个_17</option>
+			<option value="t_18">那个个_18</option>
+			<option value="t_19">那个个_19</option>
+			<option value="t_20">那个个_20</option>
+			<option value="t_21">那个个_21</option>
+			<option value="t_22">那个个_22</option>
+			<option value="t_23">那个个_23</option>
+			<option value="t_24">那个个_24</option>
+			<option value="t_25">那个个_25</option>
+			<option value="t_26">那个个_26</option>
+			<option value="t_27">那个个_27</option>
+			<option value="t_28">那个个_28</option>
+			<option value="t_29">那个个_29</option>
+			<option value="t_30">那个个_30</option>
+			<option value="t_31">那个个_31</option>
+			<option value="t_32">那个个_32</option>
+			<option value="t_33">那个个_33</option>
+			<option value="t_34">那个个_34</option>
+			<option value="t_35">那个个_35</option>
+			<option value="t_36">那个个_36</option>
+			<option value="t_37">那个个_37</option>
+			<option value="t_38">那个个_38</option>
+			<option value="t_39">那个个_39</option>
+			<option value="t_40">那个个_40</option>
+			<option value="t_41">那个个_41</option>
+			<option value="t_42">那个个_42</option>
+			<option value="t_43">那个个_43</option>
+			<option value="t_44">那个个_44</option>
+			<option value="t_45">那个个_45</option>
+			<option value="t_46">那个个_46</option>
+			<option value="t_47">那个个_47</option>
+			<option value="t_48">那个个_48</option>
+			<option value="t_49">那个个_49</option>
+		</select>
+		<h1>json数据格式</h1>
+		<input type='search' id='auto_search_json' autocomplete="off" />
+		<input type='text' id='auto_search_json1' autocomplete="off" />
 
-	<select name='sel3' id='data3'><option value="x_0">xbcd_0</option>
-		<option value="x_1">xbcd_1</option>
-		<option value="x_2">xbcd_2</option>
-		<option value="x_3">xbcd_3</option>
-		<option value="x_4">xbcd_4</option>
-		<option value="x_5">xbcd_5</option>
-		<option value="x_6">xbcd_6</option>
-		<option value="x_7">xbcd_7</option>
-		<option value="x_8">xbcd_8</option>
-		<option value="x_9">xbcd_9</option>
-		<option value="x_10">xbcd_10</option>
-		<option value="x_11">xbcd_11</option>
-		<option value="x_12">xbcd_12</option>
-		<option value="x_13">xbcd_13</option>
-		<option value="x_14">xbcd_14</option>
-		<option value="x_15">xbcd_15</option>
-		<option value="x_16">xbcd_16</option>
-		<option value="x_17">xbcd_17</option>
-		<option value="x_18">xbcd_18</option>
-		<option value="x_19">xbcd_19</option>
-		<option value="x_20">xbcd_20</option>
-		<option value="x_21">xbcd_21</option>
-		<option value="x_22">xbcd_22</option>
-		<option value="x_23">xbcd_23</option>
-		<option value="x_24">xbcd_24</option>
-		<option value="x_25">xbcd_25</option>
-		<option value="x_26">xbcd_26</option>
-		<option value="x_27">xbcd_27</option>
-		<option value="x_28">xbcd_28</option>
-		<option value="x_29">xbcd_29</option>
-		<option value="x_30">xbcd_30</option>
-		<option value="x_31">xbcd_31</option>
-		<option value="x_32">xbcd_32</option>
-		<option value="x_33">xbcd_33</option>
-		<option value="x_34">xbcd_34</option>
-		<option value="x_35">xbcd_35</option>
-		<option value="x_36">xbcd_36</option>
-		<option value="x_37">xbcd_37</option>
-		<option value="x_38">xbcd_38</option>
-		<option value="x_39">xbcd_39</option>
-		<option value="x_40">xbcd_40</option>
-		<option value="x_41">xbcd_41</option>
-		<option value="x_42">xbcd_42</option>
-		<option value="x_43">xbcd_43</option>
-		<option value="x_44">xbcd_44</option>
-		<option value="x_45">xbcd_45</option>
-		<option value="x_46">xbcd_46</option>
-		<option value="x_47">xbcd_47</option>
-		<option value="x_48">xbcd_48</option>
-		<option value="x_49">xbcd_49</option>
-		<option value="Y_0">YCA_0</option>
-		<option value="Y_1">YCA_1</option>
-		<option value="Y_2">YCA_2</option>
-		<option value="Y_3">YCA_3</option>
-		<option value="Y_4">YCA_4</option>
-		<option value="Y_5">YCA_5</option>
-		<option value="Y_6">YCA_6</option>
-		<option value="Y_7">YCA_7</option>
-		<option value="Y_8">YCA_8</option>
-		<option value="Y_9">YCA_9</option>
-		<option value="Y_10">YCA_10</option>
-		<option value="Y_11">YCA_11</option>
-		<option value="Y_12">YCA_12</option>
-		<option value="Y_13">YCA_13</option>
-		<option value="Y_14">YCA_14</option>
-		<option value="Y_15">YCA_15</option>
-		<option value="Y_16">YCA_16</option>
-		<option value="Y_17">YCA_17</option>
-		<option value="Y_18">YCA_18</option>
-		<option value="Y_19">YCA_19</option>
-		<option value="Y_20">YCA_20</option>
-		<option value="Y_21">YCA_21</option>
-		<option value="Y_22">YCA_22</option>
-		<option value="Y_23">YCA_23</option>
-		<option value="Y_24">YCA_24</option>
-		<option value="Y_25">YCA_25</option>
-		<option value="Y_26">YCA_26</option>
-		<option value="Y_27">YCA_27</option>
-		<option value="Y_28">YCA_28</option>
-		<option value="Y_29">YCA_29</option>
-		<option value="Y_30">YCA_30</option>
-		<option value="Y_31">YCA_31</option>
-		<option value="Y_32">YCA_32</option>
-		<option value="Y_33">YCA_33</option>
-		<option value="Y_34">YCA_34</option>
-		<option value="Y_35">YCA_35</option>
-		<option value="Y_36">YCA_36</option>
-		<option value="Y_37">YCA_37</option>
-		<option value="Y_38">YCA_38</option>
-		<option value="Y_39">YCA_39</option>
-		<option value="Y_40">YCA_40</option>
-		<option value="Y_41">YCA_41</option>
-		<option value="Y_42">YCA_42</option>
-		<option value="Y_43">YCA_43</option>
-		<option value="Y_44">YCA_44</option>
-		<option value="Y_45">YCA_45</option>
-		<option value="Y_46">YCA_46</option>
-		<option value="Y_47">YCA_47</option>
-		<option value="Y_48">YCA_48</option>
-		<option value="Y_49">YCA_49</option>
-		<option value="m_0">WzA_0</option>
-		<option value="m_1">WzA_1</option>
-		<option value="m_2">WzA_2</option>
-		<option value="m_3">WzA_3</option>
-		<option value="m_4">WzA_4</option>
-		<option value="m_5">WzA_5</option>
-		<option value="m_6">WzA_6</option>
-		<option value="m_7">WzA_7</option>
-		<option value="m_8">WzA_8</option>
-		<option value="m_9">WzA_9</option>
-		<option value="m_10">WzA_10</option>
-		<option value="m_11">WzA_11</option>
-		<option value="m_12">WzA_12</option>
-		<option value="m_13">WzA_13</option>
-		<option value="m_14">WzA_14</option>
-		<option value="m_15">WzA_15</option>
-		<option value="m_16">WzA_16</option>
-		<option value="m_17">WzA_17</option>
-		<option value="m_18">WzA_18</option>
-		<option value="m_19">WzA_19</option>
-		<option value="m_20">WzA_20</option>
-		<option value="m_21">WzA_21</option>
-		<option value="m_22">WzA_22</option>
-		<option value="m_23">WzA_23</option>
-		<option value="m_24">WzA_24</option>
-		<option value="m_25">WzA_25</option>
-		<option value="m_26">WzA_26</option>
-		<option value="m_27">WzA_27</option>
-		<option value="m_28">WzA_28</option>
-		<option value="m_29">WzA_29</option>
-		<option value="m_30">WzA_30</option>
-		<option value="m_31">WzA_31</option>
-		<option value="m_32">WzA_32</option>
-		<option value="m_33">WzA_33</option>
-		<option value="m_34">WzA_34</option>
-		<option value="m_35">WzA_35</option>
-		<option value="m_36">WzA_36</option>
-		<option value="m_37">WzA_37</option>
-		<option value="m_38">WzA_38</option>
-		<option value="m_39">WzA_39</option>
-		<option value="m_40">WzA_40</option>
-		<option value="m_41">WzA_41</option>
-		<option value="m_42">WzA_42</option>
-		<option value="m_43">WzA_43</option>
-		<option value="m_44">WzA_44</option>
-		<option value="m_45">WzA_45</option>
-		<option value="m_46">WzA_46</option>
-		<option value="m_47">WzA_47</option>
-		<option value="m_48">WzA_48</option>
-		<option value="m_49">WzA_49</option>
-		<option value="v_0">这个_0</option>
-		<option value="v_1">这个_1</option>
-		<option value="v_2">这个_2</option>
-		<option value="v_3">这个_3</option>
-		<option value="v_4">这个_4</option>
-		<option value="v_5">这个_5</option>
-		<option value="v_6">这个_6</option>
-		<option value="v_7">这个_7</option>
-		<option value="v_8">这个_8</option>
-		<option value="v_9">这个_9</option>
-		<option value="v_10">这个_10</option>
-		<option value="v_11">这个_11</option>
-		<option value="v_12">这个_12</option>
-		<option value="v_13">这个_13</option>
-		<option value="v_14">这个_14</option>
-		<option value="v_15">这个_15</option>
-		<option value="v_16">这个_16</option>
-		<option value="v_17">这个_17</option>
-		<option value="v_18">这个_18</option>
-		<option value="v_19">这个_19</option>
-		<option value="v_20">这个_20</option>
-		<option value="v_21">这个_21</option>
-		<option value="v_22">这个_22</option>
-		<option value="v_23">这个_23</option>
-		<option value="v_24">这个_24</option>
-		<option value="v_25">这个_25</option>
-		<option value="v_26">这个_26</option>
-		<option value="v_27">这个_27</option>
-		<option value="v_28">这个_28</option>
-		<option value="v_29">这个_29</option>
-		<option value="v_30">这个_30</option>
-		<option value="v_31">这个_31</option>
-		<option value="v_32">这个_32</option>
-		<option value="v_33">这个_33</option>
-		<option value="v_34">这个_34</option>
-		<option value="v_35">这个_35</option>
-		<option value="v_36">这个_36</option>
-		<option value="v_37">这个_37</option>
-		<option value="v_38">这个_38</option>
-		<option value="v_39">这个_39</option>
-		<option value="v_40">这个_40</option>
-		<option value="v_41">这个_41</option>
-		<option value="v_42">这个_42</option>
-		<option value="v_43">这个_43</option>
-		<option value="v_44">这个_44</option>
-		<option value="v_45">这个_45</option>
-		<option value="v_46">这个_46</option>
-		<option value="v_47">这个_47</option>
-		<option value="v_48">这个_48</option>
-		<option value="v_49">这个_49</option>
-		<option value="t_0">那个个_0</option>
-		<option value="t_1">那个个_1</option>
-		<option value="t_2">那个个_2</option>
-		<option value="t_3">那个个_3</option>
-		<option value="t_4">那个个_4</option>
-		<option value="t_5">那个个_5</option>
-		<option value="t_6">那个个_6</option>
-		<option value="t_7">那个个_7</option>
-		<option value="t_8">那个个_8</option>
-		<option value="t_9">那个个_9</option>
-		<option value="t_10">那个个_10</option>
-		<option value="t_11">那个个_11</option>
-		<option value="t_12">那个个_12</option>
-		<option value="t_13">那个个_13</option>
-		<option value="t_14">那个个_14</option>
-		<option value="t_15">那个个_15</option>
-		<option value="t_16">那个个_16</option>
-		<option value="t_17">那个个_17</option>
-		<option value="t_18">那个个_18</option>
-		<option value="t_19">那个个_19</option>
-		<option value="t_20">那个个_20</option>
-		<option value="t_21">那个个_21</option>
-		<option value="t_22">那个个_22</option>
-		<option value="t_23">那个个_23</option>
-		<option value="t_24">那个个_24</option>
-		<option value="t_25">那个个_25</option>
-		<option value="t_26">那个个_26</option>
-		<option value="t_27">那个个_27</option>
-		<option value="t_28">那个个_28</option>
-		<option value="t_29">那个个_29</option>
-		<option value="t_30">那个个_30</option>
-		<option value="t_31">那个个_31</option>
-		<option value="t_32">那个个_32</option>
-		<option value="t_33">那个个_33</option>
-		<option value="t_34">那个个_34</option>
-		<option value="t_35">那个个_35</option>
-		<option value="t_36">那个个_36</option>
-		<option value="t_37">那个个_37</option>
-		<option value="t_38">那个个_38</option>
-		<option value="t_39">那个个_39</option>
-		<option value="t_40">那个个_40</option>
-		<option value="t_41">那个个_41</option>
-		<option value="t_42">那个个_42</option>
-		<option value="t_43">那个个_43</option>
-		<option value="t_44">那个个_44</option>
-		<option value="t_45">那个个_45</option>
-		<option value="t_46">那个个_46</option>
-		<option value="t_47">那个个_47</option>
-		<option value="t_48">那个个_48</option>
-		<option value="t_49">那个个_49</option>
-	</select>
-	<h1>json数据格式</h1>
-	<input type='search' id='auto_search_json' autocomplete="off" />
-	<input type='text' id='auto_search_json1' autocomplete="off" />
-
-	<h1>数组数据格式</h1>
-	<input type='search' id='auto_search_array' autocomplete="off" />
-	<input type='text' id='auto_search_array1' autocomplete="off" />
-</body>
+		<h1>数组数据格式</h1>
+		<input type='search' id='auto_search_array' autocomplete="off" />
+		<input type='text' id='auto_search_array1' autocomplete="off" />
+	</body>
 </html>

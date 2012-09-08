@@ -3,9 +3,7 @@
 
 	<property name="build.dir" value="./build" />
 	<property name="src.dir" value="./src" />
-
 	<property name="version" value="0.1" />
-
 	<property name="closure-jar" value="./libs/compiler.jar" />
 
 	<!-- 清理build目录下的 *.js文件 -->
@@ -16,9 +14,7 @@
 	<!-- 使用Google Closure Compiler 压缩js文件 -->
 	<target name="js.min" depends="js.clean">
 		<echo message="version = ${version}" />
-
 		<mkdir dir="${build.dir}" />
-
 		<apply executable="java">
 			<fileset dir="${src.dir}">
 				<include name="*.js" />
@@ -33,12 +29,11 @@
 			<arg value="SIMPLE_OPTIMIZATIONS" />
 			<arg value="--js_output_file" />
 			<!--
-				以下三句可替换为
-				<arg value="${build.dir}/${js.min.name}" />
+			以下三句可替换为
+			<arg value="${build.dir}/${js.min.name}" />
 			-->
 			<targetfile />
 			<arg value="--js" />
-
 			<mapper type="glob" from="*.js" to="${build.dir}/*.min.js" />
 
 		</apply>
