@@ -2,7 +2,7 @@
 
 /* http://stackoverflow.com/questions/6544852/ie7-problem-with-display-inline-block */
 .auto_div_shell {
-	border: 0px solid pink;
+	border: 0px solid teal;
 	display: inline-block;
 	*display: inline;
 	zoom: 1;

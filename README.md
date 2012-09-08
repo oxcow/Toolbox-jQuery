@@ -74,5 +74,7 @@ jQuery Toolbox主要提供基于jQuery的javascript小工具插件。
 ###sAutoComplete(datasource)
 简单输入自动提示。请参看[sAutoComplete](./src/sAutoComplete)
 
+###BigSelect(options)
+基于大数据量的下拉选择插件。使用该插件可以将 html select 元素转化为列表一次显示多次，同时提供关键字匹配的功能，从而避免因 select 选择元素过多带来的不好用户体验。请参看[BigSelect](./src/BigSelect)
 
 [返回顶部](#top)

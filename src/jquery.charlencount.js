@@ -24,6 +24,7 @@
 			alert('$("' + this.selector + '")绑定jCharLenCount方法失败(参数类型有误)');
 			return;
 		}
+
 		maxLen = maxLen >= 0 ? maxLen : 0;
 		// 负数一律当0来处理
 
@@ -107,4 +108,4 @@
 		return maxLen === null || maxLen === undefined ? charLen : charLen + '/' + maxLen;
 	}
 
-})(jQuery); 
+})(jQuery);

@@ -2,7 +2,6 @@
  * jQuery Prompt Plugin 用来显示元素提示消息,相当于html中某些元素的的title属性
  *
  * @author: leeyee
- *
  * @requires jQuery v1.1.2 or later
  *
  *
@@ -36,7 +35,7 @@
 			var x = e.clientX + scrollLeft;
 			// 实际坐标X点
 			var y = e.clientY + scrollTop;
-			// 实际坐标Y点
+
 			// 判断当前元素位置是否插过浏览器窗口显示大小， 确保坐标点落在当前窗口区域，而非已滚动过的区域
 			if (e.clientX + opts.css.width > document.documentElement.clientWidth) {
 				x = Math.max(scrollLeft, x - opts.css.width - 6);
@@ -91,4 +90,4 @@
 		className : null,
 		openmouseleave : true
 	};
-})(jQuery); 
+})(jQuery);
