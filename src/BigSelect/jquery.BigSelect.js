@@ -13,32 +13,61 @@
 
 	/**
 	 * 数据存储对象
+	 *
+	 * 数据结构 : [{k : kv, v: vv}, {k : kv, v: vv}, {k : kv, v: vv}, ...]
 	 */
-	function DataSource(dataSet) {
+	function DataSource() {
 		/**
 		 * 数据集
 		 */
-		this.dataSet = dataSet || [];
-
+		this.dataSet = [];
 		/**
 		 * 设置来自select元素的数据集
 		 */
-		this.setDataSetFromSelect = function(selectObj) {
+		this.setDataSet = function(selectObj, dataType, data) {
 			var self = this;
-			$.each(selectObj.find("option"), function(idx, elem) {
-				self.dataSet[idx] = {
-					k : $(elem).val(),
-					v : $(elem).text()
-				};
-			});
+			if (dataType.toLowerCase() === 'select') {
+				$.each(selectObj.find("option"), function(idx, elem) {
+					var _k = $(elem).val();
+					if (_k) {
+						self.dataSet.push({
+							key : _k,
+							val : $(elem).text()
+						});
+					}
+				});
+			}
+			if (dataType.toLowerCase() === 'array') {
+				$.each(data, function(_k, _v) {
+					self.dataSet.push({
+						key : _k,
+						val : _v
+					});
+				});
+			}
+			if (dataType.toLowerCase() === 'json') {
+				$.each($.parseJSON(data), function(_k, _v) {
+					self.dataSet.push({
+						key : _k,
+						val : _v
+					});
+				});
+			}
 		};
 		/**
-		 * 获取初始来自select元素的数据集
+		 * 获取指定正则匹配的数据集
+		 *
+		 * @param {RegExp}
+		 *            reg 过滤正则表达式
+		 * @param {string}
+		 *            val k|v 定义匹配的是数据集机构中的key还是val
+		 *
+		 * @return {Array} 返回匹配数据数组
 		 */
-		this.getDataSetFromSelect = function(reg) {
+		this.getRegExpDataSet = function(reg, val) {
 			var matchDate = [];
 			for (var i = 0; i < this.dataSet.length; i++) {
-				var v = this.dataSet[i].v;
+				var v = this.dataSet[i][val];
 				if (reg.test(v)) {
 					matchDate.push(this.dataSet[i]);
 				}
@@ -149,15 +178,30 @@
 			$dataPlacement.find('ul').detach();
 			var $ul = $("<ul>");
 			for (var i = this.start(); i < this.end(); i++) {
-				var $li = $("<li>").attr("_val_", this.data[i].k).html(this.data[i].v);
-				$li.click(function() {
-					bigSelectFrame.caller.val($(this).attr("_val_"));
+
+				var _v = this.data[i][bigSelectFrame.opts.core.val];
+
+				var $li = $("<li>")
+
+				var $label = $("<label>").attr("title", _v).html(_v).css({
+					'cursor' : 'pointer'
+				}).data(this.data[i]);
+
+				$label.click(function() {
+
+					bigSelectFrame.caller.val($(this).data()[bigSelectFrame.opts.core.val]);
+
 					setTimeout(function() {
+
 						$("#" + bigSelectFrame.bigSelectId).hide("slow", function() {
+
 							$(this).detach();
+
 						});
+
 					}, 10);
 				});
+				$li.append($label);
 				$ul.append($li);
 			}
 			$dataPlacement.append($ul);
@@ -249,13 +293,13 @@
 	 *            caller 该类的调用对象
 	 *
 	 */
-	function BigSelectFrame(caller,options) {
+	function BigSelectFrame(caller, options) {
 		/**
 		 * 该类的调用对象
 		 */
 		this.caller = caller;
 		/**
-		 * 参数 
+		 * 参数
 		 */
 		this.opts = options;
 		/**
@@ -308,7 +352,7 @@
 		this.create = function() {
 
 			var $bigSelect = $("<div>").attr("id", this.bigSelectId).addClass("bigSelect").css({
-				'width' : this.opts.width
+				'width' : this.opts.css.width
 			});
 
 			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
@@ -339,10 +383,11 @@
 
 	var BigSelectFactory = {
 		create : function(obj, options) {
-			var dataSource = new DataSource();
-			dataSource.setDataSetFromSelect(obj);
 
-			var page = new Page(dataSource.dataSet, options.pagesize);
+			var dataSource = new DataSource();
+			dataSource.setDataSet(obj, options.core.dataType, options.core.data);
+
+			var page = new Page(dataSource.dataSet, options.core.pagesize);
 
 			var bigSelectFrame = new BigSelectFrame(obj, options);
 
@@ -353,10 +398,11 @@
 
 			bigSelectFrame.display(page);
 
+			// bind search event
 			$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
 				var ipt = escapeRegex($.trim($(this).val()));
 				var reg = new RegExp("^" + ipt, "i");
-				page.reset(dataSource.getDataSetFromSelect(reg));
+				page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
 				bigSelectFrame.display(page);
 			});
 		}
@@ -364,19 +410,30 @@
 
 	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
-
-		var $label = $("<label>").attr("for", this.attr("id")).text(">");
+		var txt = opts.css.icon.bold();
+		var $label = $("<label>").attr("for", this.attr("id")).append(txt).css({
+			'cursor' : 'pointer'
+		});
 
 		this.after($label);
 
 		var parent = this;
+
 		$label.bind("click", function() {
 			BigSelectFactory.create(parent, opts);
 		});
 	};
 
 	$.fn.bigSelect.defaults = {
-		pagesize : 10,
-		width : 400
+		core : {
+			pagesize : 10,
+			dataType : 'select',
+			data : [],
+			val : 'val'
+		},
+		css : {
+			width : 400,
+			icon : " >"
+		}
 	};
 })(jQuery);

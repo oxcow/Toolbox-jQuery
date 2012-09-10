@@ -8,20 +8,49 @@
 		<script type="text/javascript" src="../src/BigSelect/jquery.BigSelect.js"></script>
 		<script type="text/javascript">
 			$(function() {
-				$(".data1").bigSelect({
-					pagesize : 20
+				$("#ipt1").bigSelect({
+					core : {
+						dataType : 'array',
+						data : [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100]
+					}
 				});
+				$("#ipt2").bigSelect({
+					core : {
+						dataType : 'JSON',
+						data : '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}',
+						val : 'key'
+					},
+					css : {
+						width : 'auto'
+					}
+				});
+				$(".data1").bigSelect();
 				$("#data2").bigSelect({
-					pagesize : 130,
-					width : 800
+					core : {
+						pagesize : 100,
+					},
+					css : {
+						width : 560
+					}
 				});
-
 			});
 		</script>
 	</head>
 	<body>
 		<form name="bigSelectFrm" method="get">
 			<table border='1' width='80%' align='center'>
+				<tr>
+					<td>输入框提示(array)</td>
+					<td>
+					<input type="text" name="iptpro" id="ipt1"/>
+					</td>
+				</tr>
+				<tr>
+					<td>输入框提示(json)</td>
+					<td>
+					<input type="text" name="iptJSON" id="ipt2"/>
+					</td>
+				</tr>
 				<tr>
 					<td>喜欢语言</td>
 					<td>
@@ -57,12 +86,12 @@
 					<td>所在省份</td>
 					<td>
 					<select name='sel2' id='data2'>
-						<option value="东城区">东城区</option>
-						<option value="西城区">西城区</option>
-						<option value="崇文区">崇文区</option>
-						<option value="宣武区">宣武区</option>
-						<option value="朝阳区">朝阳区</option>
-						<option value="丰台区">丰台区</option>
+						<option value="1东城区">东城区</option>
+						<option value="1西城区">西城区</option>
+						<option value="1崇文区">崇文区</option>
+						<option value="1宣武区">宣武区</option>
+						<option value="1朝阳区">朝阳区</option>
+						<option value="1丰台区">丰台区</option>
 						<option value="石景山区">石景山区</option>
 						<option value="海淀区">海淀区</option>
 						<option value="门头沟区">门头沟区</option>
