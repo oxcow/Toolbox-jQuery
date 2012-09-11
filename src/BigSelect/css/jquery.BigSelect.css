@@ -58,9 +58,10 @@
 }
 
 .bigSelect_page span {
-	margin: 4px 2px;
+	margin: 4px 4px;
 }
 
 .bigSelect_page input {
 	width: 20px;
+	height: 13px;
 }

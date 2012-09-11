@@ -241,6 +241,7 @@
 			$offsetObj.find("span").detach();
 
 			$total = $("<span>共 " + this.TOTAL_SIZE + " 条数据 </span>");
+
 			$offsetObj.append($total);
 
 			if (this.TOTAL_PAGE != 1) {
@@ -268,19 +269,22 @@
 
 					$offsetObj.append($pre_span.append($pre_link));
 				}
-				// jumpto input
-				var $jump_span = $("<span>第</span>");
-				var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
 
-				// jumpto event
-				$jump_input.bind("keydown", function(event) {
-					if (event.which == 13) {
-						parent.jumpto(this.value);
-						bigSelectFrame.display(parent);
-					}
-				});
-				var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
-				$offsetObj.append($jump);
+				// 页码跳转
+				if (this.TOTAL_SIZE != 0) {
+					var $jump_span = $("<span>第</span>");
+					var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
+
+					// jumpto event
+					$jump_input.bind("keydown", function(event) {
+						if (event.which == 13) {
+							parent.jumpto(this.value);
+							bigSelectFrame.display(parent);
+						}
+					});
+					var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
+					$offsetObj.append($jump);
+				}
 
 				// 下一页 ,末页
 				if (this.CURRENT_PAGE < this.TOTAL_PAGE) {
@@ -456,7 +460,21 @@
 				// bind search event
 				$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
 					var ipt = escapeRegex($.trim($(this).val()));
-					var reg = new RegExp("^" + ipt, "i");
+					var matchMode = options.core.MatchMode.toUpperCase();
+					var reg = null;
+					switch(matchMode) {
+						case 'START':
+							reg = new RegExp("^" + ipt, "i");
+							break;
+						case 'END':
+							reg = new RegExp(ipt + "$", "i");
+							break;
+						case 'LIKE':
+							reg = new RegExp(ipt, "i");
+							break;
+						default:
+							reg = new RegExp("^" + ipt, "i");
+					}
 					page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
 					bigSelectFrame.display(page);
 				});
@@ -493,8 +511,31 @@
 
 	$.fn.bigSelect.defaults = {
 		core : {
+			/**
+			 *自动匹配模式.[START|END|LIKE]
+			 *
+			 * START: 默认模式。匹配以输入开头的内容;
+			 * END: 匹配以输入结尾的内容;
+			 * LIKE: 匹配包含输入的内容;
+			 *
+			 */
+			MatchMode : 'START',
+			/**
+			 * 分页大小
+			 *
+			 */
 			pagesize : 10,
+			/**
+			 * 数据类型.[SELECT|ARRAY|JSON]
+			 * SELECE: 默认类型.当为该类型时,调用该函数的对象应为select元素
+			 * ARRAY: 数组类型.当为该类型时，需指定数组类型的data参数
+			 * JSON: JSON类型.当为该类型时，需指定json类型的data参数
+			 *
+			 */
 			dataType : 'select',
+			/**
+			 * 数据集.可为[ARRAY|JSON]
+			 */
 			data : [],
 			key : 'key',
 			val : 'val'

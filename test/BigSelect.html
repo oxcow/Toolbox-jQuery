@@ -17,17 +17,22 @@
 				});
 				$("#ipt2").bigSelect({
 					core : {
+						MatchMode : 'LIKE',
 						dataType : 'JSON',
-						data : '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}',
-						key : 'val'
+						data : '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}'
 					},
 					css : {
 						width : 'auto'
 					}
 				});
-				$(".data1").bigSelect();
+				$(".data1").bigSelect({
+					core : {
+						MatchMode : 'end'
+					}
+				});
 				$("#data2").bigSelect({
 					core : {
+						MatchMode : 'LIKE',
 						pagesize : 100
 					},
 					css : {
