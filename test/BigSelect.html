@@ -11,14 +11,15 @@
 				$("#ipt1").bigSelect({
 					core : {
 						dataType : 'array',
-						data : [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100]
+						data : [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100],
+						key : 'val'
 					}
 				});
 				$("#ipt2").bigSelect({
 					core : {
 						dataType : 'JSON',
 						data : '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}',
-						val : 'key'
+						key : 'val'
 					},
 					css : {
 						width : 'auto'
@@ -27,16 +28,30 @@
 				$(".data1").bigSelect();
 				$("#data2").bigSelect({
 					core : {
-						pagesize : 100,
+						pagesize : 100
 					},
 					css : {
-						width : 560
+						width : 560,
+						icon : ' >>点击打开选择'
+					}
+				});
+				$("#_yxdm").bigSelect({
+					core : {
+						pagesize : 100
+					},
+					css : {
+						width : 560,
+						bgcolor : 'teal',
+						color : '#313',
+						opacity : 0.8,
+						icon : $("#img1")
 					}
 				});
 			});
 		</script>
 	</head>
 	<body>
+		<img id = 'img1' src="http://edu.qzs.qq.com/ac/qzone_v5/client/auth_icon.png"/>
 		<form name="bigSelectFrm" method="get">
 			<table border='1' width='80%' align='center'>
 				<tr>
@@ -86,9 +101,9 @@
 					<td>所在省份</td>
 					<td>
 					<select name='sel2' id='data2'>
-						<option value="1东城区">东城区</option>
-						<option value="1西城区">西城区</option>
-						<option value="1崇文区">崇文区</option>
+						<option value="dcq">东城区</option>
+						<option value="xcq">西城区</option>
+						<option value="cwq">崇文区</option>
 						<option value="1宣武区">宣武区</option>
 						<option value="1朝阳区">朝阳区</option>
 						<option value="1丰台区">丰台区</option>
@@ -3040,6 +3055,1738 @@
 						<option value="圣方济各堂区">圣方济各堂区</option>
 						<option value="路氹城">路氹城</option>
 					</select>
+				</tr>
+				<tr>
+					<td class="txtRight pr5"> 所在党组织 </td>
+
+					<td>
+					<select name="yxdm" id="_yxdm">
+
+						<option value=""> =请选择= </option>
+
+						<option value="002"> 建筑学院 </option>
+
+						<option value="002J07"> 建学生组 </option>
+
+						<option value="002Y01"> 建研一历史、美术、技术支部 </option>
+
+						<option value="002Y02"> 建研二建筑支部 </option>
+
+						<option value="002Y03"> 建研2-04 </option>
+
+						<option value="002Y04"> 建研2-05 </option>
+
+						<option value="002Y05"> 建研三甲规划景观支部 </option>
+
+						<option value="002Y06"> 建研三规划景观支部 </option>
+
+						<option value="002Y08"> 建研2-03 </option>
+
+						<option value="002Y09"> 建研四空调支部 </option>
+
+						<option value="003"> 土木水利学院 </option>
+
+						<option value="003Y01"> 土研一（2） </option>
+
+						<option value="003Y02"> 土研2 </option>
+
+						<option value="003Y03"> 土研3 </option>
+
+						<option value="003Y04"> 土研4 </option>
+
+						<option value="003Y05"> 土研5 </option>
+
+						<option value="003Y06"> 建管研1 </option>
+
+						<option value="003Y07"> 水研1 </option>
+
+						<option value="003Y08"> 水研12 </option>
+
+						<option value="003Y09"> 水研2 </option>
+
+						<option value="003Y10"> 水研3 </option>
+
+						<option value="003Y11"> 水研4 </option>
+
+						<option value="003Y12"> 水研5 </option>
+
+						<option value="005"> 环境学院 </option>
+
+						<option value="005Y01"> 环研1 </option>
+
+						<option value="005Y02"> 环研21 </option>
+
+						<option value="005Y03"> 环研3 </option>
+
+						<option value="005Y04"> 环研4 </option>
+
+						<option value="005Y05"> 环研5 </option>
+
+						<option value="005Y06"> 环研6 </option>
+
+						<option value="005Y07"> 环研22 </option>
+
+						<option value="012"> 机械工程系 </option>
+
+						<option value="012Y01"> 机研11 </option>
+
+						<option value="012Y02"> 机研12 </option>
+
+						<option value="012Y03"> 机研13 </option>
+
+						<option value="012Y04"> 机研21 </option>
+
+						<option value="012Y05"> 机研22 </option>
+
+						<option value="012Y09"> 机研23 </option>
+
+						<option value="013"> 精密仪器与机械学系 </option>
+
+						<option value="013Y01"> 精研1党支部 </option>
+
+						<option value="013Y02"> 精研13 </option>
+
+						<option value="013Y04"> 精博2007支部 </option>
+
+						<option value="013Y05"> 精研22 </option>
+
+						<option value="013Y07"> 精研31 </option>
+
+						<option value="013Y08"> 精研32 </option>
+
+						<option value="013Y09"> 精研3党支部 </option>
+
+						<option value="013Y10"> 精硕20071支部 </option>
+
+						<option value="013Y11"> 精研44 </option>
+
+						<option value="013Y12"> 精博2004支部 </option>
+
+						<option value="013Y13"> 精硕20041 </option>
+
+						<option value="013Y14"> 精硕20042 </option>
+
+						<option value="013Y15"> 精博2005支部 </option>
+
+						<option value="013Y16"> 精硕2005支部 </option>
+
+						<option value="013Y17"> 精硕20052 </option>
+
+						<option value="014"> 热能工程系 </option>
+
+						<option value="014Y01"> 热研11 </option>
+
+						<option value="014Y02"> 热研2 </option>
+
+						<option value="014Y03"> 热研3 </option>
+
+						<option value="014Y04"> 热研4 </option>
+
+						<option value="014Y05"> 热研5 </option>
+
+						<option value="014Y06"> 热研12 </option>
+
+						<option value="015"> 汽车工程系 </option>
+
+						<option value="015Y03"> 汽研03 </option>
+
+						<option value="015Y04"> 汽研04 </option>
+
+						<option value="015Y05"> 汽研05 </option>
+
+						<option value="015Y06"> 汽博2 </option>
+
+						<option value="016"> 工业工程系 </option>
+
+						<option value="016Y01"> 工研5 </option>
+
+						<option value="016Y03"> 工研联合 </option>
+
+						<option value="016Y04"> 工业博 </option>
+
+						<option value="016Y07"> 工业硕 </option>
+
+						<option value="022"> 电机工程与应用电子技术系 </option>
+
+						<option value="022Y01"> 电研12（拆） </option>
+
+						<option value="022Y02"> 电博06 </option>
+
+						<option value="022Y05"> 电研2 </option>
+
+						<option value="022Y07"> 电研3 </option>
+
+						<option value="022Y09"> 电研4 </option>
+
+						<option value="022Y10"> 电研42 </option>
+
+						<option value="022Y11"> 电研5 </option>
+
+						<option value="023"> 电子工程系 </option>
+
+						<option value="023Y01"> 无研一一 </option>
+
+						<option value="023Y02"> 无研21 </option>
+
+						<option value="023Y03"> 无研三一 </option>
+
+						<option value="023Y04"> 无研三二 </option>
+
+						<option value="023Y05"> 无研三二 </option>
+
+						<option value="023Y06"> 无研四一 </option>
+
+						<option value="023Y07"> 无研5 </option>
+
+						<option value="023Y08"> 无研61 </option>
+
+						<option value="023Y09"> 无研一 </option>
+
+						<option value="023Y10"> 无研一三 </option>
+
+						<option value="023Y11"> 无研二 </option>
+
+						<option value="023Y12"> 无研三 </option>
+
+						<option value="023Y13"> 无研国防班 </option>
+
+						<option value="024"> 计算机科学与技术系 </option>
+
+						<option value="024Y01"> 计研11 </option>
+
+						<option value="024Y02"> 计研21 </option>
+
+						<option value="024Y03"> 计研22 </option>
+
+						<option value="024Y04"> 计研23 </option>
+
+						<option value="024Y05"> 计研31 </option>
+
+						<option value="024Y06"> 计研32 </option>
+
+						<option value="024Y07"> 计研41 </option>
+
+						<option value="024Y08"> 计研42 </option>
+
+						<option value="024Y09"> 计研43 </option>
+
+						<option value="024Y10"> 计研44 </option>
+
+						<option value="024Y11"> 计研51 </option>
+
+						<option value="024Y12"> 计研52 </option>
+
+						<option value="024Y13"> 计研53 </option>
+
+						<option value="024Y14"> 计研54 </option>
+
+						<option value="024Y16"> 计研61 </option>
+
+						<option value="024Y17"> 计研62 </option>
+
+						<option value="024Y18"> 计研63 </option>
+
+						<option value="024Y19"> 计研64 </option>
+
+						<option value="024Y20"> 计研65 </option>
+
+						<option value="024Y21"> 计研8 </option>
+
+						<option value="025"> 自动化系 </option>
+
+						<option value="025Y01"> 自研1 </option>
+
+						<option value="025Y02"> 自研21 </option>
+
+						<option value="025Y03"> 自研22 </option>
+
+						<option value="025Y04"> 自研31 </option>
+
+						<option value="025Y05"> 自研32 </option>
+
+						<option value="025Y06"> 自研41 </option>
+
+						<option value="025Y07"> 自研42 </option>
+
+						<option value="025Y08"> 自研51 </option>
+
+						<option value="025Y09"> 自研52 </option>
+
+						<option value="025Y10"> 自研53 </option>
+
+						<option value="025Y11"> 自研61 </option>
+
+						<option value="025Y12"> 自研62 </option>
+
+						<option value="032"> 工程物理系 </option>
+
+						<option value="032Y03"> 工物研11 </option>
+
+						<option value="032Y05"> 工物研12 </option>
+
+						<option value="032Y06"> 工物研14 </option>
+
+						<option value="032Y08"> 工物研2 </option>
+
+						<option value="032Y09"> 工物研3 </option>
+
+						<option value="033"> 航天航空学院 </option>
+
+						<option value="033Y01"> 航研1 </option>
+
+						<option value="033Y02"> 航研2 </option>
+
+						<option value="033Y03"> 航研22 </option>
+
+						<option value="033Y04"> 航研23 </option>
+
+						<option value="033Y05"> 航研3 </option>
+
+						<option value="033Y06"> 航研41 </option>
+
+						<option value="033Y07"> 航研42 </option>
+
+						<option value="033Y08"> 航博05 </option>
+
+						<option value="033Y09"> 航硕2005 </option>
+
+						<option value="034"> 化学工程系 </option>
+
+						<option value="034Y08"> 化工研1 </option>
+
+						<option value="034Y09"> 化工研2 </option>
+
+						<option value="034Y10"> 化工研3 </option>
+
+						<option value="034Y11"> 化工研4 </option>
+
+						<option value="034Y12"> 化工研5 </option>
+
+						<option value="034Y13"> 化工研6 </option>
+
+						<option value="035"> 材料科学与工程系 </option>
+
+						<option value="035Y01"> 材研1 </option>
+
+						<option value="035Y02"> 材博03 </option>
+
+						<option value="035Y03"> 材研3 </option>
+
+						<option value="035Y04"> 材研4 </option>
+
+						<option value="035Y05"> 材研5 </option>
+
+						<option value="035Y06"> 材研6 </option>
+
+						<option value="035Y07"> 材硕41 </option>
+
+						<option value="035Y08"> 材硕42 </option>
+
+						<option value="035Y09"> 材博04 </option>
+
+						<option value="035Y10"> 材硕05 </option>
+
+						<option value="035Y11"> 材硕52 </option>
+
+						<option value="035Y12"> 材博05 </option>
+
+						<option value="042"> 数学科学系 </option>
+
+						<option value="042Y01"> 数研1 </option>
+
+						<option value="042Y02"> 数研2 </option>
+
+						<option value="042Y03"> 数研3 </option>
+
+						<option value="043"> 物理系 </option>
+
+						<option value="043Y01"> 物研1 </option>
+
+						<option value="043Y02"> 物研2 </option>
+
+						<option value="043Y03"> 物研3 </option>
+
+						<option value="043Y04"> 物研4 </option>
+
+						<option value="043Y05"> 物研5 </option>
+
+						<option value="043Y06"> 物研6 </option>
+
+						<option value="044"> 化学系 </option>
+
+						<option value="044Y01"> 化研一（有机） </option>
+
+						<option value="044Y02"> 化研二（分析） </option>
+
+						<option value="044Y03"> 化研三（物化） </option>
+
+						<option value="044Y04"> 化研4(无机) </option>
+
+						<option value="044Y05"> 化研2005 </option>
+
+						<option value="045"> 生命科学学院 </option>
+
+						<option value="045B07"> 生物系研61支部 </option>
+
+						<option value="045Y01"> 生物系研1支部 </option>
+
+						<option value="045Y02"> 生博2 </option>
+
+						<option value="045Y03"> 生研33 </option>
+
+						<option value="045Y04"> 生物系研3支部 </option>
+
+						<option value="045Y05"> 生博06 </option>
+
+						<option value="045Y06"> 生物系研4支部 </option>
+
+						<option value="045Y07"> 生研42 </option>
+
+						<option value="051"> 经济管理学院 </option>
+
+						<option value="051Y01"> 经博1 </option>
+
+						<option value="051Y02"> 经博2 </option>
+
+						<option value="051Y03"> 经博3 </option>
+
+						<option value="051Y04"> 经博4 </option>
+
+						<option value="051Y05"> 经硕51 </option>
+
+						<option value="051Y06"> 经硕04 </option>
+
+						<option value="051Y07"> 经硕31 </option>
+
+						<option value="051Y08"> 经硕32 </option>
+
+						<option value="051Y09"> 经硕53 </option>
+
+						<option value="051Y10"> 经硕52 </option>
+
+						<option value="051Y11"> 04MBAF1 </option>
+
+						<option value="051Y12"> 04MBAF2 </option>
+
+						<option value="051Y14"> 04MBAI1 </option>
+
+						<option value="051Y15"> 05MBAF1 </option>
+
+						<option value="051Y16"> 05MBAF2 </option>
+
+						<option value="051Y18"> 05MBAI1 </option>
+
+						<option value="051Y19"> 05MBAI2 </option>
+
+						<option value="051Y20"> 04MBAI2 </option>
+
+						<option value="051Y23"> 经博5 </option>
+
+						<option value="051Y24"> 经博6 </option>
+
+						<option value="051Y26"> 经硕43 </option>
+
+						<option value="051Y27"> 经硕42 </option>
+
+						<option value="059"> 公共管理学院 </option>
+
+						<option value="059Y01"> 公管研11 </option>
+
+						<option value="059Y02"> 公管研21 </option>
+
+						<option value="059Y03"> 公管研31 </option>
+
+						<option value="059Y04"> 03MPA </option>
+
+						<option value="059Y05"> 公管研22 </option>
+
+						<option value="059Y06"> 公管硕05 </option>
+
+						<option value="059Y07"> 公管研32 </option>
+
+						<option value="059Y08"> 公管博05 </option>
+
+						<option value="059Y09"> 公管研13 </option>
+
+						<option value="059Y10"> 公管研12 </option>
+
+						<option value="060"> 五道口金融学院 </option>
+
+						<option value="061"> 人文社会科学学院 </option>
+
+						<option value="061Y01"> 文硕1(中文) </option>
+
+						<option value="061Y02"> 文硕2(外语) </option>
+
+						<option value="061Y03"> 文硕3(历史) </option>
+
+						<option value="061Y04"> 文硕4(哲学) </option>
+
+						<option value="061Y05"> 文硕5(经济) </option>
+
+						<option value="061Y06"> 文硕6(国关) </option>
+
+						<option value="061Y07"> 文硕71(教育) </option>
+
+						<option value="061Y08"> 文博1(中文) </option>
+
+						<option value="061Y09"> 文博2(哲学) </option>
+
+						<option value="061Y10"> 文硕8(社会) </option>
+
+						<option value="061Y11"> 文硕7(教育) </option>
+
+						<option value="061Y12"> 文博3 </option>
+
+						<option value="061Y13"> 文博4(历史、社会) </option>
+
+						<option value="066"> 法学院 </option>
+
+						<option value="066Y01"> 法研51 </option>
+
+						<option value="066Y02"> 法研05 </option>
+
+						<option value="066Y03"> 法研42 </option>
+
+						<option value="066Y04"> JM41 </option>
+
+						<option value="066Y05"> JM42 </option>
+
+						<option value="066Y06"> JM51 </option>
+
+						<option value="066Y07"> 法研13 </option>
+
+						<option value="066Y08"> 法研23 </option>
+
+						<option value="066Y09"> 法研41 </option>
+
+						<option value="066Y10"> JM52 </option>
+
+						<option value="067"> 新闻与传播学院 </option>
+
+						<option value="067Y01"> 新博 </option>
+
+						<option value="067Y02"> 新硕5 </option>
+
+						<option value="067Y03"> 新硕31 </option>
+
+						<option value="067Y04"> 新硕32 </option>
+
+						<option value="067Y05"> 新硕41 </option>
+
+						<option value="067Y06"> 新硕42 </option>
+
+						<option value="067Y07"> 新硕52 </option>
+
+						<option value="068"> 马克思主义学院 </option>
+
+						<option value="080"> 美术学院 </option>
+
+						<option value="080Y01"> 美研05 </option>
+
+						<option value="080Y02"> 美研04 </option>
+
+						<option value="080Y03"> 美研3 </option>
+
+						<option value="101"> 核能与新能源技术研究院 </option>
+
+						<option value="101Y01"> 核研03 </option>
+
+						<option value="101Y02"> 核研72 </option>
+
+						<option value="101Y03"> 核研05 </option>
+
+						<option value="101Y05"> 核博 </option>
+
+						<option value="102"> 微电子学研究所党委 </option>
+
+						<option value="102Y01"> 微研1.3党支部 </option>
+
+						<option value="102Y02"> 微研2党支部 </option>
+
+						<option value="102Y03"> 微研3 </option>
+
+						<option value="102Y04"> 微研4党支部 </option>
+
+						<option value="102Y05"> 深微4党支部 </option>
+
+						<option value="103"> 教育研究院 </option>
+
+						<option value="207"> 学生直属总支 </option>
+
+						<option value="207H02"> 代表队1 </option>
+
+						<option value="207H04"> 未就业研 </option>
+
+						<option value="290"> 软件学院 </option>
+
+						<option value="290Y01"> 信息系统与工程所第1党支部 </option>
+
+						<option value="290Y02"> 软件理论与系统所第1党支部 </option>
+
+						<option value="290Y03"> 图形学与辅助设计所第1党支部 </option>
+
+						<option value="290Y04"> 软件理论与系统所第4党支部 </option>
+
+						<option value="291"> 深圳研究生院 </option>
+
+						<option value="291Y01"> 深电机支部 </option>
+
+						<option value="291Y02"> 深微研5 </option>
+
+						<option value="291Y03"> JM53 </option>
+
+						<option value="291Y04"> JM54 </option>
+
+						<option value="291Y05"> JM43 </option>
+
+						<option value="291Y06"> JM44 </option>
+
+						<option value="291Y07"> JM45 </option>
+
+						<option value="291Y08"> 深电子支部 </option>
+
+						<option value="291Y09"> 深制研支部 </option>
+
+						<option value="291Y10"> 深文理支部 </option>
+
+						<option value="400"> 医学院 </option>
+
+						<option value="400Y01"> 医研1班第2党支部 </option>
+
+						<option value="400Y02"> 医研博士生支部 </option>
+
+						<option value="400Y03"> 医硕10党支部 </option>
+
+						<option value="dzz1082824"> 计研66 </option>
+
+						<option value="dzz1083759"> 计研67 </option>
+
+						<option value="dzz1112762"> 文艺社团1 </option>
+
+						<option value="dzz1113701"> 文艺社团2 </option>
+
+						<option value="dzz1116525"> 文艺社团3 </option>
+
+						<option value="dzz1117467"> 文艺社团4 </option>
+
+						<option value="dzz1185345"> 物研7 </option>
+
+						<option value="dzz1186292"> 物研8 </option>
+
+						<option value="dzz1585571"> 土研1 </option>
+
+						<option value="dzz1596395"> 数研3-1 </option>
+
+						<option value="dzz1597382"> 数研3-2 </option>
+
+						<option value="dzz1707190"> 核研04 </option>
+
+						<option value="dzz1808098"> 深微5 </option>
+
+						<option value="dzz1990608"> 美研6 </option>
+
+						<option value="dzz1992622"> 美研06 </option>
+
+						<option value="dzz2081941"> 公管研1 </option>
+
+						<option value="dzz2082964"> 公管研12 </option>
+
+						<option value="dzz2083988"> 公管研123 </option>
+
+						<option value="dzz2085013"> 公管博06 </option>
+
+						<option value="dzz2086039"> 公管硕061 </option>
+
+						<option value="dzz2087066"> 公管硕06 </option>
+
+						<option value="dzz2095261"> 工研07A </option>
+
+						<option value="dzz2121863"> JM61 </option>
+
+						<option value="dzz2122891"> JM62 </option>
+
+						<option value="dzz2124944"> 法研61 </option>
+
+						<option value="dzz2125972"> 法研06 </option>
+
+						<option value="dzz2127001"> 汽研06 </option>
+
+						<option value="dzz2153781"> 精博2006支部 </option>
+
+						<option value="dzz2158949"> 数研2006级 </option>
+
+						<option value="dzz2178626"> 精硕20061支部 </option>
+
+						<option value="dzz2181732"> 计研82 </option>
+
+						<option value="dzz2182768"> 精硕20062支部 </option>
+
+						<option value="dzz2183805"> 计研81 </option>
+
+						<option value="dzz2184851"> 深法硕61 </option>
+
+						<option value="dzz2187966"> 深法硕62 </option>
+
+						<option value="dzz2189006"> 深法硕63 </option>
+
+						<option value="dzz2190047"> 深微研61 </option>
+
+						<option value="dzz2191089"> 深微研62 </option>
+
+						<option value="dzz2193173"> 无研2006级 </option>
+
+						<option value="dzz2195261"> 无博2006级 </option>
+
+						<option value="dzz2196304"> 化研2006 </option>
+
+						<option value="dzz2197348"> 化研2006 </option>
+
+						<option value="dzz2200483"> 建研2-05 </option>
+
+						<option value="dzz2234879"> 经硕06-1 </option>
+
+						<option value="dzz2236981"> 经硕06-2 </option>
+
+						<option value="dzz2238027"> 经硕06-3 </option>
+
+						<option value="dzz2239074"> 经06MBAF1 </option>
+
+						<option value="dzz2251671"> 数研2-1 </option>
+
+						<option value="dzz2252721"> 数研2-2 </option>
+
+						<option value="dzz2253772"> 数研2-2 </option>
+
+						<option value="dzz2257971"> 核研06 </option>
+
+						<option value="dzz2291651"> 航硕06 </option>
+
+						<option value="dzz2293764"> 航博06 </option>
+
+						<option value="dzz2304281"> 新硕6 </option>
+
+						<option value="dzz2305328"> 新硕62 </option>
+
+						<option value="dzz2307431"> 材博06 </option>
+
+						<option value="dzz2308480"> 材硕06 </option>
+
+						<option value="dzz2309531"> 材硕4 </option>
+
+						<option value="dzz2324191"> 经06MBAI1 </option>
+
+						<option value="dzz2329421"> 经06MBAI2 </option>
+
+						<option value="dzz2330471"> 医研1班第3党支部 </option>
+
+						<option value="dzz2331518"> 工物研13 </option>
+
+						<option value="dzz2339911"> 机研6 </option>
+
+						<option value="dzz2409825"> 无研三五 </option>
+
+						<option value="dzz2410865"> 无研三二 </option>
+
+						<option value="dzz2420226"> 无研四 </option>
+
+						<option value="dzz2421268"> 无研43 </option>
+
+						<option value="dzz2423353"> 无研六 </option>
+
+						<option value="dzz2437951"> 建研四乙空调支部 </option>
+
+						<option value="dzz2472251"> 信息系统与工程所第2党支部 </option>
+
+						<option value="dzz2473289"> 软件理论与系统所第2党支部 </option>
+
+						<option value="dzz2474328"> 信息系统与工程所第4党支部 </option>
+
+						<option value="dzz2555811"> 电研一一 </option>
+
+						<option value="dzz2557871"> 电研31 </option>
+
+						<option value="dzz2571268"> 102Y03 </option>
+
+						<option value="dzz2592951"> 微研3党支部 </option>
+
+						<option value="dzz2696476"> 工物研12 </option>
+
+						<option value="dzz2922312"> 环研1 </option>
+
+						<option value="dzz4264101"> 深微6-1党支部 </option>
+
+						<option value="dzz4265107"> 深微6-2党支部 </option>
+
+						<option value="dzz4283257"> 深生命一支部 </option>
+
+						<option value="dzz4379802"> 研究生国防党支部 </option>
+
+						<option value="dzz4664527"> 化研2007 </option>
+
+						<option value="dzz4711034"> 汽研07 </option>
+
+						<option value="dzz4732821"> 法研71 </option>
+
+						<option value="dzz4733862"> 法研07 </option>
+
+						<option value="dzz4735947"> 材硕07 </option>
+
+						<option value="dzz4736991"> 材博07 </option>
+
+						<option value="dzz4763190"> 建研082建筑支部 </option>
+
+						<option value="dzz4819623"> 机研7 </option>
+
+						<option value="dzz4862068"> 经硕08 </option>
+
+						<option value="dzz4867253"> 经硕07-3 </option>
+
+						<option value="dzz4887946"> 工研06A </option>
+
+						<option value="dzz4900362"> 新硕71 </option>
+
+						<option value="dzz4901396"> 新硕72 </option>
+
+						<option value="dzz4903465"> 经硕07-2 </option>
+
+						<option value="dzz4904502"> 经07MBAI2 </option>
+
+						<option value="dzz4922163"> 经07MBAF1 </option>
+
+						<option value="dzz4928410"> 经07MBAI1 </option>
+
+						<option value="dzz4934669"> 美研07 </option>
+
+						<option value="dzz4935714"> 公管硕07 </option>
+
+						<option value="dzz4936760"> 公管博07 </option>
+
+						<option value="dzz4937807"> 航硕07 </option>
+
+						<option value="dzz4938855"> 航博07 </option>
+
+						<option value="dzz4939904"> 生研71支部 </option>
+
+						<option value="dzz4942005"> 生博07 </option>
+
+						<option value="dzz4949357"> 计研12 </option>
+
+						<option value="dzz4950409"> 计研12 </option>
+
+						<option value="dzz4959881"> 法博07 </option>
+
+						<option value="dzz4965154"> 电硕7B </option>
+
+						<option value="dzz4966210"> 电博7 </option>
+
+						<option value="dzz4967267"> 电硕7 </option>
+
+						<option value="dzz5106098"> 无研国防一党支部 </option>
+
+						<option value="dzz5107160"> 无研国防二党支部 </option>
+
+						<option value="dzz5110347"> 深法硕71支部 </option>
+
+						<option value="dzz5111411"> 深法硕72支部 </option>
+
+						<option value="dzz5112476"> 深法硕73支部 </option>
+
+						<option value="dzz5113542"> 深法硕74支部 </option>
+
+						<option value="dzz5114609"> 深法硕75支部 </option>
+
+						<option value="dzz5115677"> IC71 </option>
+
+						<option value="dzz5116746"> IC72 </option>
+
+						<option value="dzz5119954"> 计研83 </option>
+
+						<option value="dzz5127445"> 核研07 </option>
+
+						<option value="dzz5128517"> 自研5 </option>
+
+						<option value="dzz5129590"> 自研4 </option>
+
+						<option value="dzz5142412"> 环研2 </option>
+
+						<option value="dzz5248742"> 精博2007支部 </option>
+
+						<option value="dzz5250866"> 精博2007支部 </option>
+
+						<option value="dzz5258292"> 精硕20072支部 </option>
+
+						<option value="dzz5399028"> 生物系研1支部 </option>
+
+						<option value="dzz5864872"> 工物研4 </option>
+
+						<option value="dzz5872160"> 深微研71 </option>
+
+						<option value="dzz5873203"> 深微研72 </option>
+
+						<option value="dzz5893116"> 无研五 </option>
+
+						<option value="dzz5894167"> 无研五二 </option>
+
+						<option value="dzz5991361"> 文博5(外语) </option>
+
+						<option value="dzz5992419"> 文博6(国关、经济) </option>
+
+						<option value="dzz5993478"> 文博7(教育) </option>
+
+						<option value="dzz6764752"> 研究生新生 </option>
+
+						<option value="dzz7045053"> 软研第8支部 </option>
+
+						<option value="dzz7047196"> 图形学与辅助设计所第2党支部 </option>
+
+						<option value="dzz7612677"> 物研08级 </option>
+
+						<option value="dzz7630007"> 生硕08 </option>
+
+						<option value="dzz7631094"> 生博08 </option>
+
+						<option value="dzz7636530"> 汽研08 </option>
+
+						<option value="dzz7647403"> 材硕08 </option>
+
+						<option value="dzz7648493"> 材博08 </option>
+
+						<option value="dzz7658301"> 化硕2008 </option>
+
+						<option value="dzz7743781"> 美研08 </option>
+
+						<option value="dzz7750388"> 计研84 </option>
+
+						<option value="dzz7775717"> 经08MBAI2 </option>
+
+						<option value="dzz7776818"> 经08MBAI1 </option>
+
+						<option value="dzz7777920"> 经08MBAF1 </option>
+
+						<option value="dzz7779023"> 经08MBAF2 </option>
+
+						<option value="dzz7783436"> 电博8 </option>
+
+						<option value="dzz7791166"> 经硕081 </option>
+
+						<option value="dzz7792273"> 经硕082 </option>
+
+						<option value="dzz7793381"> 经硕083 </option>
+
+						<option value="dzz7976621"> 公管硕08 </option>
+
+						<option value="dzz7999943"> 汽博1 </option>
+
+						<option value="dzz8003274"> 电博8 </option>
+
+						<option value="dzz8004386"> 电硕081 </option>
+
+						<option value="dzz8005499"> 电硕08 </option>
+
+						<option value="dzz8012178"> 法硕81支部 </option>
+
+						<option value="dzz8013293"> 法硕82支部 </option>
+
+						<option value="dzz8015524"> 法硕83支部 </option>
+
+						<option value="dzz8016641"> 法硕84支部 </option>
+
+						<option value="dzz8018876"> 深IC81支部 </option>
+
+						<option value="dzz8019995"> 深IC82支部 </option>
+
+						<option value="dzz8023353"> 新硕82 </option>
+
+						<option value="dzz8043507"> JM63 </option>
+
+						<option value="dzz8044628"> 医研08班党支部 </option>
+
+						<option value="dzz8046871"> JM64 </option>
+
+						<option value="dzz8047994"> JM65 </option>
+
+						<option value="dzz8049118"> 法研81 </option>
+
+						<option value="dzz8050243"> 法研08 </option>
+
+						<option value="dzz8051369"> 法博08 </option>
+
+						<option value="dzz8071631"> 工业硕08 </option>
+
+						<option value="dzz8092821"> 新硕81 </option>
+
+						<option value="dzz8138340"> 核研08 </option>
+
+						<option value="dzz8139448"> 核研82 </option>
+
+						<option value="dzz8158265"> 中物院研究生 </option>
+
+						<option value="dzz8164911"> 航博08 </option>
+
+						<option value="dzz8166021"> 航硕08 </option>
+
+						<option value="dzz8189332"> 精硕20081支部 </option>
+
+						<option value="dzz8190444"> 精硕20082支部 </option>
+
+						<option value="dzz8191557"> 精博2008支部 </option>
+
+						<option value="dzz9483499"> 公管博08 </option>
+
+						<option value="dzz9646071"> 热研硕08 </option>
+
+						<option value="dzz9649381"> 热研博08 </option>
+
+						<option value="dzz9791069"> 土研6 </option>
+
+						<option value="dzzdm10008"> 能源所研究生 </option>
+
+						<option value="dzzdm10010"> 深微研81 </option>
+
+						<option value="dzzdm10011"> 深微研82 </option>
+
+						<option value="dzzdm10018"> 马克思主义学院博士生党支部 </option>
+
+						<option value="dzzdm10019"> 马克思主义学院硕士生支部 </option>
+
+						<option value="dzzdm10025"> 研14 </option>
+
+						<option value="dzzdm10037"> 09研究生 </option>
+
+						<option value="dzzdm10052"> 建研093规划景观支部 </option>
+
+						<option value="dzzdm10053"> 建研3横向支部 </option>
+
+						<option value="dzzdm10055"> 汽博09 </option>
+
+						<option value="dzzdm10056"> 汽研09 </option>
+
+						<option value="dzzdm10057"> 公管博09 </option>
+
+						<option value="dzzdm10058"> 公管硕09 </option>
+
+						<option value="dzzdm10059"> 土硕09 </option>
+
+						<option value="dzzdm10061"> 深IC92支部 </option>
+
+						<option value="dzzdm10062"> 深IC93支部 </option>
+
+						<option value="dzzdm10063"> 深IC93支部 </option>
+
+						<option value="dzzdm10064"> 材硕09 </option>
+
+						<option value="dzzdm10065"> 材博09 </option>
+
+						<option value="dzzdm10068"> 经硕09 </option>
+
+						<option value="dzzdm10069"> 经硕093 </option>
+
+						<option value="dzzdm10070"> 经硕092－1 </option>
+
+						<option value="dzzdm10071"> 经硕092－2 </option>
+
+						<option value="dzzdm10072"> 经07MBA </option>
+
+						<option value="dzzdm10076"> 工业研09 </option>
+
+						<option value="dzzdm10077"> 建研092建筑支部 </option>
+
+						<option value="dzzdm10078"> 建研094空调支部 </option>
+
+						<option value="dzzdm10079"> 数硕2008级 </option>
+
+						<option value="dzzdm10080"> 数硕2009级 </option>
+
+						<option value="dzzdm10081"> 数硕2009级 </option>
+
+						<option value="dzzdm10082"> 数博1 </option>
+
+						<option value="dzzdm10083"> 数博2 </option>
+
+						<option value="dzzdm10084"> 数博3 </option>
+
+						<option value="dzzdm10085"> 热博09 </option>
+
+						<option value="dzzdm10086"> 热研硕09 </option>
+
+						<option value="dzzdm10088"> 电硕091 </option>
+
+						<option value="dzzdm10089"> 电硕09 </option>
+
+						<option value="dzzdm10090"> 电博09 </option>
+
+						<option value="dzzdm10093"> 航硕09 </option>
+
+						<option value="dzzdm10094"> 航博09 </option>
+
+						<option value="dzzdm10095"> 新硕91 </option>
+
+						<option value="dzzdm10096"> 新硕92 </option>
+
+						<option value="dzzdm10097"> 精博20091党支部 </option>
+
+						<option value="dzzdm10098"> 化硕2009 </option>
+
+						<option value="dzzdm10099"> 医研09班党支部 </option>
+
+						<option value="dzzdm10100"> MBA09F </option>
+
+						<option value="dzzdm10101"> MBA09 </option>
+
+						<option value="dzzdm10102"> 软件理论与系统所第3党支部 </option>
+
+						<option value="dzzdm10104"> 精硕20091党支部 </option>
+
+						<option value="dzzdm10105"> 精硕20092党支部 </option>
+
+						<option value="dzzdm10106"> 生研9支部 </option>
+
+						<option value="dzzdm10107"> 精博20092党支部 </option>
+
+						<option value="dzzdm10108"> 水博09 </option>
+
+						<option value="dzzdm10109"> 水硕09 </option>
+
+						<option value="dzzdm10111"> MBA09I2 </option>
+
+						<option value="dzzdm10113"> 深环境支部 </option>
+
+						<option value="dzzdm10114"> 深电机支部 </option>
+
+						<option value="dzzdm10115"> 物研09 </option>
+
+						<option value="dzzdm10116"> 化研2008 </option>
+
+						<option value="dzzdm10121"> 微博09 </option>
+
+						<option value="dzzdm10122"> 微硕091 </option>
+
+						<option value="dzzdm10123"> 深材料支部 </option>
+
+						<option value="dzzdm10124"> 无研091 </option>
+
+						<option value="dzzdm10125"> 无研092 </option>
+
+						<option value="dzzdm10126"> 无研093 </option>
+
+						<option value="dzzdm10127"> 无研095 </option>
+
+						<option value="dzzdm10128"> 无研096 </option>
+
+						<option value="dzzdm10132"> 美研09 </option>
+
+						<option value="dzzdm10133"> JM91 </option>
+
+						<option value="dzzdm10134"> JM92 </option>
+
+						<option value="dzzdm10135"> JM93 </option>
+
+						<option value="dzzdm10136"> JM94 </option>
+
+						<option value="dzzdm10137"> JM95 </option>
+
+						<option value="dzzdm10140"> 经博09 </option>
+
+						<option value="dzzdm10141"> 法博09 </option>
+
+						<option value="dzzdm10142"> 法研91 </option>
+
+						<option value="dzzdm10143"> 法研09 </option>
+
+						<option value="dzzdm10146"> JM71 </option>
+
+						<option value="dzzdm10147"> JM72 </option>
+
+						<option value="dzzdm10148"> JM73 </option>
+
+						<option value="dzzdm10149"> JM74 </option>
+
+						<option value="dzzdm10150"> JM75 </option>
+
+						<option value="dzzdm10166"> 计研091 </option>
+
+						<option value="dzzdm10167"> 计研092 </option>
+
+						<option value="dzzdm10168"> 计研093 </option>
+
+						<option value="dzzdm10169"> 计研094 </option>
+
+						<option value="dzzdm10170"> 计研095 </option>
+
+						<option value="dzzdm10171"> 计研096 </option>
+
+						<option value="dzzdm10172"> 计研098 </option>
+
+						<option value="dzzdm10173"> 计研1 </option>
+
+						<option value="dzzdm10174"> 计研071 </option>
+
+						<option value="dzzdm10175"> 计研081 </option>
+
+						<option value="dzzdm10176"> 计研072 </option>
+
+						<option value="dzzdm10177"> 计研082 </option>
+
+						<option value="dzzdm10178"> 计研092 </option>
+
+						<option value="dzzdm10182"> 热硕11 </option>
+
+						<option value="dzzdm10183"> 计研073 </option>
+
+						<option value="dzzdm10184"> 计研083 </option>
+
+						<option value="dzzdm10185"> 计研3 </option>
+
+						<option value="dzzdm10186"> 计研4 </option>
+
+						<option value="dzzdm10187"> 计研084 </option>
+
+						<option value="dzzdm10188"> 计研074 </option>
+
+						<option value="dzzdm10189"> 计研5 </option>
+
+						<option value="dzzdm10190"> 计研075 </option>
+
+						<option value="dzzdm10191"> 计研5 </option>
+
+						<option value="dzzdm10192"> 新硕7 </option>
+
+						<option value="dzzdm10193"> 新硕7 </option>
+
+						<option value="dzzdm10194"> 新硕7 </option>
+
+						<option value="dzzdm10198"> 计研6 </option>
+
+						<option value="dzzdm10199"> 计研076 </option>
+
+						<option value="dzzdm10200"> 计研086 </option>
+
+						<option value="dzzdm10201"> 计研078 </option>
+
+						<option value="dzzdm10202"> 计研088 </option>
+
+						<option value="dzzdm10203"> 计研098 </option>
+
+						<option value="dzzdm10210"> 生硕09 </option>
+
+						<option value="dzzdm10211"> 核研91 </option>
+
+						<option value="dzzdm10215"> 深法硕74支部 </option>
+
+						<option value="dzzdm10216"> 深法硕75支部 </option>
+
+						<option value="dzzdm10217"> 核研92 </option>
+
+						<option value="dzzdm10218"> 核研93 </option>
+
+						<option value="dzzdm10219"> 生博09 </option>
+
+						<option value="dzzdm10220"> 生研深圳 </option>
+
+						<option value="dzzdm10230"> 机研091 </option>
+
+						<option value="dzzdm10231"> 机研092 </option>
+
+						<option value="dzzdm10244"> 微硕092 </option>
+
+						<option value="dzzdm10245"> 微硕093 </option>
+
+						<option value="dzzdm10252"> 医博10党支部 </option>
+
+						<option value="dzzdm10253"> 物研06 </option>
+
+						<option value="dzzdm10254"> 物研07 </option>
+
+						<option value="dzzdm10258"> 硕士一支部 </option>
+
+						<option value="dzzdm10259"> 教研博支部 </option>
+
+						<option value="dzzdm10266"> 研究生2010 </option>
+
+						<option value="dzzdm10274"> 化硕2010 </option>
+
+						<option value="dzzdm10276"> 研究生 </option>
+
+						<option value="dzzdm10283"> 公管硕10 </option>
+
+						<option value="dzzdm10284"> 公管博10 </option>
+
+						<option value="dzzdm10285"> 自博101 </option>
+
+						<option value="dzzdm10286"> 深管理 </option>
+
+						<option value="dzzdm10287"> 深管理支部 </option>
+
+						<option value="dzzdm10288"> 自硕101 </option>
+
+						<option value="dzzdm10289"> 法硕10级（临时） </option>
+
+						<option value="dzzdm10290"> 热硕10 </option>
+
+						<option value="dzzdm10305"> 建研102建筑党支部 </option>
+
+						<option value="dzzdm10306"> 建研103规划景观党支部 </option>
+
+						<option value="dzzdm10307"> 建研104空调党支部 </option>
+
+						<option value="dzzdm10309"> 汽研10 </option>
+
+						<option value="dzzdm10310"> 汽博10 </option>
+
+						<option value="dzzdm10313"> 经硕102 </option>
+
+						<option value="dzzdm10314"> 航硕101 </option>
+
+						<option value="dzzdm10315"> 航硕102 </option>
+
+						<option value="dzzdm10316"> 航博101 </option>
+
+						<option value="dzzdm10317"> 航博102 </option>
+
+						<option value="dzzdm10318"> 材硕10 </option>
+
+						<option value="dzzdm10319"> 材博10 </option>
+
+						<option value="dzzdm10320"> 材博10党支部-1 </option>
+
+						<option value="dzzdm10322"> 物研10 </option>
+
+						<option value="dzzdm10323"> 化博2010 </option>
+
+						<option value="dzzdm10326"> 化研2006 </option>
+
+						<option value="dzzdm10327"> 化研2007 </option>
+
+						<option value="dzzdm10328"> 化研2008 </option>
+
+						<option value="dzzdm10329"> 化博2009 </option>
+
+						<option value="dzzdm10331"> 经硕103 </option>
+
+						<option value="dzzdm10334"> 工业研10 </option>
+
+						<option value="dzzdm10335"> 深JM01支部 </option>
+
+						<option value="dzzdm10336"> 深JM02支部 </option>
+
+						<option value="dzzdm10337"> 深JM03支部 </option>
+
+						<option value="dzzdm10338"> 深JM04支部 </option>
+
+						<option value="dzzdm10339"> 深JM05支部 </option>
+
+						<option value="dzzdm10340"> 微硕102党支部 </option>
+
+						<option value="dzzdm10343"> 深JM01支部 </option>
+
+						<option value="dzzdm10344"> JM101 </option>
+
+						<option value="dzzdm10345"> JM102 </option>
+
+						<option value="dzzdm10346"> JM103 </option>
+
+						<option value="dzzdm10347"> JM104 </option>
+
+						<option value="dzzdm10348"> JM105 </option>
+
+						<option value="dzzdm10349"> 电博10 </option>
+
+						<option value="dzzdm10350"> 电硕101 </option>
+
+						<option value="dzzdm10351"> 电硕102 </option>
+
+						<option value="dzzdm10353"> 公管博10 </option>
+
+						<option value="dzzdm10355"> 土硕10 </option>
+
+						<option value="dzzdm10356"> 水硕10 </option>
+
+						<option value="dzzdm10357"> 微硕103党支部 </option>
+
+						<option value="dzzdm10358"> 深生命二支部 </option>
+
+						<option value="dzzdm10362"> MBA 10F </option>
+
+						<option value="dzzdm10363"> 经硕101 </option>
+
+						<option value="dzzdm10364"> 美研10 </option>
+
+						<option value="dzzdm10365"> 经硕104 </option>
+
+						<option value="dzzdm10366"> 精硕20101党支部 </option>
+
+						<option value="dzzdm10367"> 精硕20102党支部 </option>
+
+						<option value="dzzdm10369"> 微博10党支部 </option>
+
+						<option value="dzzdm10370"> 微硕101党支部 </option>
+
+						<option value="dzzdm10372"> 精博20102党支部 </option>
+
+						<option value="dzzdm10374"> MBA10I1 </option>
+
+						<option value="dzzdm10375"> MBA10I2 </option>
+
+						<option value="dzzdm10376"> 自硕102 </option>
+
+						<option value="dzzdm10380"> 经博10 </option>
+
+						<option value="dzzdm10381"> 热博11 </option>
+
+						<option value="dzzdm10382"> 精博20101党支部 </option>
+
+						<option value="dzzdm10383"> 法研101 </option>
+
+						<option value="dzzdm10384"> 法研102 </option>
+
+						<option value="dzzdm10385"> 法博10 </option>
+
+						<option value="dzzdm10386"> 无研101 </option>
+
+						<option value="dzzdm10387"> 无研103 </option>
+
+						<option value="dzzdm10390"> 无研105 </option>
+
+						<option value="dzzdm10391"> 无研102 </option>
+
+						<option value="dzzdm10392"> 无研106 </option>
+
+						<option value="dzzdm10393"> 新硕101 </option>
+
+						<option value="dzzdm10394"> 新硕102 </option>
+
+						<option value="dzzdm10395"> 新硕103 </option>
+
+						<option value="dzzdm10396"> 新硕8 </option>
+
+						<option value="dzzdm10401"> 化工研1硕 </option>
+
+						<option value="dzzdm10402"> 化工研1博 </option>
+
+						<option value="dzzdm10403"> 化工研2硕 </option>
+
+						<option value="dzzdm10404"> 化工研2博 </option>
+
+						<option value="dzzdm10405"> 化工研4硕 </option>
+
+						<option value="dzzdm10406"> 化工研4博 </option>
+
+						<option value="dzzdm10411"> 生博10-1 </option>
+
+						<option value="dzzdm10412"> 生博10-2 </option>
+
+						<option value="dzzdm10413"> 生硕10 </option>
+
+						<option value="dzzdm10414"> 数硕2010级 </option>
+
+						<option value="dzzdm10419"> 计研103 </option>
+
+						<option value="dzzdm10420"> 计研105 </option>
+
+						<option value="dzzdm10421"> 计研106 </option>
+
+						<option value="dzzdm10429"> 信息系统与工程所第3党支部 </option>
+
+						<option value="dzzdm10430"> 核研01支部 </option>
+
+						<option value="dzzdm10431"> 核研02支部 </option>
+
+						<option value="dzzdm10432"> 核研03支部 </option>
+
+						<option value="dzzdm10439"> 代表队3 </option>
+
+						<option value="dzzdm10441"> 计研102 </option>
+
+						<option value="dzzdm10442"> 计研104 </option>
+
+						<option value="dzzdm10443"> 计研108 </option>
+
+						<option value="dzzdm10444"> 计研101 </option>
+
+						<option value="dzzdm10462"> 机研091 </option>
+
+						<option value="dzzdm10463"> 机研092 </option>
+
+						<option value="dzzdm10464"> 机研101 </option>
+
+						<option value="dzzdm10465"> 机研102 </option>
+
+						<option value="dzzdm10466"> 机研1 </option>
+
+						<option value="dzzdm10467"> 机研2 </option>
+
+						<option value="dzzdm10471"> 美研10-1 </option>
+
+						<option value="dzzdm10472"> 美研10-2 </option>
+
+						<option value="dzzdm10473"> 美研10-3 </option>
+
+						<option value="dzzdm10475"> 深计自支部 </option>
+
+						<option value="dzzdm10496"> 航9国防定向 </option>
+
+						<option value="dzzdm10507"> 公管博11 </option>
+
+						<option value="dzzdm10508"> 物研11 </option>
+
+						<option value="dzzdm10509"> 生硕11 </option>
+
+						<option value="dzzdm10510"> 公管硕11 </option>
+
+						<option value="dzzdm10511"> 研究生 </option>
+
+						<option value="dzzdm10514"> 自硕111 </option>
+
+						<option value="dzzdm10515"> 经博11 </option>
+
+						<option value="dzzdm10516"> 经硕114 </option>
+
+						<option value="dzzdm10517"> 经硕112 </option>
+
+						<option value="dzzdm10518"> 经硕113 </option>
+
+						<option value="dzzdm10519"> 经硕111 </option>
+
+						<option value="dzzdm10520"> 经硕111 </option>
+
+						<option value="dzzdm10537"> 建研111 </option>
+
+						<option value="dzzdm10539"> 自博111 </option>
+
+						<option value="dzzdm10540"> 工业研11 </option>
+
+						<option value="dzzdm10541"> 汽博11 </option>
+
+						<option value="dzzdm10542"> 汽研11 </option>
+
+						<option value="dzzdm10543"> 材博11 </option>
+
+						<option value="dzzdm10544"> 材硕11 </option>
+
+						<option value="dzzdm10546"> 化博2011 </option>
+
+						<option value="dzzdm10547"> 化硕2011 </option>
+
+						<option value="dzzdm10550"> 电硕111 </option>
+
+						<option value="dzzdm10551"> 热研11新 </option>
+
+						<option value="dzzdm10552"> 无研111 </option>
+
+						<option value="dzzdm10553"> 深JM11 </option>
+
+						<option value="dzzdm10554"> 深JM12 </option>
+
+						<option value="dzzdm10555"> 深JM13 </option>
+
+						<option value="dzzdm10556"> 深JM14 </option>
+
+						<option value="dzzdm10557"> 深JM15 </option>
+
+						<option value="dzzdm10558"> 微硕112党支部 </option>
+
+						<option value="dzzdm10559"> 微硕113党支部 </option>
+
+						<option value="dzzdm10560"> 深金融11 </option>
+
+						<option value="dzzdm10561"> 深金融12 </option>
+
+						<option value="dzzdm10563"> 无研112 </option>
+
+						<option value="dzzdm10565"> 水硕11 </option>
+
+						<option value="dzzdm10566"> 航博111 </option>
+
+						<option value="dzzdm10567"> 精硕20112党支部 </option>
+
+						<option value="dzzdm10568"> 精博20111党支部 </option>
+
+						<option value="dzzdm10569"> 精硕20111党支部 </option>
+
+						<option value="dzzdm10570"> 精博20112党支部 </option>
+
+						<option value="dzzdm10571"> 新硕111 </option>
+
+						<option value="dzzdm10572"> 新硕112 </option>
+
+						<option value="dzzdm10573"> 新硕113 </option>
+
+						<option value="dzzdm10579"> 建研113 </option>
+
+						<option value="dzzdm10580"> 建研112 </option>
+
+						<option value="dzzdm10581"> 建研114 </option>
+
+						<option value="dzzdm10582"> 土硕11 </option>
+
+						<option value="dzzdm10584"> 深工研1 </option>
+
+						<option value="dzzdm10585"> 深信研2 </option>
+
+						<option value="dzzdm10586"> 深物研1 </option>
+
+						<option value="dzzdm10587"> 深机研1 </option>
+
+						<option value="dzzdm10588"> 电博11 </option>
+
+						<option value="dzzdm10590"> 深自动化支部 </option>
+
+						<option value="dzzdm10591"> 深工研21 </option>
+
+						<option value="dzzdm10592"> 深制研 </option>
+
+						<option value="dzzdm10593"> 深工研3 </option>
+
+						<option value="dzzdm10594"> 法博11 </option>
+
+						<option value="dzzdm10595"> 法研112 </option>
+
+						<option value="dzzdm10596"> 法研111 </option>
+
+						<option value="dzzdm10601"> 航硕112 </option>
+
+						<option value="dzzdm10605"> 计研111 </option>
+
+						<option value="dzzdm10606"> 无研113 </option>
+
+						<option value="dzzdm10607"> 无研114 </option>
+
+						<option value="dzzdm10608"> 深计算机支部 </option>
+
+						<option value="dzzdm10609"> 无研116 </option>
+
+						<option value="dzzdm10610"> 计研112 </option>
+
+						<option value="dzzdm10611"> 计研112 </option>
+
+						<option value="dzzdm10612"> 计研112 </option>
+
+						<option value="dzzdm10613"> 计研111 </option>
+
+						<option value="dzzdm10614"> 计研113 </option>
+
+						<option value="dzzdm10615"> 计研114 </option>
+
+						<option value="dzzdm10616"> 计研115 </option>
+
+						<option value="dzzdm10617"> 计研116 </option>
+
+						<option value="dzzdm10618"> 计研118 </option>
+
+						<option value="dzzdm10619"> 微硕111党支部 </option>
+
+						<option value="dzzdm10620"> 微博11党支部 </option>
+
+						<option value="dzzdm10621"> 航硕111 </option>
+
+						<option value="dzzdm10622"> 医硕11党支部 </option>
+
+						<option value="dzzdm10623"> 医硕11党支部 </option>
+
+						<option value="dzzdm10624"> 医博11党支部 </option>
+
+						<option value="dzzdm10625"> 生博11-1 </option>
+
+						<option value="dzzdm10626"> 生博11-2 </option>
+
+						<option value="dzzdm10627"> 生硕11 </option>
+
+						<option value="dzzdm10629"> 美研11-1支部 </option>
+
+						<option value="dzzdm10630"> 美研11-2支部 </option>
+
+						<option value="dzzdm10631"> 美研11-3支部 </option>
+
+						<option value="dzzdm10632"> MBA11I2 </option>
+
+						<option value="dzzdm10633"> MBA11F2 </option>
+
+						<option value="dzzdm10634"> MBA11F1 </option>
+
+						<option value="dzzdm10635"> MBA11I1 </option>
+
+						<option value="dzzdm10637"> 航博112 </option>
+
+						<option value="dzzdm10638"> 新硕9 </option>
+
+						<option value="dzzdm10639"> 美研11-4支部 </option>
+
+						<option value="dzzdm10640"> 深生命三支部 </option>
+
+						<option value="dzzdm10642"> 机研111 </option>
+
+						<option value="dzzdm10643"> 机研112 </option>
+
+						<option value="dzzdm10646"> 微研2.4党支部 </option>
+
+						<option value="dzzdm10649"> 深文研1 </option>
+
+						<option value="dzzdm10668"> 核研13党支部 </option>
+
+						<option value="dzzdm10669"> 核研13党支部 </option>
+
+						<option value="dzzdm10670"> 核研12党支部 </option>
+
+						<option value="dzzdm10671"> 核研11党支部 </option>
+
+						<option value="dzzdm10672"> 核研12党支部 </option>
+
+						<option value="dzzdm10673"> 核研9党支部 </option>
+
+						<option value="dzzdm10674"> 核研9党支部 </option>
+
+						<option value="dzzdm10678"> 硕士二支部 </option>
+
+						<option value="dzzdm10683"> 无研094 </option>
+
+						<option value="dzzdm10684"> 无研104 </option>
+
+						<option value="dzzdm10691"> 数硕2011级 </option>
+
+						<option value="dzzdm10694"> 自硕112 </option>
+
+						<option value="dzzdm10710"> 微硕112党支部 </option>
+
+						<option value="dzzdm10711"> 微硕112党支部 </option>
+
+						<option value="dzzdm10712"> 微硕113党支部 </option>
+
+						<option value="dzzdm10725"> 环研1-1 </option>
+
+						<option value="dzzdm10726"> 环研1-2 </option>
+
+						<option value="dzzdm10727"> 环研2-1 </option>
+
+						<option value="dzzdm10728"> 环研2-2 </option>
+
+						<option value="dzzdm10729"> 环研4-1 </option>
+
+						<option value="dzzdm10730"> 环研4-2 </option>
+
+						<option value="dzzdm10731"> 环研5-1 </option>
+
+						<option value="dzzdm10732"> 环研5-2 </option>
+
+						<option value="dzzdm10733"> 环研6-1 </option>
+
+						<option value="dzzdm10734"> 环研6-2 </option>
+
+						<option value="dzzdm10735"> 地研1 </option>
+
+						<option value="dzzdm10739"> 交叉信息研究院研究生党支部 </option>
+
+						<option value="dzzdm10741"> 研究生2010级党支部 </option>
+
+						<option value="dzzdm10745"> 研究生2009级党支部 </option>
+
+						<option value="dzzdm10746"> 2011级硕士生货币经济学党支 </option>
+
+						<option value="dzzdm10756"> 2011级硕士生金融经济学党支 </option>
+
+						<option value="dzzdm10757"> 无研115 </option>
+
+					</select></td>
 				</tr>
 				<tr>
 					<td>

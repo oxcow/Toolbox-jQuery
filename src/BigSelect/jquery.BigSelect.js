@@ -1,12 +1,15 @@
 /**
- * jQuery BigSelect Plugin 用来批量显示下拉框元素。
+ * jQuery BigSelect Plugin 用来批量显示下拉框元素,或者显示指定array/json数据。适合用于下拉数据量较大的情况
  *
  * @author leeyee
  * @date 2012-09
- * @requires jQuery v1.1.2 or later
+ * @requires jQuery v1.2.3 or later
  *
  */
 (function($) {
+	/**
+	 * 正则输入字符转义
+	 */
 	function escapeRegex(value) {
 		return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 	}
@@ -14,42 +17,56 @@
 	/**
 	 * 数据存储对象
 	 *
-	 * 数据结构 : [{k : kv, v: vv}, {k : kv, v: vv}, {k : kv, v: vv}, ...]
+	 * 数据结构 : [{k : kv, v: vv}, {k1 : kv1, v1: vv1}, {k2 : kv2, v2: vv2}, ...]
+	 *
 	 */
 	function DataSource() {
 		/**
 		 * 数据集
 		 */
 		this.dataSet = [];
+
 		/**
-		 * 设置来自select元素的数据集
+		 * 设置数据集
+		 *
+		 * @param {jQuery Object}
+		 *            selectObj select元素jQuery 对象 .
+		 * @param {String}
+		 *            dataType 数据类型.取值范围[select|array|json]不区分大小写.
+		 * @param {Array}
+		 *            data 数据。当dataType = [array|json]有效.
+		 *
 		 */
 		this.setDataSet = function(selectObj, dataType, data) {
 			var self = this;
 			if (dataType.toLowerCase() === 'select') {
-				$.each(selectObj.find("option"), function(idx, elem) {
-					var _k = $(elem).val();
+				//var s = +new Date();
+				var $seldate = selectObj.find("option");
+				$seldate.each(function(idx, elem) {
+					var _k = $.trim($(elem).val());
 					if (_k) {
 						self.dataSet.push({
 							key : _k,
-							val : $(elem).text()
+							val : $.trim($(elem).text())
 						});
 					}
 				});
+				//var e = +new Date();
+				//console.info(e - s);
 			}
 			if (dataType.toLowerCase() === 'array') {
 				$.each(data, function(_k, _v) {
 					self.dataSet.push({
-						key : _k,
-						val : _v
+						key : $.trim(_k),
+						val : $.trim(_v)
 					});
 				});
 			}
 			if (dataType.toLowerCase() === 'json') {
 				$.each($.parseJSON(data), function(_k, _v) {
 					self.dataSet.push({
-						key : _k,
-						val : _v
+						key : $.trim(_k),
+						val : $.trim(_v)
 					});
 				});
 			}
@@ -60,14 +77,15 @@
 		 * @param {RegExp}
 		 *            reg 过滤正则表达式
 		 * @param {string}
-		 *            val k|v 定义匹配的是数据集机构中的key还是val
+		 *            mode 定义匹配的是数据集结构中的key还是val.取值范围[key|val]
 		 *
 		 * @return {Array} 返回匹配数据数组
+		 *
 		 */
-		this.getRegExpDataSet = function(reg, val) {
+		this.getRegExpDataSet = function(reg, mode) {
 			var matchDate = [];
 			for (var i = 0; i < this.dataSet.length; i++) {
-				var v = this.dataSet[i][val];
+				var v = this.dataSet[i][mode];
 				if (reg.test(v)) {
 					matchDate.push(this.dataSet[i]);
 				}
@@ -101,14 +119,20 @@
 		/**
 		 * 总记录数
 		 */
-		this.TOTAL_SIZE = data.length || 1;
+		this.TOTAL_SIZE = this.data.length;
 		/**
 		 * 总页数
 		 */
 		this.TOTAL_PAGE = Math.ceil(this.TOTAL_SIZE / this.DEFAULT_SIZE);
 
 		/**
-		 * 初始函数
+		 * 重置Page对象
+		 *
+		 * @param {Array}
+		 *            aData 被分页所有数据集合.默认为[].
+		 * @param {Number}
+		 *            pagesize 分页大小
+		 *
 		 */
 		this.reset = function(aData, pageSize) {
 			this.data = aData;
@@ -179,9 +203,9 @@
 			var $ul = $("<ul>");
 			for (var i = this.start(); i < this.end(); i++) {
 
-				var _v = this.data[i][bigSelectFrame.opts.core.val];
+				var _v = this.data[i][bigSelectFrame.opts.core.val || "val"];
 
-				var $li = $("<li>")
+				var $li = $("<li>");
 
 				var $label = $("<label>").attr("title", _v).html(_v).css({
 					'cursor' : 'pointer'
@@ -189,20 +213,14 @@
 
 				$label.click(function() {
 
-					bigSelectFrame.caller.val($(this).data()[bigSelectFrame.opts.core.val]);
+					bigSelectFrame.caller.val($(this).data()[bigSelectFrame.opts.core.key]);
 
 					setTimeout(function() {
-
-						$("#" + bigSelectFrame.bigSelectId).hide("slow", function() {
-
-							$(this).detach();
-
-						});
-
+						$("#" + bigSelectFrame.bigSelectId).hide("slow");
 					}, 10);
 				});
-				$li.append($label);
-				$ul.append($li);
+
+				$ul.append($li.append($label));
 			}
 			$dataPlacement.append($ul);
 		};
@@ -231,6 +249,7 @@
 					var $first_span = $("<span>");
 					var $first_link = $("<a href='javascript:void(0);' title='首页'>首页</a>");
 
+					// first page event
 					$first_link.click(function() {
 						parent.first();
 						bigSelectFrame.display(parent);
@@ -241,6 +260,7 @@
 					var $pre_span = $("<span>");
 					var $pre_link = $("<a href='javascript:void(0);' title='上一页'>上一页</a>");
 
+					// previous page event
 					$pre_link.click(function() {
 						parent.previous();
 						bigSelectFrame.display(parent);
@@ -248,10 +268,11 @@
 
 					$offsetObj.append($pre_span.append($pre_link));
 				}
-				// 跳转输入
+				// jumpto input
 				var $jump_span = $("<span>第</span>");
 				var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
 
+				// jumpto event
 				$jump_input.bind("keydown", function(event) {
 					if (event.which == 13) {
 						parent.jumpto(this.value);
@@ -266,6 +287,7 @@
 					var $next_span = $("<span>");
 					var $next_link = $("<a href='javascript:void(0);' title='下一页'>下一页</a>");
 
+					// next page event
 					$next_link.click(function() {
 						parent.next();
 						bigSelectFrame.display(parent);
@@ -275,6 +297,8 @@
 
 					var $last_span = $("<span>");
 					var $last_link = $("<a href='javascript:void(0);' title='末页'>末页</a>");
+
+					// last page event
 					$last_link.click(function() {
 						parent.last();
 						bigSelectFrame.display(parent);
@@ -285,12 +309,22 @@
 		};
 	}
 
-	;
 	/**
 	 * BigSelect HTML框架
 	 *
+	 * <pre>
+	 * &lt;div class='bigSelect' id='' title='双击关闭'&gt;
+	 * 	&lt;input type='search' autocomplete='off' id=''/&gt;
+	 * 	&lt;div class='bigSelect_content' id=''&gt;&lt;/div&gt;
+	 * 	&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
+	 * &lt;/div&gt;
+	 * </pre>
+	 *
 	 * @param {Object}
 	 *            caller 该类的调用对象
+	 * @param {Object}
+	 *            options 框架属性
+	 *
 	 *
 	 */
 	function BigSelectFrame(caller, options) {
@@ -317,42 +351,58 @@
 			return id;
 		};
 		/**
-		 * BigSelect 框架ID
+		 * 框架ID
 		 */
 		this.bigSelectId = 'bigSelect_' + this.getBsNo();
 		/**
-		 * BigSelect 查询输入框ID
+		 * 查询输入框ID
 		 */
 		this.bigSelectSearchId = 'bigSelect_search_' + this.getBsNo();
 		/**
-		 * BigSelect 数据展示框ID
+		 * 数据展示框ID
 		 */
 		this.bigSelectContentId = 'bigSelect_content_' + this.getBsNo();
 		/**
-		 * BigSelect 分页展示框ID
+		 * 分页展示框ID
 		 */
 		this.bigSelectPageId = 'bigSelect_page_' + this.getBsNo();
-
+		/**
+		 * 判断当前bigSelectId是否存在
+		 *
+		 * @return {Boolean} 存在返回true,否则返回false
+		 *
+		 */
 		this.isExistBsNo = function() {
 			var $obj = $("#bigSelect_" + this.getBsNo());
 			return ($obj) && ($obj.length != 0);
 		};
 		/**
-		 * New base BigSelect
+		 * 判断当前框架是否为隐藏状态
+		 */
+		this.isHide = function() {
+			var display = $("#" + this.bigSelectId).css('display');
+			return display === 'none' ? true : false;
+		};
+		/**
+		 * New Base BigSelect
 		 *
 		 * @return {BigSelectFrame}
-		 *
-		 * 	&lt;div class='bigSelect' id=''&gt;
-		 * 		&lt;input type='search' autocomplete='off' id=''/&gt;
-		 * 		&lt;div class='bigSelect_content'	id=''&gt;&lt;/div&gt;
-		 * 		&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
-		 * 	&lt;/div&gt;
+		 * <pre>
+		 * &lt;div class='bigSelect' id='' title='双击关闭'&gt;
+		 * 	&lt;input type='search' autocomplete='off' id=''/&gt;
+		 * 	&lt;div class='bigSelect_content' id=''&gt;&lt;/div&gt;
+		 * 	&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
+		 * &lt;/div&gt;
+		 * </pre>
 		 *
 		 */
 		this.create = function() {
 
 			var $bigSelect = $("<div>").attr("id", this.bigSelectId).addClass("bigSelect").css({
-				'width' : this.opts.css.width
+				'background-color' : this.opts.css.bgcolor,
+				opacity : this.opts.css.opacity,
+				color : this.opts.css.color,
+				width : this.opts.css.width
 			});
 
 			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
@@ -364,16 +414,20 @@
 			$bigSelect.append($search).append($content).append($page);
 
 			$bigSelect.attr("title", "双击关闭");
+
+			var parent = this;
 			$bigSelect.dblclick(function() {
-				$bigSelect.hide("slow", function() {
-					$(this).detach();
-				});
+				$bigSelect.hide("slow");
 			});
 
 			return $bigSelect;
 		};
 		/**
 		 * 显示数据及分页信息
+		 *
+		 * @param {Page}
+		 *            page 分页对象
+		 *
 		 */
 		this.display = function(page) {
 			page.showPagedata(this);
@@ -382,37 +436,48 @@
 	}
 
 	var BigSelectFactory = {
+
 		create : function(obj, options) {
-
-			var dataSource = new DataSource();
-			dataSource.setDataSet(obj, options.core.dataType, options.core.data);
-
-			var page = new Page(dataSource.dataSet, options.core.pagesize);
 
 			var bigSelectFrame = new BigSelectFrame(obj, options);
 
-			if (bigSelectFrame.isExistBsNo())
-				return null;
+			if (!bigSelectFrame.isExistBsNo()) {
 
-			obj.after(bigSelectFrame.create());
+				var dataSource = new DataSource();
 
-			bigSelectFrame.display(page);
+				dataSource.setDataSet(obj, options.core.dataType, options.core.data);
 
-			// bind search event
-			$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
-				var ipt = escapeRegex($.trim($(this).val()));
-				var reg = new RegExp("^" + ipt, "i");
-				page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
+				var page = new Page(dataSource.dataSet, options.core.pagesize);
+
+				obj.after(bigSelectFrame.create());
+
 				bigSelectFrame.display(page);
-			});
+
+				// bind search event
+				$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
+					var ipt = escapeRegex($.trim($(this).val()));
+					var reg = new RegExp("^" + ipt, "i");
+					page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
+					bigSelectFrame.display(page);
+				});
+			} else {
+				if (bigSelectFrame.isHide()) {
+					$('#' + bigSelectFrame.bigSelectSearchId).val('').trigger("keyup");
+					$("#" + bigSelectFrame.bigSelectId).show("slow");
+				}
+			}
 		}
 	};
 
 	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
-		var txt = opts.css.icon.bold();
-		var $label = $("<label>").attr("for", this.attr("id")).append(txt).css({
-			'cursor' : 'pointer'
+		var txt = opts.css.icon;
+		var $label = $("<label>").attr({
+			"for" : this.attr("id")
+		}).append(txt).css({
+			'cursor' : 'pointer',
+			'font-size' : '12px',
+			'padding' : '0px 4px'
 		});
 
 		this.after($label);
@@ -420,7 +485,9 @@
 		var parent = this;
 
 		$label.bind("click", function() {
+
 			BigSelectFactory.create(parent, opts);
+
 		});
 	};
 
@@ -429,11 +496,15 @@
 			pagesize : 10,
 			dataType : 'select',
 			data : [],
+			key : 'key',
 			val : 'val'
 		},
 		css : {
+			bgcolor : '#eeeeee',
+			opacity : 0.9,
+			color : 'blank',
 			width : 400,
-			icon : " >"
+			icon : ">"
 		}
 	};
 })(jQuery);
