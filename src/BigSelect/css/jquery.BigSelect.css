@@ -3,7 +3,6 @@
 .bigSelect {
 	font-family: "Courier New", "微软雅黑", Symbol, serif;
 	border: 1px solid teal;
-	width: 400px;
 	z-index: 200;
 	position: absolute;
 	border-radius: 10px;

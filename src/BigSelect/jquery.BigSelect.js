@@ -40,7 +40,7 @@
 		this.setDataSet = function(selectObj, dataType, data) {
 			var self = this;
 			if (dataType.toLowerCase() === 'select') {
-				//var s = +new Date();
+				var s = +new Date();
 				var $seldate = selectObj.find("option");
 				$seldate.each(function(idx, elem) {
 					var _k = $.trim($(elem).val());
@@ -51,8 +51,8 @@
 						});
 					}
 				});
-				//var e = +new Date();
-				//console.info(e - s);
+				var e = +new Date();
+				console.info(e - s);
 			}
 			if (dataType.toLowerCase() === 'array') {
 				$.each(data, function(_k, _v) {
@@ -512,7 +512,7 @@
 	$.fn.bigSelect.defaults = {
 		core : {
 			/**
-			 *自动匹配模式.[START|END|LIKE]
+			 *自动匹配模式.[START|END|LIKE]不区分大小写,默认为START
 			 *
 			 * START: 默认模式。匹配以输入开头的内容;
 			 * END: 匹配以输入结尾的内容;
@@ -521,30 +521,51 @@
 			 */
 			MatchMode : 'START',
 			/**
-			 * 分页大小
+			 * 分页大小.默认为20
 			 *
 			 */
-			pagesize : 10,
+			pagesize : 20,
 			/**
-			 * 数据类型.[SELECT|ARRAY|JSON]
+			 * 数据类型.[SELECT|ARRAY|JSON]不区分大小写,默认为SELECT.
 			 * SELECE: 默认类型.当为该类型时,调用该函数的对象应为select元素
 			 * ARRAY: 数组类型.当为该类型时，需指定数组类型的data参数
 			 * JSON: JSON类型.当为该类型时，需指定json类型的data参数
 			 *
 			 */
-			dataType : 'select',
+			dataType : 'SELECT',
 			/**
-			 * 数据集.可为[ARRAY|JSON]
+			 * 数据集.可为数组或者json数据格式,默认为[]
 			 */
 			data : [],
+			/**
+			 * 指定最终获取数据所属数据集的属性.可取[key|val],默认为key
+			 */
 			key : 'key',
+			/**
+			 * 指定展示数据所属数据集的属性.可取[key|val],默认为val
+			 */
 			val : 'val'
 		},
 		css : {
+			/**
+			 * 背景色.默认#eeeeee
+			 */
 			bgcolor : '#eeeeee',
+			/**
+			 * 背景色透明度.默认0.9
+			 */
 			opacity : 0.9,
+			/**
+			 * 字体颜色.默认blank
+			 */
 			color : 'blank',
+			/**
+			 * 宽度.默认400px
+			 */
 			width : 400,
+			/**
+			 * 触发按钮.字符或者jQuery对象,默认为字符">"
+			 */
 			icon : ">"
 		}
 	};
