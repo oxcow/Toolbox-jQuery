@@ -3,8 +3,8 @@
 .bigSelect {
 	font-family: "Courier New", "微软雅黑", Symbol, serif;
 	border: 1px solid teal;
-	z-index: 200;
 	position: absolute;
+	z-index: 200;
 	border-radius: 10px;
 	-moz-border-radius: 10px;
 	-webkit-border-radius: 10px;

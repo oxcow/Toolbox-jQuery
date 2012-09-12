@@ -39,6 +39,11 @@
 		 */
 		this.setDataSet = function(selectObj, dataType, data) {
 			var self = this;
+			/**
+			 * 大概数据量很大时(>500),这段代码在IE7、IE8下性能表现很差。
+			 * 应该跟浏览器对数组循环及元素属性获取的优化优化。
+			 * Firefox,Chrome,IE9上性能差别不是很大。
+			 */
 			if (dataType.toLowerCase() === 'select') {
 				var s = +new Date();
 				var $seldate = selectObj.find("option");
@@ -52,7 +57,9 @@
 					}
 				});
 				var e = +new Date();
-				console.info(e - s);
+				if (console.info) {
+					console.info("加载select元素花费: ", e - s + "ms");
+				}
 			}
 			if (dataType.toLowerCase() === 'array') {
 				$.each(data, function(_k, _v) {
@@ -453,7 +460,8 @@
 
 				var page = new Page(dataSource.dataSet, options.core.pagesize);
 
-				obj.after(bigSelectFrame.create());
+				//obj.after(bigSelectFrame.create()); //不考虑IE7可使用该语句
+				obj.parent().after(bigSelectFrame.create());
 
 				bigSelectFrame.display(page);
 
@@ -490,12 +498,32 @@
 	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
 		var txt = opts.css.icon;
+
+		/*
+		 * IE7-下,直接在内联对象(display:inline)后 跟块对象(display:block),
+		 * 则该块对象将会紧跟前面的内联对象而不换行。也就是说IE7下的块对象只在元素后增加换行，而在该块对象前不增加换行；
+		 *
+		 * IE8,IE9,Firefox4+,Chrome11+ 对于块对象(display:block)则是前后均换行；
+		 *
+		 * 基于上述考虑，为兼容IE7- 这里将select元素和label元素使用div元素包裹起来，然后在该div元素后添BigSelect div元素
+		 * <div>
+		 * 	<select></select>
+		 * 	<label></label>
+		 * </div>
+		 * <div class='bigSelect'></div>
+		 *
+		 * 如果不考虑IE7-,则这句可以省去,最终创建结果DOM为:
+		 * <select></select><div class='bigSelect'></div><label></label>
+		 *
+		 */
+		this.wrap($("<div>"));
+
 		var $label = $("<label>").attr({
 			"for" : this.attr("id")
 		}).append(txt).css({
-			'cursor' : 'pointer',
-			'font-size' : '12px',
-			'padding' : '0px 4px'
+			cursor : 'pointer',
+			padding : '0px 4px',
+			'font-size' : '12px'
 		});
 
 		this.after($label);

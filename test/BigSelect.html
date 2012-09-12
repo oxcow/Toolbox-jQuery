@@ -8,23 +8,7 @@
 		<script type="text/javascript" src="../src/BigSelect/jquery.BigSelect.js"></script>
 		<script type="text/javascript">
 			$(function() {
-				$("#ipt1").bigSelect({
-					core : {
-						dataType : 'array',
-						data : [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100],
-						key : 'val'
-					}
-				});
-				$("#ipt2").bigSelect({
-					core : {
-						MatchMode : 'LIKE',
-						dataType : 'JSON',
-						data : '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}'
-					},
-					css : {
-						width : 'auto'
-					}
-				});
+
 				$(".data1").bigSelect({
 					core : {
 						MatchMode : 'end'
@@ -52,6 +36,23 @@
 						icon : $("#img1")
 					}
 				});
+				$("#ipt1").bigSelect({
+					core : {
+						dataType : 'array',
+						data : [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100],
+						key : 'val'
+					}
+				});
+				$("#ipt2").bigSelect({
+					core : {
+						MatchMode : 'LIKE',
+						dataType : 'JSON',
+						data : '{"1" : "java","2" : "javascript","3" : "C","4" : "C++"}'
+					},
+					css : {
+						width : 'auto'
+					}
+				});
 			});
 		</script>
 	</head>
@@ -59,18 +60,6 @@
 		<img id = 'img1' src="http://edu.qzs.qq.com/ac/qzone_v5/client/auth_icon.png"/>
 		<form name="bigSelectFrm" method="get">
 			<table border='1' width='80%' align='center'>
-				<tr>
-					<td>输入框提示(array)</td>
-					<td>
-					<input type="text" name="iptpro" id="ipt1"/>
-					</td>
-				</tr>
-				<tr>
-					<td>输入框提示(json)</td>
-					<td>
-					<input type="text" name="iptJSON" id="ipt2"/>
-					</td>
-				</tr>
 				<tr>
 					<td>喜欢语言</td>
 					<td>
@@ -4792,6 +4781,18 @@
 						<option value="dzzdm10757"> 无研115 </option>
 
 					</select></td>
+				</tr>
+				<tr>
+					<td>【参考】输入框提示(array)</td>
+					<td>
+					<input type="text" name="iptpro" id="ipt1"/>
+					</td>
+				</tr>
+				<tr>
+					<td>【参考】输入框提示(json)</td>
+					<td>
+					<input type="text" name="iptJSON" id="ipt2"/>
+					</td>
 				</tr>
 				<tr>
 					<td>
