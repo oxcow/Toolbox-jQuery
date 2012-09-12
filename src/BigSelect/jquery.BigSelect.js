@@ -40,7 +40,7 @@
 		this.setDataSet = function(selectObj, dataType, data) {
 			var self = this;
 			/**
-			 * 大概数据量很大时(>500),这段代码在IE7、IE8下性能表现很差。
+			 * 当数据量很大时(>500),这段代码在IE7、IE8下性能表现很差。
 			 * 应该跟浏览器对数组循环及元素属性获取的优化优化。
 			 * Firefox,Chrome,IE9上性能差别不是很大。
 			 */
