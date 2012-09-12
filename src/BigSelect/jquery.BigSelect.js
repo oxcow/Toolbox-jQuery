@@ -1,44 +1,98 @@
 /**
- * jQuery BigSelect Plugin 用来批量显示下拉框元素。
+ * jQuery BigSelect Plugin 用来批量显示下拉框元素,或者显示指定array/json数据。适合用于下拉数据量较大的情况
  *
  * @author leeyee
  * @date 2012-09
- * @requires jQuery v1.1.2 or later
+ * @requires jQuery v1.2.3 or later
  *
  */
 (function($) {
+	/**
+	 * 正则输入字符转义
+	 */
 	function escapeRegex(value) {
 		return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 	}
 
 	/**
 	 * 数据存储对象
+	 *
+	 * 数据结构 : [{k : kv, v: vv}, {k1 : kv1, v1: vv1}, {k2 : kv2, v2: vv2}, ...]
+	 *
 	 */
-	function DataSource(dataSet) {
+	function DataSource() {
 		/**
 		 * 数据集
 		 */
-		this.dataSet = dataSet || [];
+		this.dataSet = [];
 
 		/**
-		 * 设置来自select元素的数据集
+		 * 设置数据集
+		 *
+		 * @param {jQuery Object}
+		 *            selectObj select元素jQuery 对象 .
+		 * @param {String}
+		 *            dataType 数据类型.取值范围[select|array|json]不区分大小写.
+		 * @param {Array}
+		 *            data 数据。当dataType = [array|json]有效.
+		 *
 		 */
-		this.setDataSetFromSelect = function(selectObj) {
+		this.setDataSet = function(selectObj, dataType, data) {
 			var self = this;
-			$.each(selectObj.find("option"), function(idx, elem) {
-				self.dataSet[idx] = {
-					k : $(elem).val(),
-					v : $(elem).text()
-				};
-			});
+			/**
+			 * 当数据量很大时(>500),这段代码在IE7、IE8下性能表现很差。
+			 * 应该跟浏览器对数组循环及元素属性获取的优化优化。
+			 * Firefox,Chrome,IE9上性能差别不是很大。
+			 */
+			if (dataType.toLowerCase() === 'select') {
+				var s = +new Date();
+				var $seldate = selectObj.find("option");
+				$seldate.each(function(idx, elem) {
+					var _k = $.trim($(elem).val());
+					if (_k) {
+						self.dataSet.push({
+							key : _k,
+							val : $.trim($(elem).text())
+						});
+					}
+				});
+				var e = +new Date();
+				if (console.info) {
+					console.info("加载select元素花费: ", e - s + "ms");
+				}
+			}
+			if (dataType.toLowerCase() === 'array') {
+				$.each(data, function(_k, _v) {
+					self.dataSet.push({
+						key : $.trim(_k),
+						val : $.trim(_v)
+					});
+				});
+			}
+			if (dataType.toLowerCase() === 'json') {
+				$.each($.parseJSON(data), function(_k, _v) {
+					self.dataSet.push({
+						key : $.trim(_k),
+						val : $.trim(_v)
+					});
+				});
+			}
 		};
 		/**
-		 * 获取初始来自select元素的数据集
+		 * 获取指定正则匹配的数据集
+		 *
+		 * @param {RegExp}
+		 *            reg 过滤正则表达式
+		 * @param {string}
+		 *            mode 定义匹配的是数据集结构中的key还是val.取值范围[key|val]
+		 *
+		 * @return {Array} 返回匹配数据数组
+		 *
 		 */
-		this.getDataSetFromSelect = function(reg) {
+		this.getRegExpDataSet = function(reg, mode) {
 			var matchDate = [];
 			for (var i = 0; i < this.dataSet.length; i++) {
-				var v = this.dataSet[i].v;
+				var v = this.dataSet[i][mode];
 				if (reg.test(v)) {
 					matchDate.push(this.dataSet[i]);
 				}
@@ -72,14 +126,20 @@
 		/**
 		 * 总记录数
 		 */
-		this.TOTAL_SIZE = data.length || 1;
+		this.TOTAL_SIZE = this.data.length;
 		/**
 		 * 总页数
 		 */
 		this.TOTAL_PAGE = Math.ceil(this.TOTAL_SIZE / this.DEFAULT_SIZE);
 
 		/**
-		 * 初始函数
+		 * 重置Page对象
+		 *
+		 * @param {Array}
+		 *            aData 被分页所有数据集合.默认为[].
+		 * @param {Number}
+		 *            pagesize 分页大小
+		 *
 		 */
 		this.reset = function(aData, pageSize) {
 			this.data = aData;
@@ -149,16 +209,25 @@
 			$dataPlacement.find('ul').detach();
 			var $ul = $("<ul>");
 			for (var i = this.start(); i < this.end(); i++) {
-				var $li = $("<li>").attr("_val_", this.data[i].k).html(this.data[i].v);
-				$li.click(function() {
-					bigSelectFrame.caller.val($(this).attr("_val_"));
+
+				var _v = this.data[i][bigSelectFrame.opts.core.val || "val"];
+
+				var $li = $("<li>");
+
+				var $label = $("<label>").attr("title", _v).html(_v).css({
+					'cursor' : 'pointer'
+				}).data(this.data[i]);
+
+				$label.click(function() {
+
+					bigSelectFrame.caller.val($(this).data()[bigSelectFrame.opts.core.key]);
+
 					setTimeout(function() {
-						$("#" + bigSelectFrame.bigSelectId).hide("slow", function() {
-							$(this).detach();
-						});
+						$("#" + bigSelectFrame.bigSelectId).hide("slow");
 					}, 10);
 				});
-				$ul.append($li);
+
+				$ul.append($li.append($label));
 			}
 			$dataPlacement.append($ul);
 		};
@@ -179,6 +248,7 @@
 			$offsetObj.find("span").detach();
 
 			$total = $("<span>共 " + this.TOTAL_SIZE + " 条数据 </span>");
+
 			$offsetObj.append($total);
 
 			if (this.TOTAL_PAGE != 1) {
@@ -187,6 +257,7 @@
 					var $first_span = $("<span>");
 					var $first_link = $("<a href='javascript:void(0);' title='首页'>首页</a>");
 
+					// first page event
 					$first_link.click(function() {
 						parent.first();
 						bigSelectFrame.display(parent);
@@ -197,6 +268,7 @@
 					var $pre_span = $("<span>");
 					var $pre_link = $("<a href='javascript:void(0);' title='上一页'>上一页</a>");
 
+					// previous page event
 					$pre_link.click(function() {
 						parent.previous();
 						bigSelectFrame.display(parent);
@@ -204,24 +276,29 @@
 
 					$offsetObj.append($pre_span.append($pre_link));
 				}
-				// 跳转输入
-				var $jump_span = $("<span>第</span>");
-				var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
 
-				$jump_input.bind("keydown", function(event) {
-					if (event.which == 13) {
-						parent.jumpto(this.value);
-						bigSelectFrame.display(parent);
-					}
-				});
-				var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
-				$offsetObj.append($jump);
+				// 页码跳转
+				if (this.TOTAL_SIZE != 0) {
+					var $jump_span = $("<span>第</span>");
+					var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
+
+					// jumpto event
+					$jump_input.bind("keydown", function(event) {
+						if (event.which == 13) {
+							parent.jumpto(this.value);
+							bigSelectFrame.display(parent);
+						}
+					});
+					var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
+					$offsetObj.append($jump);
+				}
 
 				// 下一页 ,末页
 				if (this.CURRENT_PAGE < this.TOTAL_PAGE) {
 					var $next_span = $("<span>");
 					var $next_link = $("<a href='javascript:void(0);' title='下一页'>下一页</a>");
 
+					// next page event
 					$next_link.click(function() {
 						parent.next();
 						bigSelectFrame.display(parent);
@@ -231,6 +308,8 @@
 
 					var $last_span = $("<span>");
 					var $last_link = $("<a href='javascript:void(0);' title='末页'>末页</a>");
+
+					// last page event
 					$last_link.click(function() {
 						parent.last();
 						bigSelectFrame.display(parent);
@@ -241,21 +320,31 @@
 		};
 	}
 
-	;
 	/**
 	 * BigSelect HTML框架
 	 *
+	 * <pre>
+	 * &lt;div class='bigSelect' id='' title='双击关闭'&gt;
+	 * 	&lt;input type='search' autocomplete='off' id=''/&gt;
+	 * 	&lt;div class='bigSelect_content' id=''&gt;&lt;/div&gt;
+	 * 	&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
+	 * &lt;/div&gt;
+	 * </pre>
+	 *
 	 * @param {Object}
 	 *            caller 该类的调用对象
+	 * @param {Object}
+	 *            options 框架属性
+	 *
 	 *
 	 */
-	function BigSelectFrame(caller,options) {
+	function BigSelectFrame(caller, options) {
 		/**
 		 * 该类的调用对象
 		 */
 		this.caller = caller;
 		/**
-		 * 参数 
+		 * 参数
 		 */
 		this.opts = options;
 		/**
@@ -273,42 +362,58 @@
 			return id;
 		};
 		/**
-		 * BigSelect 框架ID
+		 * 框架ID
 		 */
 		this.bigSelectId = 'bigSelect_' + this.getBsNo();
 		/**
-		 * BigSelect 查询输入框ID
+		 * 查询输入框ID
 		 */
 		this.bigSelectSearchId = 'bigSelect_search_' + this.getBsNo();
 		/**
-		 * BigSelect 数据展示框ID
+		 * 数据展示框ID
 		 */
 		this.bigSelectContentId = 'bigSelect_content_' + this.getBsNo();
 		/**
-		 * BigSelect 分页展示框ID
+		 * 分页展示框ID
 		 */
 		this.bigSelectPageId = 'bigSelect_page_' + this.getBsNo();
-
+		/**
+		 * 判断当前bigSelectId是否存在
+		 *
+		 * @return {Boolean} 存在返回true,否则返回false
+		 *
+		 */
 		this.isExistBsNo = function() {
 			var $obj = $("#bigSelect_" + this.getBsNo());
 			return ($obj) && ($obj.length != 0);
 		};
 		/**
-		 * New base BigSelect
+		 * 判断当前框架是否为隐藏状态
+		 */
+		this.isHide = function() {
+			var display = $("#" + this.bigSelectId).css('display');
+			return display === 'none' ? true : false;
+		};
+		/**
+		 * New Base BigSelect
 		 *
 		 * @return {BigSelectFrame}
-		 *
-		 * 	&lt;div class='bigSelect' id=''&gt;
-		 * 		&lt;input type='search' autocomplete='off' id=''/&gt;
-		 * 		&lt;div class='bigSelect_content'	id=''&gt;&lt;/div&gt;
-		 * 		&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
-		 * 	&lt;/div&gt;
+		 * <pre>
+		 * &lt;div class='bigSelect' id='' title='双击关闭'&gt;
+		 * 	&lt;input type='search' autocomplete='off' id=''/&gt;
+		 * 	&lt;div class='bigSelect_content' id=''&gt;&lt;/div&gt;
+		 * 	&lt;div class='bigSelect_page' id=''&gt;&lt;/div&gt;
+		 * &lt;/div&gt;
+		 * </pre>
 		 *
 		 */
 		this.create = function() {
 
 			var $bigSelect = $("<div>").attr("id", this.bigSelectId).addClass("bigSelect").css({
-				'width' : this.opts.width
+				'background-color' : this.opts.css.bgcolor,
+				opacity : this.opts.css.opacity,
+				color : this.opts.css.color,
+				width : this.opts.css.width
 			});
 
 			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
@@ -320,16 +425,20 @@
 			$bigSelect.append($search).append($content).append($page);
 
 			$bigSelect.attr("title", "双击关闭");
+
+			var parent = this;
 			$bigSelect.dblclick(function() {
-				$bigSelect.hide("slow", function() {
-					$(this).detach();
-				});
+				$bigSelect.hide("slow");
 			});
 
 			return $bigSelect;
 		};
 		/**
 		 * 显示数据及分页信息
+		 *
+		 * @param {Page}
+		 *            page 分页对象
+		 *
 		 */
 		this.display = function(page) {
 			page.showPagedata(this);
@@ -338,45 +447,154 @@
 	}
 
 	var BigSelectFactory = {
-		create : function(obj, options) {
-			var dataSource = new DataSource();
-			dataSource.setDataSetFromSelect(obj);
 
-			var page = new Page(dataSource.dataSet, options.pagesize);
+		create : function(obj, options) {
 
 			var bigSelectFrame = new BigSelectFrame(obj, options);
 
-			if (bigSelectFrame.isExistBsNo())
-				return null;
+			if (!bigSelectFrame.isExistBsNo()) {
 
-			obj.after(bigSelectFrame.create());
+				var dataSource = new DataSource();
 
-			bigSelectFrame.display(page);
+				dataSource.setDataSet(obj, options.core.dataType, options.core.data);
 
-			$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
-				var ipt = escapeRegex($.trim($(this).val()));
-				var reg = new RegExp("^" + ipt, "i");
-				page.reset(dataSource.getDataSetFromSelect(reg));
+				var page = new Page(dataSource.dataSet, options.core.pagesize);
+
+				//obj.after(bigSelectFrame.create()); //不考虑IE7可使用该语句
+				obj.parent().after(bigSelectFrame.create());
+
 				bigSelectFrame.display(page);
-			});
+
+				// bind search event
+				$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
+					var ipt = escapeRegex($.trim($(this).val()));
+					var matchMode = options.core.MatchMode.toUpperCase();
+					var reg = null;
+					switch(matchMode) {
+						case 'START':
+							reg = new RegExp("^" + ipt, "i");
+							break;
+						case 'END':
+							reg = new RegExp(ipt + "$", "i");
+							break;
+						case 'LIKE':
+							reg = new RegExp(ipt, "i");
+							break;
+						default:
+							reg = new RegExp("^" + ipt, "i");
+					}
+					page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
+					bigSelectFrame.display(page);
+				});
+			} else {
+				if (bigSelectFrame.isHide()) {
+					$('#' + bigSelectFrame.bigSelectSearchId).val('').trigger("keyup");
+					$("#" + bigSelectFrame.bigSelectId).show("slow");
+				}
+			}
 		}
 	};
 
 	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
+		var txt = opts.css.icon;
 
-		var $label = $("<label>").attr("for", this.attr("id")).text(">");
+		/*
+		 * IE7-下,直接在内联对象(display:inline)后 跟块对象(display:block),
+		 * 则该块对象将会紧跟前面的内联对象而不换行。也就是说IE7下的块对象只在元素后增加换行，而在该块对象前不增加换行；
+		 *
+		 * IE8,IE9,Firefox4+,Chrome11+ 对于块对象(display:block)则是前后均换行；
+		 *
+		 * 基于上述考虑，为兼容IE7- 这里将select元素和label元素使用div元素包裹起来，然后在该div元素后添BigSelect div元素
+		 * <div>
+		 * 	<select></select>
+		 * 	<label></label>
+		 * </div>
+		 * <div class='bigSelect'></div>
+		 *
+		 * 如果不考虑IE7-,则这句可以省去,最终创建结果DOM为:
+		 * <select></select><div class='bigSelect'></div><label></label>
+		 *
+		 */
+		this.wrap($("<div>"));
+
+		var $label = $("<label>").attr({
+			"for" : this.attr("id")
+		}).append(txt).css({
+			cursor : 'pointer',
+			padding : '0px 4px',
+			'font-size' : '12px'
+		});
 
 		this.after($label);
 
 		var parent = this;
+
 		$label.bind("click", function() {
+
 			BigSelectFactory.create(parent, opts);
+
 		});
 	};
 
 	$.fn.bigSelect.defaults = {
-		pagesize : 10,
-		width : 400
+		core : {
+			/**
+			 *自动匹配模式.[START|END|LIKE]不区分大小写,默认为START
+			 *
+			 * START: 默认模式。匹配以输入开头的内容;
+			 * END: 匹配以输入结尾的内容;
+			 * LIKE: 匹配包含输入的内容;
+			 *
+			 */
+			MatchMode : 'START',
+			/**
+			 * 分页大小.默认为20
+			 *
+			 */
+			pagesize : 20,
+			/**
+			 * 数据类型.[SELECT|ARRAY|JSON]不区分大小写,默认为SELECT.
+			 * SELECE: 默认类型.当为该类型时,调用该函数的对象应为select元素
+			 * ARRAY: 数组类型.当为该类型时，需指定数组类型的data参数
+			 * JSON: JSON类型.当为该类型时，需指定json类型的data参数
+			 *
+			 */
+			dataType : 'SELECT',
+			/**
+			 * 数据集.可为数组或者json数据格式,默认为[]
+			 */
+			data : [],
+			/**
+			 * 指定最终获取数据所属数据集的属性.可取[key|val],默认为key
+			 */
+			key : 'key',
+			/**
+			 * 指定展示数据所属数据集的属性.可取[key|val],默认为val
+			 */
+			val : 'val'
+		},
+		css : {
+			/**
+			 * 背景色.默认#eeeeee
+			 */
+			bgcolor : '#eeeeee',
+			/**
+			 * 背景色透明度.默认0.9
+			 */
+			opacity : 0.9,
+			/**
+			 * 字体颜色.默认blank
+			 */
+			color : 'blank',
+			/**
+			 * 宽度.默认400px
+			 */
+			width : 400,
+			/**
+			 * 触发按钮.字符或者jQuery对象,默认为字符">"
+			 */
+			icon : ">"
+		}
 	};
 })(jQuery);
