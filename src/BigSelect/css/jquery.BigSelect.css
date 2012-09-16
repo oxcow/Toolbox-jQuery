@@ -1,6 +1,8 @@
 @CHARSET "UTF-8";
 
 .bigSelect {
+	margin: 0px 0px;
+	padding: 0px 0px;
 	font-family: "Courier New", "微软雅黑", Symbol, serif;
 	border: 1px solid teal;
 	position: absolute;

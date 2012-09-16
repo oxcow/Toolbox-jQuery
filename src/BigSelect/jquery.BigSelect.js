@@ -41,24 +41,64 @@
 			var self = this;
 			/**
 			 * 当数据量很大时(>500),这段代码在IE7、IE8下性能表现很差。
-			 * 应该跟浏览器对数组循环及元素属性获取的优化优化。
+			 * 应该跟浏览器对数组循环及元素属性获取的优化有关。
 			 * Firefox,Chrome,IE9上性能差别不是很大。
+			 *
+			 * 2012/9/16改写该方法.使其先加载前400条数据展示给用户，其余数据通过timeout后获取.
+			 *
 			 */
 			if (dataType.toLowerCase() === 'select') {
 				var s = +new Date();
 				var $seldate = selectObj.find("option");
-				$seldate.each(function(idx, elem) {
-					var _k = $.trim($(elem).val());
-					if (_k) {
-						self.dataSet.push({
-							key : _k,
-							val : $.trim($(elem).text())
-						});
+
+				var iLen = $seldate.length;
+
+				this.dataSet = new Array(iLen);
+
+				for (var i = 0; i < iLen; i++) {
+					if (i < 400) {
+						var opt = $seldate[i];
+						var _k = $.trim($(opt).val());
+						if (_k) {
+							this.dataSet[i] = {
+								key : _k,
+								val : $.trim($(opt).text())
+							};
+						}
+					} else {
+						setTimeout(function() {
+							var s1 = +new Date();
+							for (var j = i; j < iLen; j++) {
+								var opt = $seldate[j];
+								var _k = $.trim($(opt).val());
+								if (_k) {
+									self.dataSet[j] = {
+										key : _k,
+										val : $.trim($(opt).text())
+									};
+								}
+							}
+							var e1 = +new Date();
+							if (console) {
+								console.info("加载option剩余元素 " + (iLen - 400) + " 花费: ", e1 - s1 + "ms");
+							}
+						}, 30);
+						break;
 					}
-				});
+				}
+				/*
+				 $seldate.each(function(idx, elem) {
+				 var _k = $.trim($(elem).val());
+				 if (_k) {
+				 self.dataSet.push({
+				 key : _k,
+				 val : $.trim($(elem).text())
+				 });
+				 }
+				 });*/
 				var e = +new Date();
-				if (console.info) {
-					console.info("加载select元素花费: ", e - s + "ms");
+				if (console) {
+					console.info("加载options元素 400 花费: ", e - s + "ms");
 				}
 			}
 			if (dataType.toLowerCase() === 'array') {
@@ -92,6 +132,8 @@
 		this.getRegExpDataSet = function(reg, mode) {
 			var matchDate = [];
 			for (var i = 0; i < this.dataSet.length; i++) {
+				if (!this.dataSet[i])
+					continue;
 				var v = this.dataSet[i][mode];
 				if (reg.test(v)) {
 					matchDate.push(this.dataSet[i]);
@@ -209,6 +251,9 @@
 			$dataPlacement.find('ul').detach();
 			var $ul = $("<ul>");
 			for (var i = this.start(); i < this.end(); i++) {
+
+				if (!this.data[i])
+					continue;
 
 				var _v = this.data[i][bigSelectFrame.opts.core.val || "val"];
 
@@ -444,6 +489,27 @@
 			page.showPagedata(this);
 			page.showPageToolbar(this);
 		};
+
+		/**
+		 * 返回 BigSelectFrame显示的坐标位置
+		 * @return {Object}
+		 * 				{top : <Number>, left: <Number>}
+		 */
+		this.getOffset = function() {
+			var width = this.opts.css.width;
+			var caller_top = this.caller.offset().top;
+			var caller_left = this.caller.offset().left;
+			var caller_height = this.caller.outerHeight();
+			var view_width = $(window).width();
+
+			if (caller_left + width > view_width) {
+				caller_left = view_width - width - 5;
+			}
+			return {
+				top : caller_top + caller_height + 1,
+				left : caller_left
+			};
+		};
 	}
 
 	var BigSelectFactory = {
@@ -460,8 +526,7 @@
 
 				var page = new Page(dataSource.dataSet, options.core.pagesize);
 
-				//obj.after(bigSelectFrame.create()); //不考虑IE7可使用该语句
-				obj.parent().after(bigSelectFrame.create());
+				obj.after(bigSelectFrame.create());
 
 				bigSelectFrame.display(page);
 
@@ -492,35 +557,17 @@
 					$("#" + bigSelectFrame.bigSelectId).show("slow");
 				}
 			}
+			// 根据浏览器窗口大小调整显示的位置
+			$('#' + bigSelectFrame.bigSelectId).css(bigSelectFrame.getOffset());
 		}
 	};
 
 	$.fn.bigSelect = function(options) {
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
-		var txt = opts.css.icon;
-
-		/*
-		 * IE7-下,直接在内联对象(display:inline)后 跟块对象(display:block),
-		 * 则该块对象将会紧跟前面的内联对象而不换行。也就是说IE7下的块对象只在元素后增加换行，而在该块对象前不增加换行；
-		 *
-		 * IE8,IE9,Firefox4+,Chrome11+ 对于块对象(display:block)则是前后均换行；
-		 *
-		 * 基于上述考虑，为兼容IE7- 这里将select元素和label元素使用div元素包裹起来，然后在该div元素后添BigSelect div元素
-		 * <div>
-		 * 	<select></select>
-		 * 	<label></label>
-		 * </div>
-		 * <div class='bigSelect'></div>
-		 *
-		 * 如果不考虑IE7-,则这句可以省去,最终创建结果DOM为:
-		 * <select></select><div class='bigSelect'></div><label></label>
-		 *
-		 */
-		this.wrap($("<div>"));
 
 		var $label = $("<label>").attr({
 			"for" : this.attr("id")
-		}).append(txt).css({
+		}).append(opts.css.icon).css({
 			cursor : 'pointer',
 			padding : '0px 4px',
 			'font-size' : '12px'

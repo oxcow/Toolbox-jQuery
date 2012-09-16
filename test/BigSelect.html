@@ -6,9 +6,21 @@
 		<link rel="stylesheet" type="text/css" href="../src/BigSelect/css/jquery.BigSelect.css" />
 		<script type="text/javascript" src="../libs/jquery-1.7.2.js"></script>
 		<script type="text/javascript" src="../src/BigSelect/jquery.BigSelect.js"></script>
+		<style type="text/css">
+			td {
+				line-height: 24px;
+			}
+			select {
+				margin: 14px 14px;
+			}
+		</style>
 		<script type="text/javascript">
 			$(function() {
-
+				$(".out1").bigSelect({
+					core : {
+						MatchMode : 'end'
+					}
+				});
 				$(".data1").bigSelect({
 					core : {
 						MatchMode : 'end'
@@ -57,6 +69,34 @@
 		</script>
 	</head>
 	<body>
+		<label>Form外</label><label>测试</label>
+		<select name='sel1' class='out1'>
+			<option value='Java'>Java</option>
+			<option value='Javascript'>Javascript</option>
+			<option value='Php'>Php</option>
+			<option value='.Net'>.Net</option>
+			<option value='C#'>C#</option>
+			<option value='Ajax'>Ajax</option>
+			<option value='Perl'>Perl</option>
+			<option value='Ruby On Rails'>Ruby on Rails</option>
+			<option value='Object-C'>Object-C</option>
+			<option value='Python'>Python</option>
+			<option value='C'>C</option>
+			<option value='C++'>C++</option>
+			<option value='D'>D</option>
+			<option value='PL/SQL'>PL/SQL</option>
+			<option value='Groovy'>Groovy</option>
+			<option value='Matlab'>Matlab</option>
+			<option value='Lisp'>Lisp</option>
+			<option value='jQuery'>jQuery</option>
+			<option value='dojo'>Dojo</option>
+			<option value='Logo'>Logo</option>
+			<option value='Ada'>Ada</option>
+			<option value='Pascal'>Pascal</option>
+			<option value='Bash'>Bash</option>
+			<option value='VBScript'>VBScript</option>
+		</select>
+
 		<img id = 'img1' src="http://edu.qzs.qq.com/ac/qzone_v5/client/auth_icon.png"/>
 		<form name="bigSelectFrm" method="get">
 			<table border='1' width='80%' align='center'>

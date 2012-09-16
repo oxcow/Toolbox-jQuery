@@ -11,14 +11,23 @@
 		<delete dir="${build.dir}" />
 	</target>
 
-	<!-- 使用Google Closure Compiler 压缩js文件 -->
-	<target name="js.min" depends="js.clean">
-		<echo message="version = ${version}" />
+	<!-- 拷贝src下的所有js文件到build目录下-->
+	<target name='js.copy' depends="js.clean">
 		<mkdir dir="${build.dir}" />
-		<apply executable="java">
+		<copy todir="${build.dir}">
 			<fileset dir="${src.dir}">
+				<include name="**/*.js"/>
+			</fileset>
+			<flattenmapper/>
+		</copy>
+	</target>
+
+	<!-- 使用Google Closure Compiler 压缩js文件 -->
+	<target name="js.min" depends="js.copy">
+		<echo message="version = ${version}" />
+		<apply executable="java">
+			<fileset dir="${build.dir}">
 				<include name="*.js" />
-				<!--<include name="sAutoComplete/*.js" />-->
 			</fileset>
 			<!-- command  java -jar compiler.jar \-\-js hello.js \-\-js_output_file hello-compiled.js -->
 			<arg line="-jar" />
