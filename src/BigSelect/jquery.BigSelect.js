@@ -17,7 +17,7 @@
 	/**
 	 * 数据存储对象
 	 *
-	 * 数据结构 : [{k : kv, v: vv}, {k1 : kv1, v1: vv1}, {k2 : kv2, v2: vv2}, ...]
+	 * 数据结构 : [{k : kv, v: vv}, {k : kv1, v: vv1}, {k : kv2, v: vv2}, ...]
 	 *
 	 */
 	function DataSource() {
@@ -44,11 +44,14 @@
 			 * 应该跟浏览器对数组循环及元素属性获取的优化有关。
 			 * Firefox,Chrome,IE9上性能差别不是很大。
 			 *
-			 * 2012/9/16改写该方法.使其先加载前400条数据展示给用户，其余数据通过timeout后获取.
+			 * 2012/9/16: 改写该方法.使其先加载前400条数据展示给用户，其余数据通过timeout后获取.
+			 *
+			 * 2012/9/23: 使用分批加载后仍存在问题。当剩余数据没有加载完成时，虽然会显示出来第一页数据，但仍会导致浏览器阻塞而无法进行其他操作！
 			 *
 			 */
 			if (dataType.toLowerCase() === 'select') {
 				var s = +new Date();
+
 				var $seldate = selectObj.find("option");
 
 				var iLen = $seldate.length;
@@ -86,16 +89,6 @@
 						break;
 					}
 				}
-				/*
-				 $seldate.each(function(idx, elem) {
-				 var _k = $.trim($(elem).val());
-				 if (_k) {
-				 self.dataSet.push({
-				 key : _k,
-				 val : $.trim($(elem).text())
-				 });
-				 }
-				 });*/
 				var e = +new Date();
 				if (console) {
 					console.info("加载options元素 400 花费: ", e - s + "ms");
@@ -193,14 +186,14 @@
 		/**
 		 * 分页数据起始索引
 		 */
-		this.start = function() {
+		this.getStartIndex = function() {
 			return (this.CURRENT_PAGE - 1) * this.DEFAULT_SIZE;
 		};
 		/**
 		 * 分页数据结束索引
 		 */
-		this.end = function() {
-			return Math.min(this.TOTAL_SIZE, this.start() + this.DEFAULT_SIZE);
+		this.getEndIndex = function() {
+			return Math.min(this.TOTAL_SIZE, this.getStartIndex() + this.DEFAULT_SIZE);
 		};
 		/**
 		 * 下一页
@@ -247,33 +240,44 @@
 		 *            bigSelectFrame BigSelect HTML框架对象
 		 */
 		this.showPagedata = function(bigSelectFrame) {
-			$dataPlacement = $("#" + bigSelectFrame.bigSelectContentId);
-			$dataPlacement.find('ul').detach();
-			var $ul = $("<ul>");
-			for (var i = this.start(); i < this.end(); i++) {
+
+			var $dataPlacement = $("#" + bigSelectFrame.bigSelectContentId);
+
+			var $ul = $dataPlacement.find("ul");
+
+			if (!$ul || $ul.length === 0) {
+				$ul = $("<ul>").delegate("li", "click", function() {
+
+					bigSelectFrame.caller.val($.data(this)[bigSelectFrame.opts.core.key]);
+
+					setTimeout(function() {
+						$("#" + bigSelectFrame.bigSelectId).hide("slow");
+					}, 20);
+				});
+			} else {
+				$ul.empty();
+			}
+			
+			var frag = document.createDocumentFragment();
+			var _sIdx = this.getStartIndex(), _eIdx = this.getEndIndex();
+			var _val = bigSelectFrame.opts.core.val || "val";
+			
+			for (var i = _sIdx; i < _eIdx; i++) {
 
 				if (!this.data[i])
 					continue;
 
-				var _v = this.data[i][bigSelectFrame.opts.core.val || "val"];
+				var _v = this.data[i][_val];
 
-				var $li = $("<li>");
+				var $li = $("<li title='" + _v + "'><label>" + _v + "</label></li>");
 
-				var $label = $("<label>").attr("title", _v).html(_v).css({
-					'cursor' : 'pointer'
-				}).data(this.data[i]);
+				frag.appendChild($li[0]);
 
-				$label.click(function() {
-
-					bigSelectFrame.caller.val($(this).data()[bigSelectFrame.opts.core.key]);
-
-					setTimeout(function() {
-						$("#" + bigSelectFrame.bigSelectId).hide("slow");
-					}, 10);
-				});
-
-				$ul.append($li.append($label));
+				$.data($li[0], this.data[i]);
 			}
+
+			$ul.append(frag);
+
 			$dataPlacement.append($ul);
 		};
 
@@ -290,9 +294,9 @@
 			var $offsetObj = $("#" + bigSelectFrame.bigSelectPageId);
 
 			// 移除已有的分页工具条
-			$offsetObj.find("span").detach();
+			$offsetObj.find("span").remove();
 
-			$total = $("<span>共 " + this.TOTAL_SIZE + " 条数据 </span>");
+			$total = $("<span>" + this.TOTAL_SIZE + "条数据 第" + this.CURRENT_PAGE + "/" + this.TOTAL_PAGE + "页</span>");
 
 			$offsetObj.append($total);
 
@@ -321,23 +325,6 @@
 
 					$offsetObj.append($pre_span.append($pre_link));
 				}
-
-				// 页码跳转
-				if (this.TOTAL_SIZE != 0) {
-					var $jump_span = $("<span>第</span>");
-					var $jump_input = $("<input type='text' maxlength='2' value='" + this.CURRENT_PAGE + "'/>");
-
-					// jumpto event
-					$jump_input.bind("keydown", function(event) {
-						if (event.which == 13) {
-							parent.jumpto(this.value);
-							bigSelectFrame.display(parent);
-						}
-					});
-					var $jump = $jump_span.append($jump_input).append("/" + this.TOTAL_PAGE + "页");
-					$offsetObj.append($jump);
-				}
-
 				// 下一页 ,末页
 				if (this.CURRENT_PAGE < this.TOTAL_PAGE) {
 					var $next_span = $("<span>");
@@ -360,6 +347,41 @@
 						bigSelectFrame.display(parent);
 					});
 					$offsetObj.append($last_span.append($last_link));
+				}
+
+				// 页码跳转
+				if (this.TOTAL_SIZE != 0) {
+					var $jump_span = $("<span>").append("跳转到");
+					if (this.TOTAL_PAGE < 16) {
+						var $jump_select = $("<select>").bind("change", function() {
+							parent.jumpto(this.value);
+							bigSelectFrame.display(parent);
+						});
+						for (var i = 1; i <= this.TOTAL_PAGE; i++) {
+							var $opt = $("<option value='" + i + "'>" + i + "</option>");
+							$jump_select.append($opt);
+						}
+
+						$jump_select.val(this.CURRENT_PAGE);
+						$jump_span.append($jump_select);
+
+					} else {
+						var $jump_input = $("<input/>", {
+							type : 'text',
+							maxlength : 2,
+							value : this.CURRENT_PAGE,
+							title : '回车跳转'
+						});
+						// jumpto event
+						$jump_input.bind("keydown", function(event) {
+							if (event.which == 13) {
+								parent.jumpto(this.value);
+								bigSelectFrame.display(parent);
+							}
+						});
+						$jump_span.append($jump_input);
+					}
+					$offsetObj.append($jump_span.append("页"));
 				}
 			}
 		};
@@ -453,23 +475,37 @@
 		 *
 		 */
 		this.create = function() {
+			var $bigSelect = $("<div>", {
+				id : this.bigSelectId,
+				title : "双击关闭",
+				'class' : 'bigSelect'
 
-			var $bigSelect = $("<div>").attr("id", this.bigSelectId).addClass("bigSelect").css({
+			}).css({
 				'background-color' : this.opts.css.bgcolor,
 				opacity : this.opts.css.opacity,
 				color : this.opts.css.color,
 				width : this.opts.css.width
 			});
 
-			var $search = $("<input type='search' autocomplete='off' />").addClass("bigSelect_search").attr("id", this.bigSelectSearchId);
+			var $search = $("<input />", {
+				type : 'search',
+				autofocus : 'autofocus',
+				id : this.bigSelectSearchId,
+				autocomplete : 'off',
+				'class' : 'bigSelect_search'
+			});
 
-			var $content = $("<div>").addClass("bigSelect_content").attr('id', this.bigSelectContentId);
+			var $content = $("<div>", {
+				id : this.bigSelectContentId,
+				'class' : 'bigSelect_content'
+			});
 
-			var $page = $("<div>").addClass("bigSelect_page").attr("id", this.bigSelectPageId);
+			var $page = $("<div>", {
+				id : this.bigSelectPageId,
+				'class' : 'bigSelect_page'
+			});
 
 			$bigSelect.append($search).append($content).append($page);
-
-			$bigSelect.attr("title", "双击关闭");
 
 			var parent = this;
 			$bigSelect.dblclick(function() {
@@ -532,23 +568,29 @@
 
 				// bind search event
 				$("#" + bigSelectFrame.bigSelectSearchId).keyup(function() {
+
 					var ipt = escapeRegex($.trim($(this).val()));
-					var matchMode = options.core.MatchMode.toUpperCase();
-					var reg = null;
-					switch(matchMode) {
-						case 'START':
-							reg = new RegExp("^" + ipt, "i");
-							break;
-						case 'END':
-							reg = new RegExp(ipt + "$", "i");
-							break;
-						case 'LIKE':
-							reg = new RegExp(ipt, "i");
-							break;
-						default:
-							reg = new RegExp("^" + ipt, "i");
+
+					if (!ipt) {
+						page.reset(dataSource.dataSet);
+					} else {
+						var matchMode = options.core.MatchMode.toUpperCase();
+						var reg = null;
+						switch(matchMode) {
+							case 'START':
+								reg = new RegExp("^" + ipt, "i");
+								break;
+							case 'END':
+								reg = new RegExp(ipt + "$", "i");
+								break;
+							case 'LIKE':
+								reg = new RegExp(ipt, "i");
+								break;
+							default:
+								reg = new RegExp("^" + ipt, "i");
+						}
+						page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
 					}
-					page.reset(dataSource.getRegExpDataSet(reg, options.core.val));
 					bigSelectFrame.display(page);
 				});
 			} else {
@@ -559,19 +601,21 @@
 			}
 			// 根据浏览器窗口大小调整显示的位置
 			$('#' + bigSelectFrame.bigSelectId).css(bigSelectFrame.getOffset());
+
 		}
 	};
 
 	$.fn.bigSelect = function(options) {
+
 		var opts = $.extend(true, {}, $.fn.bigSelect.defaults, options);
 
-		var $label = $("<label>").attr({
+		var $label = $("<label>", {
 			"for" : this.attr("id")
-		}).append(opts.css.icon).css({
+		}).css({
 			cursor : 'pointer',
 			padding : '0px 4px',
 			'font-size' : '12px'
-		});
+		}).append(opts.css.icon);
 
 		this.after($label);
 

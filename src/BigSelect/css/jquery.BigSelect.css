@@ -1,68 +1,69 @@
 @CHARSET "UTF-8";
-
 .bigSelect {
-	margin: 0px 0px;
-	padding: 0px 0px;
-	font-family: "Courier New", "微软雅黑", Symbol, serif;
-	border: 1px solid teal;
-	position: absolute;
-	z-index: 200;
-	border-radius: 10px;
-	-moz-border-radius: 10px;
-	-webkit-border-radius: 10px;
-	box-shadow: 5px 2px 6px #000;
-	-moz-box-shadow: 5px 2px 6px #000;
-	-webkit-box-shadow: 5px 2px 6px #000;
+	margin:0px 0px;
+	padding:0px 0px;
+	font-family:"Courier New","微软雅黑",Symbol,serif;
+	border:1px solid teal;
+	position:absolute;
+	z-index:200;
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	box-shadow:5px 2px 6px #000;
+	-moz-box-shadow:5px 2px 6px #000;
+	-webkit-box-shadow:5px 2px 6px #000;
 }
-
 .bigSelect_search {
-	margin: 8px 2px 2px 6px;
-	padding: 1px 2px;
-	width: 240px;
-	height: 24px;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
+	margin:8px 2px 2px 6px;
+	padding:1px 2px;
+	width:240px;
+	height:24px;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
 }
-
 .bigSelect_content {
-	margin: 2px 4px;
-	padding: 1px 2px;
-	border: 0px solid teal;
-	overflow: hidden;
+	margin:2px 4px;
+	padding:1px 2px;
+	border:0px solid teal;
+	overflow:hidden;
 }
-
 .bigSelect_content ul {
-	margin-top: 0px;
-	padding-left: 14px;
-	border: 0px solid green;
+	margin-top:0px;
+	padding-left:14px;
+	border:0px solid green;
 }
-
 .bigSelect_content ul li {
-	margin: 6px 6px 6px 0px;
-	width: 100px;
-	float: left;
-	list-style-type: none;
-	border: 0px solid red;
-	text-decoration: underline;
-	text-align: center;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	margin:3px 0px;
+	width:100px;
+	line-height: 30px;
+	float:left;
+	list-style-type:none;
+	border:0px solid red;
+	text-decoration:underline;
+	text-align:center;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	cursor:pointer;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
 }
-
+.bigSelect_content ul li:hover {
+	background-color:#FFFF00;
+	opacity:0.9;
+}
 .bigSelect_page {
-	font-size: 12px;
-	margin-right: 16px;
-	margin-bottom: 8px;
-	text-align: right;
+	font-size:12px;
+	margin-right:16px;
+	margin-bottom:8px;
+	text-align:right;
 }
-
 .bigSelect_page span {
-	margin: 4px 4px;
+	margin:4px 4px;
 }
-
 .bigSelect_page input {
-	width: 20px;
-	height: 13px;
+	width:20px;
+	height:13px;
 }
