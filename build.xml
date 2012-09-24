@@ -3,7 +3,7 @@
 
 	<property name="build.dir" value="./build" />
 	<property name="src.dir" value="./src" />
-	<property name="version" value="0.1" />
+	<property name="version" value="0.1beta" />
 	<property name="closure-jar" value="./libs/compiler.jar" />
 
 	<!-- 清理build目录下的 *.js文件 -->
@@ -43,7 +43,7 @@
 			-->
 			<targetfile />
 			<arg value="--js" />
-			<mapper type="glob" from="*.js" to="${build.dir}/*.min.js" />
+			<mapper type="glob" from="*.js" to="${build.dir}/*-${version}.min.js" />
 
 		</apply>
 	</target>
