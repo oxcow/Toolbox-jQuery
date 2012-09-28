@@ -1,0 +1,4919 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Array Speed Test</title>
+		<script type="text/javascript" src="../libs/jquery-1.7.2.js"></script>
+		<script type="text/javascript">
+			function addD(tmp, opt) {
+				var _k = $.trim($(opt).val());
+				if (_k) {
+					tmp.push({
+						key : _k,
+						val : $.trim($(opt).text())
+					});
+				}
+			}
+
+			function addIndex(tmp, opt, i) {
+				var _k = $.trim($(opt).val());
+				if (_k) {
+					tmp[i] = {
+						key : _k,
+						val : $.trim($(opt).text())
+					};
+				}
+			}
+
+			function jeach($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				$seldate.each(function(idx, elem) {
+					addD(tmp, elem);
+				});
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " jeach-push 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function jeach1($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				$seldate.each(function(idx, elem) {
+					addIndex(tmp, elem, idx);
+				});
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " jeach 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function feach($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				var iLen = $seldate.length;
+				for (var i = 0; i < iLen; i++) {
+					if(i == 10){
+						setTimeout(function(){
+							console.log("Thead-1:");
+							//console.log("iLen : ",iLen);
+							//console.log("i : ",i);
+							//console.log("$seldate : ",$seldate);
+							console.time("inn");
+							for(var j = i ;j<iLen;j++){
+								addD(tmp, $seldate[j]);
+							}
+							console.timeEnd('inn');
+							console.log("tmp : ",tmp);
+						},1000);
+						break;
+					}else{
+						addD(tmp, $seldate[i]);
+					}
+					
+				}
+				var e = +new Date();
+				if (console) {
+					console.log("tmp-1 : ",tmp);
+					console.info(tmp.length, " feach-push 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function feach1($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				var iLen = $seldate.length;
+				for (var i = 0; i < iLen; i++) {
+					addIndex(tmp, $seldate[i], i);
+				}
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " feach 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function duffSwitch($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				var iLen = $seldate.length;
+				var loop = Math.ceil(iLen / 8);
+				var mod = iLen % 8;
+				var i = 0;
+				do {
+					switch(mod) {
+						case 0 :
+							addD(tmp, $seldate[i++]);
+						case 7 :
+							addD(tmp, $seldate[i++]);
+						case 6 :
+							addD(tmp, $seldate[i++]);
+						case 5 :
+							addD(tmp, $seldate[i++]);
+						case 4 :
+							addD(tmp, $seldate[i++]);
+						case 3 :
+							addD(tmp, $seldate[i++]);
+						case 2 :
+							addD(tmp, $seldate[i++]);
+						case 1 :
+							addD(tmp, $seldate[i++]);
+					}
+					mod = 0;
+				} while(--loop);
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " duffSwitch-push 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function duffSwitch1($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				var iLen = $seldate.length;
+				var loop = Math.ceil(iLen / 8);
+				var mod = iLen % 8;
+				var i = 0;
+				do {
+					switch(mod) {
+						case 0 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 7 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 6 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 5 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 4 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 3 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 2 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+						case 1 :
+							addIndex(tmp, $seldate[--iLen], iLen);
+					}
+					mod = 0;
+				} while(--loop);
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " duffSwitch 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function duffWhile($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				var iLen = $seldate.length;
+				var loop = Math.ceil(iLen / 8);
+				var mod = iLen % 8;
+
+				while (mod--) {
+					addD(tmp, $seldate[--iLen]);
+				}
+				while (loop--) {
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+					addD(tmp, $seldate[--iLen]);
+				}
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " duffWhile-push 花费: " + (e - s) + "ms");
+				}
+			}
+
+			function duffWhile1($seldate) {
+				var s = +new Date();
+				var tmp = [];
+				var iLen = $seldate.length;
+				var loop = Math.ceil(iLen / 8);
+				var mod = iLen % 8;
+
+				while (mod--) {
+					addIndex(tmp, $seldate[--iLen], iLen);
+				}
+				while (loop--) {
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+					addIndex(tmp, $seldate[--iLen], iLen);
+				}
+				var e = +new Date();
+				if (console) {
+					console.info(tmp.length, " duffWhile 花费: " + (e - s) + "ms");
+				}
+			}
+
+			$(function() {
+				$("#dufftest").click(function() {
+					var $seldata = $("#data2").find("option");
+					//jeach($seldata);
+					//jeach1($seldata);
+					feach($seldata);
+					feach1($seldata);
+					//duffSwitch($seldata);
+					//duffSwitch1($seldata);
+					//duffWhile($seldata);
+					//duffWhile1($seldata);
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<button id='dufftest'>
+			test
+		</button>
+
+		<select name='sel2' id='data2'>
+			<option value="dcq">东城区</option>
+			<option value="xcq">西城区</option>
+			<option value="cwq">崇文区</option>
+			<option value="1宣武区">宣武区</option>
+			<option value="1朝阳区">朝阳区</option>
+			<option value="1丰台区">丰台区</option>
+			<option value="石景山区">石景山区</option>
+			<option value="海淀区">海淀区</option>
+			<option value="门头沟区">门头沟区</option>
+			<option value="房山区">房山区</option>
+			<option value="通州区">通州区</option>
+			<option value="顺义区">顺义区</option>
+			<option value="昌平区">昌平区</option>
+			<option value="大兴区">大兴区</option>
+			<option value="怀柔区">怀柔区</option>
+			<option value="平谷区">平谷区</option>
+			<option value="密云县">密云县</option>
+			<option value="延庆县">延庆县</option>
+			<option value="和平区">和平区</option>
+			<option value="河东区">河东区</option>
+			<option value="河西区">河西区</option>
+			<option value="南开区">南开区</option>
+			<option value="河北区">河北区</option>
+			<option value="红桥区">红桥区</option>
+			<option value="塘沽区">塘沽区</option>
+			<option value="汉沽区">汉沽区</option>
+			<option value="大港区">大港区</option>
+			<option value="东丽区">东丽区</option>
+			<option value="西青区">西青区</option>
+			<option value="津南区">津南区</option>
+			<option value="北辰区">北辰区</option>
+			<option value="武清区">武清区</option>
+			<option value="宝坻区">宝坻区</option>
+			<option value="宁河县">宁河县</option>
+			<option value="静海县">静海县</option>
+			<option value="蓟县">蓟县</option>
+			<option value="长安区">长安区</option>
+			<option value="桥东区">桥东区</option>
+			<option value="桥西区">桥西区</option>
+			<option value="新华区">新华区</option>
+			<option value="井陉矿区">井陉矿区</option>
+			<option value="裕华区">裕华区</option>
+			<option value="井陉县">井陉县</option>
+			<option value="正定县">正定县</option>
+			<option value="栾城县">栾城县</option>
+			<option value="行唐县">行唐县</option>
+			<option value="灵寿县">灵寿县</option>
+			<option value="高邑县">高邑县</option>
+			<option value="深泽县">深泽县</option>
+			<option value="赞皇县">赞皇县</option>
+			<option value="无极县">无极县</option>
+			<option value="平山县">平山县</option>
+			<option value="元氏县">元氏县</option>
+			<option value="赵县">赵县</option>
+			<option value="辛集市">辛集市</option>
+			<option value="藁城市">藁城市</option>
+			<option value="晋州市">晋州市</option>
+			<option value="新乐市">新乐市</option>
+			<option value="鹿泉市">鹿泉市</option>
+			<option value="路南区">路南区</option>
+			<option value="路北区">路北区</option>
+			<option value="古冶区">古冶区</option>
+			<option value="开平区">开平区</option>
+			<option value="丰南区">丰南区</option>
+			<option value="丰润区">丰润区</option>
+			<option value="滦县">滦县</option>
+			<option value="滦南县">滦南县</option>
+			<option value="乐亭县">乐亭县</option>
+			<option value="迁西县">迁西县</option>
+			<option value="玉田县">玉田县</option>
+			<option value="唐海县">唐海县</option>
+			<option value="遵化市">遵化市</option>
+			<option value="迁安市">迁安市</option>
+			<option value="海港区">海港区</option>
+			<option value="山海关区">山海关区</option>
+			<option value="北戴河区">北戴河区</option>
+			<option value="青龙满族自治县">青龙满族自治县</option>
+			<option value="昌黎县">昌黎县</option>
+			<option value="抚宁县">抚宁县</option>
+			<option value="卢龙县">卢龙县</option>
+			<option value="邯山区">邯山区</option>
+			<option value="丛台区">丛台区</option>
+			<option value="复兴区">复兴区</option>
+			<option value="峰峰矿区">峰峰矿区</option>
+			<option value="邯郸县">邯郸县</option>
+			<option value="临漳县">临漳县</option>
+			<option value="成安县">成安县</option>
+			<option value="大名县">大名县</option>
+			<option value="涉县">涉县</option>
+			<option value="磁县">磁县</option>
+			<option value="肥乡县">肥乡县</option>
+			<option value="永年县">永年县</option>
+			<option value="邱县">邱县</option>
+			<option value="鸡泽县">鸡泽县</option>
+			<option value="广平县">广平县</option>
+			<option value="馆陶县">馆陶县</option>
+			<option value="魏县">魏县</option>
+			<option value="曲周县">曲周县</option>
+			<option value="武安市">武安市</option>
+			<option value="桥东区">桥东区</option>
+			<option value="桥西区">桥西区</option>
+			<option value="邢台县">邢台县</option>
+			<option value="临城县">临城县</option>
+			<option value="内丘县">内丘县</option>
+			<option value="柏乡县">柏乡县</option>
+			<option value="隆尧县">隆尧县</option>
+			<option value="任县">任县</option>
+			<option value="南和县">南和县</option>
+			<option value="宁晋县">宁晋县</option>
+			<option value="巨鹿县">巨鹿县</option>
+			<option value="新河县">新河县</option>
+			<option value="广宗县">广宗县</option>
+			<option value="平乡县">平乡县</option>
+			<option value="威县">威县</option>
+			<option value="清河县">清河县</option>
+			<option value="临西县">临西县</option>
+			<option value="南宫市">南宫市</option>
+			<option value="沙河市">沙河市</option>
+			<option value="新市区">新市区</option>
+			<option value="北市区">北市区</option>
+			<option value="南市区">南市区</option>
+			<option value="满城县">满城县</option>
+			<option value="清苑县">清苑县</option>
+			<option value="涞水县">涞水县</option>
+			<option value="阜平县">阜平县</option>
+			<option value="徐水县">徐水县</option>
+			<option value="定兴县">定兴县</option>
+			<option value="唐县">唐县</option>
+			<option value="高阳县">高阳县</option>
+			<option value="容城县">容城县</option>
+			<option value="涞源县">涞源县</option>
+			<option value="望都县">望都县</option>
+			<option value="安新县">安新县</option>
+			<option value="易县">易县</option>
+			<option value="曲阳县">曲阳县</option>
+			<option value="蠡县">蠡县</option>
+			<option value="顺平县">顺平县</option>
+			<option value="博野县">博野县</option>
+			<option value="雄县">雄县</option>
+			<option value="涿州市">涿州市</option>
+			<option value="定州市">定州市</option>
+			<option value="安国市">安国市</option>
+			<option value="高碑店市">高碑店市</option>
+			<option value="桥东区">桥东区</option>
+			<option value="桥西区">桥西区</option>
+			<option value="宣化区">宣化区</option>
+			<option value="下花园区">下花园区</option>
+			<option value="宣化县">宣化县</option>
+			<option value="张北县">张北县</option>
+			<option value="康保县">康保县</option>
+			<option value="沽源县">沽源县</option>
+			<option value="尚义县">尚义县</option>
+			<option value="蔚县">蔚县</option>
+			<option value="阳原县">阳原县</option>
+			<option value="怀安县">怀安县</option>
+			<option value="万全县">万全县</option>
+			<option value="怀来县">怀来县</option>
+			<option value="涿鹿县">涿鹿县</option>
+			<option value="赤城县">赤城县</option>
+			<option value="崇礼县">崇礼县</option>
+			<option value="双桥区">双桥区</option>
+			<option value="双滦区">双滦区</option>
+			<option value="鹰手营子矿区">鹰手营子矿区</option>
+			<option value="承德县">承德县</option>
+			<option value="兴隆县">兴隆县</option>
+			<option value="平泉县">平泉县</option>
+			<option value="滦平县">滦平县</option>
+			<option value="隆化县">隆化县</option>
+			<option value="丰宁满族自治县">丰宁满族自治县</option>
+			<option value="宽城满族自治县">宽城满族自治县</option>
+			<option value="围场满族蒙古族自治县">围场满族蒙古族自治县</option>
+			<option value="新华区">新华区</option>
+			<option value="运河区">运河区</option>
+			<option value="沧县">沧县</option>
+			<option value="青县">青县</option>
+			<option value="东光县">东光县</option>
+			<option value="海兴县">海兴县</option>
+			<option value="盐山县">盐山县</option>
+			<option value="肃宁县">肃宁县</option>
+			<option value="南皮县">南皮县</option>
+			<option value="吴桥县">吴桥县</option>
+			<option value="献县">献县</option>
+			<option value="孟村回族自治县">孟村回族自治县</option>
+			<option value="泊头市">泊头市</option>
+			<option value="任丘市">任丘市</option>
+			<option value="黄骅市">黄骅市</option>
+			<option value="河间市">河间市</option>
+			<option value="安次区">安次区</option>
+			<option value="广阳区">广阳区</option>
+			<option value="固安县">固安县</option>
+			<option value="永清县">永清县</option>
+			<option value="香河县">香河县</option>
+			<option value="大城县">大城县</option>
+			<option value="文安县">文安县</option>
+			<option value="大厂回族自治县">大厂回族自治县</option>
+			<option value="霸州市">霸州市</option>
+			<option value="三河市">三河市</option>
+			<option value="桃城区">桃城区</option>
+			<option value="枣强县">枣强县</option>
+			<option value="武邑县">武邑县</option>
+			<option value="武强县">武强县</option>
+			<option value="饶阳县">饶阳县</option>
+			<option value="安平县">安平县</option>
+			<option value="故城县">故城县</option>
+			<option value="景县">景县</option>
+			<option value="阜城县">阜城县</option>
+			<option value="冀州市">冀州市</option>
+			<option value="深州市">深州市</option>
+			<option value="小店区">小店区</option>
+			<option value="迎泽区">迎泽区</option>
+			<option value="杏花岭区">杏花岭区</option>
+			<option value="尖草坪区">尖草坪区</option>
+			<option value="万柏林区">万柏林区</option>
+			<option value="晋源区">晋源区</option>
+			<option value="清徐县">清徐县</option>
+			<option value="阳曲县">阳曲县</option>
+			<option value="娄烦县">娄烦县</option>
+			<option value="古交市">古交市</option>
+			<option value="城区">城区</option>
+			<option value="矿区">矿区</option>
+			<option value="南郊区">南郊区</option>
+			<option value="新荣区">新荣区</option>
+			<option value="阳高县">阳高县</option>
+			<option value="天镇县">天镇县</option>
+			<option value="广灵县">广灵县</option>
+			<option value="灵丘县">灵丘县</option>
+			<option value="浑源县">浑源县</option>
+			<option value="左云县">左云县</option>
+			<option value="大同县">大同县</option>
+			<option value="城区">城区</option>
+			<option value="矿区">矿区</option>
+			<option value="郊区">郊区</option>
+			<option value="平定县">平定县</option>
+			<option value="盂县">盂县</option>
+			<option value="城区">城区</option>
+			<option value="郊区">郊区</option>
+			<option value="长治县">长治县</option>
+			<option value="襄垣县">襄垣县</option>
+			<option value="屯留县">屯留县</option>
+			<option value="平顺县">平顺县</option>
+			<option value="黎城县">黎城县</option>
+			<option value="壶关县">壶关县</option>
+			<option value="长子县">长子县</option>
+			<option value="武乡县">武乡县</option>
+			<option value="沁县">沁县</option>
+			<option value="沁源县">沁源县</option>
+			<option value="潞城市">潞城市</option>
+			<option value="城区">城区</option>
+			<option value="沁水县">沁水县</option>
+			<option value="阳城县">阳城县</option>
+			<option value="陵川县">陵川县</option>
+			<option value="泽州县">泽州县</option>
+			<option value="高平市">高平市</option>
+			<option value="朔城区">朔城区</option>
+			<option value="平鲁区">平鲁区</option>
+			<option value="山阴县">山阴县</option>
+			<option value="应县">应县</option>
+			<option value="右玉县">右玉县</option>
+			<option value="怀仁县">怀仁县</option>
+			<option value="榆次区">榆次区</option>
+			<option value="榆社县">榆社县</option>
+			<option value="左权县">左权县</option>
+			<option value="和顺县">和顺县</option>
+			<option value="昔阳县">昔阳县</option>
+			<option value="寿阳县">寿阳县</option>
+			<option value="太谷县">太谷县</option>
+			<option value="祁县">祁县</option>
+			<option value="平遥县">平遥县</option>
+			<option value="灵石县">灵石县</option>
+			<option value="介休市">介休市</option>
+			<option value="盐湖区">盐湖区</option>
+			<option value="临猗县">临猗县</option>
+			<option value="万荣县">万荣县</option>
+			<option value="闻喜县">闻喜县</option>
+			<option value="稷山县">稷山县</option>
+			<option value="新绛县">新绛县</option>
+			<option value="绛县">绛县</option>
+			<option value="垣曲县">垣曲县</option>
+			<option value="夏县">夏县</option>
+			<option value="平陆县">平陆县</option>
+			<option value="芮城县">芮城县</option>
+			<option value="永济市">永济市</option>
+			<option value="河津市">河津市</option>
+			<option value="忻府区">忻府区</option>
+			<option value="定襄县">定襄县</option>
+			<option value="五台县">五台县</option>
+			<option value="代县">代县</option>
+			<option value="繁峙县">繁峙县</option>
+			<option value="宁武县">宁武县</option>
+			<option value="静乐县">静乐县</option>
+			<option value="神池县">神池县</option>
+			<option value="五寨县">五寨县</option>
+			<option value="岢岚县">岢岚县</option>
+			<option value="河曲县">河曲县</option>
+			<option value="保德县">保德县</option>
+			<option value="偏关县">偏关县</option>
+			<option value="原平市">原平市</option>
+			<option value="尧都区">尧都区</option>
+			<option value="曲沃县">曲沃县</option>
+			<option value="翼城县">翼城县</option>
+			<option value="襄汾县">襄汾县</option>
+			<option value="洪洞县">洪洞县</option>
+			<option value="古县">古县</option>
+			<option value="安泽县">安泽县</option>
+			<option value="浮山县">浮山县</option>
+			<option value="吉县">吉县</option>
+			<option value="乡宁县">乡宁县</option>
+			<option value="大宁县">大宁县</option>
+			<option value="隰县">隰县</option>
+			<option value="永和县">永和县</option>
+			<option value="蒲县">蒲县</option>
+			<option value="汾西县">汾西县</option>
+			<option value="侯马市">侯马市</option>
+			<option value="霍州市">霍州市</option>
+			<option value="离石区">离石区</option>
+			<option value="文水县">文水县</option>
+			<option value="交城县">交城县</option>
+			<option value="兴县">兴县</option>
+			<option value="临县">临县</option>
+			<option value="柳林县">柳林县</option>
+			<option value="石楼县">石楼县</option>
+			<option value="岚县">岚县</option>
+			<option value="方山县">方山县</option>
+			<option value="中阳县">中阳县</option>
+			<option value="交口县">交口县</option>
+			<option value="孝义市">孝义市</option>
+			<option value="汾阳市">汾阳市</option>
+			<option value="新城区">新城区</option>
+			<option value="回民区">回民区</option>
+			<option value="玉泉区">玉泉区</option>
+			<option value="赛罕区">赛罕区</option>
+			<option value="土默特左旗">土默特左旗</option>
+			<option value="托克托县">托克托县</option>
+			<option value="和林格尔县">和林格尔县</option>
+			<option value="清水河县">清水河县</option>
+			<option value="武川县">武川县</option>
+			<option value="东河区">东河区</option>
+			<option value="昆都仑区">昆都仑区</option>
+			<option value="青山区">青山区</option>
+			<option value="石拐区">石拐区</option>
+			<option value="白云矿区">白云矿区</option>
+			<option value="九原区">九原区</option>
+			<option value="土默特右旗">土默特右旗</option>
+			<option value="固阳县">固阳县</option>
+			<option value="达尔罕茂明安联合旗">达尔罕茂明安联合旗</option>
+			<option value="海勃湾区">海勃湾区</option>
+			<option value="海南区">海南区</option>
+			<option value="乌达区">乌达区</option>
+			<option value="红山区">红山区</option>
+			<option value="元宝山区">元宝山区</option>
+			<option value="松山区">松山区</option>
+			<option value="阿鲁科尔沁旗">阿鲁科尔沁旗</option>
+			<option value="巴林左旗">巴林左旗</option>
+			<option value="巴林右旗">巴林右旗</option>
+			<option value="林西县">林西县</option>
+			<option value="克什克腾旗">克什克腾旗</option>
+			<option value="翁牛特旗">翁牛特旗</option>
+			<option value="喀喇沁旗">喀喇沁旗</option>
+			<option value="宁城县">宁城县</option>
+			<option value="敖汉旗">敖汉旗</option>
+			<option value="科尔沁区">科尔沁区</option>
+			<option value="科尔沁左翼中旗">科尔沁左翼中旗</option>
+			<option value="科尔沁左翼后旗">科尔沁左翼后旗</option>
+			<option value="开鲁县">开鲁县</option>
+			<option value="库伦旗">库伦旗</option>
+			<option value="奈曼旗">奈曼旗</option>
+			<option value="扎鲁特旗">扎鲁特旗</option>
+			<option value="霍林郭勒市">霍林郭勒市</option>
+			<option value="东胜区">东胜区</option>
+			<option value="达拉特旗">达拉特旗</option>
+			<option value="准格尔旗">准格尔旗</option>
+			<option value="鄂托克前旗">鄂托克前旗</option>
+			<option value="鄂托克旗">鄂托克旗</option>
+			<option value="杭锦旗">杭锦旗</option>
+			<option value="乌审旗">乌审旗</option>
+			<option value="伊金霍洛旗">伊金霍洛旗</option>
+			<option value="海拉尔区">海拉尔区</option>
+			<option value="阿荣旗">阿荣旗</option>
+			<option value="莫力达瓦达斡尔族自治旗">莫力达瓦达斡尔族自治旗</option>
+			<option value="鄂伦春自治旗">鄂伦春自治旗</option>
+			<option value="鄂温克族自治旗">鄂温克族自治旗</option>
+			<option value="陈巴尔虎旗">陈巴尔虎旗</option>
+			<option value="新巴尔虎左旗">新巴尔虎左旗</option>
+			<option value="新巴尔虎右旗">新巴尔虎右旗</option>
+			<option value="满洲里市">满洲里市</option>
+			<option value="牙克石市">牙克石市</option>
+			<option value="扎兰屯市">扎兰屯市</option>
+			<option value="额尔古纳市">额尔古纳市</option>
+			<option value="根河市">根河市</option>
+			<option value="临河区">临河区</option>
+			<option value="五原县">五原县</option>
+			<option value="磴口县">磴口县</option>
+			<option value="乌拉特前旗">乌拉特前旗</option>
+			<option value="乌拉特中旗">乌拉特中旗</option>
+			<option value="乌拉特后旗">乌拉特后旗</option>
+			<option value="杭锦后旗">杭锦后旗</option>
+			<option value="集宁区">集宁区</option>
+			<option value="卓资县">卓资县</option>
+			<option value="化德县">化德县</option>
+			<option value="商都县">商都县</option>
+			<option value="兴和县">兴和县</option>
+			<option value="凉城县">凉城县</option>
+			<option value="察哈尔右翼前旗">察哈尔右翼前旗</option>
+			<option value="察哈尔右翼中旗">察哈尔右翼中旗</option>
+			<option value="察哈尔右翼后旗">察哈尔右翼后旗</option>
+			<option value="四子王旗">四子王旗</option>
+			<option value="丰镇市">丰镇市</option>
+			<option value="乌兰浩特市">乌兰浩特市</option>
+			<option value="阿尔山市">阿尔山市</option>
+			<option value="科尔沁右翼前旗">科尔沁右翼前旗</option>
+			<option value="科尔沁右翼中旗">科尔沁右翼中旗</option>
+			<option value="扎赉特旗">扎赉特旗</option>
+			<option value="突泉县">突泉县</option>
+			<option value="二连浩特市">二连浩特市</option>
+			<option value="锡林浩特市">锡林浩特市</option>
+			<option value="阿巴嘎旗">阿巴嘎旗</option>
+			<option value="苏尼特左旗">苏尼特左旗</option>
+			<option value="苏尼特右旗">苏尼特右旗</option>
+			<option value="东乌珠穆沁旗">东乌珠穆沁旗</option>
+			<option value="西乌珠穆沁旗">西乌珠穆沁旗</option>
+			<option value="太仆寺旗">太仆寺旗</option>
+			<option value="镶黄旗">镶黄旗</option>
+			<option value="正镶白旗">正镶白旗</option>
+			<option value="正蓝旗">正蓝旗</option>
+			<option value="多伦县">多伦县</option>
+			<option value="阿拉善左旗">阿拉善左旗</option>
+			<option value="阿拉善右旗">阿拉善右旗</option>
+			<option value="额济纳旗">额济纳旗</option>
+			<option value="和平区">和平区</option>
+			<option value="沈河区">沈河区</option>
+			<option value="大东区">大东区</option>
+			<option value="皇姑区">皇姑区</option>
+			<option value="铁西区">铁西区</option>
+			<option value="苏家屯区">苏家屯区</option>
+			<option value="东陵区">东陵区</option>
+			<option value="新城子区">新城子区</option>
+			<option value="于洪区">于洪区</option>
+			<option value="辽中县">辽中县</option>
+			<option value="康平县">康平县</option>
+			<option value="法库县">法库县</option>
+			<option value="新民市">新民市</option>
+			<option value="中山区">中山区</option>
+			<option value="西岗区">西岗区</option>
+			<option value="沙河口区">沙河口区</option>
+			<option value="甘井子区">甘井子区</option>
+			<option value="旅顺口区">旅顺口区</option>
+			<option value="金州区">金州区</option>
+			<option value="长海县">长海县</option>
+			<option value="瓦房店市">瓦房店市</option>
+			<option value="普兰店市">普兰店市</option>
+			<option value="庄河市">庄河市</option>
+			<option value="铁东区">铁东区</option>
+			<option value="铁西区">铁西区</option>
+			<option value="立山区">立山区</option>
+			<option value="千山区">千山区</option>
+			<option value="台安县">台安县</option>
+			<option value="岫岩满族自治县">岫岩满族自治县</option>
+			<option value="海城市">海城市</option>
+			<option value="新抚区">新抚区</option>
+			<option value="东洲区">东洲区</option>
+			<option value="望花区">望花区</option>
+			<option value="顺城区">顺城区</option>
+			<option value="抚顺县">抚顺县</option>
+			<option value="新宾满族自治县">新宾满族自治县</option>
+			<option value="清原满族自治县">清原满族自治县</option>
+			<option value="平山区">平山区</option>
+			<option value="溪湖区">溪湖区</option>
+			<option value="明山区">明山区</option>
+			<option value="南芬区">南芬区</option>
+			<option value="本溪满族自治县">本溪满族自治县</option>
+			<option value="桓仁满族自治县">桓仁满族自治县</option>
+			<option value="元宝区">元宝区</option>
+			<option value="振兴区">振兴区</option>
+			<option value="振安区">振安区</option>
+			<option value="宽甸满族自治县">宽甸满族自治县</option>
+			<option value="东港市">东港市</option>
+			<option value="凤城市">凤城市</option>
+			<option value="古塔区">古塔区</option>
+			<option value="凌河区">凌河区</option>
+			<option value="太和区">太和区</option>
+			<option value="黑山县">黑山县</option>
+			<option value="义县">义县</option>
+			<option value="凌海市">凌海市</option>
+			<option value="北宁市">北宁市</option>
+			<option value="站前区">站前区</option>
+			<option value="西市区">西市区</option>
+			<option value="鲅鱼圈区">鲅鱼圈区</option>
+			<option value="老边区">老边区</option>
+			<option value="盖州市">盖州市</option>
+			<option value="大石桥市">大石桥市</option>
+			<option value="海州区">海州区</option>
+			<option value="新邱区">新邱区</option>
+			<option value="太平区">太平区</option>
+			<option value="清河门区">清河门区</option>
+			<option value="细河区">细河区</option>
+			<option value="阜新蒙古族自治县">阜新蒙古族自治县</option>
+			<option value="彰武县">彰武县</option>
+			<option value="白塔区">白塔区</option>
+			<option value="文圣区">文圣区</option>
+			<option value="宏伟区">宏伟区</option>
+			<option value="弓长岭区">弓长岭区</option>
+			<option value="太子河区">太子河区</option>
+			<option value="辽阳县">辽阳县</option>
+			<option value="灯塔市">灯塔市</option>
+			<option value="双台子区">双台子区</option>
+			<option value="兴隆台区">兴隆台区</option>
+			<option value="大洼县">大洼县</option>
+			<option value="盘山县">盘山县</option>
+			<option value="银州区">银州区</option>
+			<option value="清河区">清河区</option>
+			<option value="铁岭县">铁岭县</option>
+			<option value="西丰县">西丰县</option>
+			<option value="昌图县">昌图县</option>
+			<option value="调兵山市">调兵山市</option>
+			<option value="开原市">开原市</option>
+			<option value="双塔区">双塔区</option>
+			<option value="龙城区">龙城区</option>
+			<option value="朝阳县">朝阳县</option>
+			<option value="建平县">建平县</option>
+			<option value="喀喇沁左翼蒙古族自治县">喀喇沁左翼蒙古族自治县</option>
+			<option value="北票市">北票市</option>
+			<option value="凌源市">凌源市</option>
+			<option value="连山区">连山区</option>
+			<option value="龙港区">龙港区</option>
+			<option value="南票区">南票区</option>
+			<option value="绥中县">绥中县</option>
+			<option value="建昌县">建昌县</option>
+			<option value="兴城市">兴城市</option>
+			<option value="南关区">南关区</option>
+			<option value="宽城区">宽城区</option>
+			<option value="朝阳区">朝阳区</option>
+			<option value="二道区">二道区</option>
+			<option value="绿园区">绿园区</option>
+			<option value="双阳区">双阳区</option>
+			<option value="农安县">农安县</option>
+			<option value="九台市">九台市</option>
+			<option value="榆树市">榆树市</option>
+			<option value="德惠市">德惠市</option>
+			<option value="昌邑区">昌邑区</option>
+			<option value="龙潭区">龙潭区</option>
+			<option value="船营区">船营区</option>
+			<option value="丰满区">丰满区</option>
+			<option value="永吉县">永吉县</option>
+			<option value="蛟河市">蛟河市</option>
+			<option value="桦甸市">桦甸市</option>
+			<option value="舒兰市">舒兰市</option>
+			<option value="磐石市">磐石市</option>
+			<option value="铁西区">铁西区</option>
+			<option value="铁东区">铁东区</option>
+			<option value="梨树县">梨树县</option>
+			<option value="伊通满族自治县">伊通满族自治县</option>
+			<option value="公主岭市">公主岭市</option>
+			<option value="双辽市">双辽市</option>
+			<option value="龙山区">龙山区</option>
+			<option value="西安区">西安区</option>
+			<option value="东丰县">东丰县</option>
+			<option value="东辽县">东辽县</option>
+			<option value="东昌区">东昌区</option>
+			<option value="二道江区">二道江区</option>
+			<option value="通化县">通化县</option>
+			<option value="辉南县">辉南县</option>
+			<option value="柳河县">柳河县</option>
+			<option value="梅河口市">梅河口市</option>
+			<option value="集安市">集安市</option>
+			<option value="八道江区">八道江区</option>
+			<option value="抚松县">抚松县</option>
+			<option value="靖宇县">靖宇县</option>
+			<option value="长白朝鲜族自治县">长白朝鲜族自治县</option>
+			<option value="江源县">江源县</option>
+			<option value="临江市">临江市</option>
+			<option value="宁江区">宁江区</option>
+			<option value="前郭尔罗斯蒙古族自治县">前郭尔罗斯蒙古族自治县</option>
+			<option value="长岭县">长岭县</option>
+			<option value="乾安县">乾安县</option>
+			<option value="扶余县">扶余县</option>
+			<option value="洮北区">洮北区</option>
+			<option value="镇赉县">镇赉县</option>
+			<option value="通榆县">通榆县</option>
+			<option value="洮南市">洮南市</option>
+			<option value="大安市">大安市</option>
+			<option value="延吉市">延吉市</option>
+			<option value="图们市">图们市</option>
+			<option value="敦化市">敦化市</option>
+			<option value="珲春市">珲春市</option>
+			<option value="龙井市">龙井市</option>
+			<option value="和龙市">和龙市</option>
+			<option value="汪清县">汪清县</option>
+			<option value="安图县">安图县</option>
+			<option value="道里区">道里区</option>
+			<option value="南岗区">南岗区</option>
+			<option value="道外区">道外区</option>
+			<option value="香坊区">香坊区</option>
+			<option value="动力区">动力区</option>
+			<option value="平房区">平房区</option>
+			<option value="松北区">松北区</option>
+			<option value="呼兰区">呼兰区</option>
+			<option value="依兰县">依兰县</option>
+			<option value="方正县">方正县</option>
+			<option value="宾县">宾县</option>
+			<option value="巴彦县">巴彦县</option>
+			<option value="木兰县">木兰县</option>
+			<option value="通河县">通河县</option>
+			<option value="延寿县">延寿县</option>
+			<option value="阿城市">阿城市</option>
+			<option value="双城市">双城市</option>
+			<option value="尚志市">尚志市</option>
+			<option value="五常市">五常市</option>
+			<option value="龙沙区">龙沙区</option>
+			<option value="建华区">建华区</option>
+			<option value="铁锋区">铁锋区</option>
+			<option value="昂昂溪区">昂昂溪区</option>
+			<option value="富拉尔基区">富拉尔基区</option>
+			<option value="碾子山区">碾子山区</option>
+			<option value="梅里斯达斡尔族区">梅里斯达斡尔族区</option>
+			<option value="龙江县">龙江县</option>
+			<option value="依安县">依安县</option>
+			<option value="泰来县">泰来县</option>
+			<option value="甘南县">甘南县</option>
+			<option value="富裕县">富裕县</option>
+			<option value="克山县">克山县</option>
+			<option value="克东县">克东县</option>
+			<option value="拜泉县">拜泉县</option>
+			<option value="讷河市">讷河市</option>
+			<option value="鸡冠区">鸡冠区</option>
+			<option value="恒山区">恒山区</option>
+			<option value="滴道区">滴道区</option>
+			<option value="梨树区">梨树区</option>
+			<option value="城子河区">城子河区</option>
+			<option value="麻山区">麻山区</option>
+			<option value="鸡东县">鸡东县</option>
+			<option value="虎林市">虎林市</option>
+			<option value="密山市">密山市</option>
+			<option value="向阳区">向阳区</option>
+			<option value="工农区">工农区</option>
+			<option value="南山区">南山区</option>
+			<option value="兴安区">兴安区</option>
+			<option value="东山区">东山区</option>
+			<option value="兴山区">兴山区</option>
+			<option value="萝北县">萝北县</option>
+			<option value="绥滨县">绥滨县</option>
+			<option value="尖山区">尖山区</option>
+			<option value="岭东区">岭东区</option>
+			<option value="四方台区">四方台区</option>
+			<option value="宝山区">宝山区</option>
+			<option value="集贤县">集贤县</option>
+			<option value="友谊县">友谊县</option>
+			<option value="宝清县">宝清县</option>
+			<option value="饶河县">饶河县</option>
+			<option value="萨尔图区">萨尔图区</option>
+			<option value="龙凤区">龙凤区</option>
+			<option value="让胡路区">让胡路区</option>
+			<option value="红岗区">红岗区</option>
+			<option value="大同区">大同区</option>
+			<option value="肇州县">肇州县</option>
+			<option value="肇源县">肇源县</option>
+			<option value="林甸县">林甸县</option>
+			<option value="杜尔伯特蒙古族自治县">杜尔伯特蒙古族自治县</option>
+			<option value="伊春区">伊春区</option>
+			<option value="南岔区">南岔区</option>
+			<option value="友好区">友好区</option>
+			<option value="西林区">西林区</option>
+			<option value="翠峦区">翠峦区</option>
+			<option value="新青区">新青区</option>
+			<option value="美溪区">美溪区</option>
+			<option value="金山屯区">金山屯区</option>
+			<option value="五营区">五营区</option>
+			<option value="乌马河区">乌马河区</option>
+			<option value="汤旺河区">汤旺河区</option>
+			<option value="带岭区">带岭区</option>
+			<option value="乌伊岭区">乌伊岭区</option>
+			<option value="红星区">红星区</option>
+			<option value="上甘岭区">上甘岭区</option>
+			<option value="嘉荫县">嘉荫县</option>
+			<option value="铁力市">铁力市</option>
+			<option value="永红区">永红区</option>
+			<option value="向阳区">向阳区</option>
+			<option value="前进区">前进区</option>
+			<option value="东风区">东风区</option>
+			<option value="郊区">郊区</option>
+			<option value="桦南县">桦南县</option>
+			<option value="桦川县">桦川县</option>
+			<option value="汤原县">汤原县</option>
+			<option value="抚远县">抚远县</option>
+			<option value="同江市">同江市</option>
+			<option value="富锦市">富锦市</option>
+			<option value="新兴区">新兴区</option>
+			<option value="桃山区">桃山区</option>
+			<option value="茄子河区">茄子河区</option>
+			<option value="勃利县">勃利县</option>
+			<option value="东安区">东安区</option>
+			<option value="阳明区">阳明区</option>
+			<option value="爱民区">爱民区</option>
+			<option value="西安区">西安区</option>
+			<option value="东宁县">东宁县</option>
+			<option value="林口县">林口县</option>
+			<option value="绥芬河市">绥芬河市</option>
+			<option value="海林市">海林市</option>
+			<option value="宁安市">宁安市</option>
+			<option value="穆棱市">穆棱市</option>
+			<option value="爱辉区">爱辉区</option>
+			<option value="嫩江县">嫩江县</option>
+			<option value="逊克县">逊克县</option>
+			<option value="孙吴县">孙吴县</option>
+			<option value="北安市">北安市</option>
+			<option value="五大连池市">五大连池市</option>
+			<option value="北林区">北林区</option>
+			<option value="望奎县">望奎县</option>
+			<option value="兰西县">兰西县</option>
+			<option value="青冈县">青冈县</option>
+			<option value="庆安县">庆安县</option>
+			<option value="明水县">明水县</option>
+			<option value="绥棱县">绥棱县</option>
+			<option value="安达市">安达市</option>
+			<option value="肇东市">肇东市</option>
+			<option value="海伦市">海伦市</option>
+			<option value="呼玛县">呼玛县</option>
+			<option value="塔河县">塔河县</option>
+			<option value="漠河县">漠河县</option>
+			<option value="黄浦区">黄浦区</option>
+			<option value="卢湾区">卢湾区</option>
+			<option value="徐汇区">徐汇区</option>
+			<option value="长宁区">长宁区</option>
+			<option value="静安区">静安区</option>
+			<option value="普陀区">普陀区</option>
+			<option value="闸北区">闸北区</option>
+			<option value="虹口区">虹口区</option>
+			<option value="杨浦区">杨浦区</option>
+			<option value="闵行区">闵行区</option>
+			<option value="宝山区">宝山区</option>
+			<option value="嘉定区">嘉定区</option>
+			<option value="浦东新区">浦东新区</option>
+			<option value="金山区">金山区</option>
+			<option value="松江区">松江区</option>
+			<option value="青浦区">青浦区</option>
+			<option value="南汇区">南汇区</option>
+			<option value="奉贤区">奉贤区</option>
+			<option value="崇明县">崇明县</option>
+			<option value="玄武区">玄武区</option>
+			<option value="白下区">白下区</option>
+			<option value="秦淮区">秦淮区</option>
+			<option value="建邺区">建邺区</option>
+			<option value="鼓楼区">鼓楼区</option>
+			<option value="下关区">下关区</option>
+			<option value="浦口区">浦口区</option>
+			<option value="栖霞区">栖霞区</option>
+			<option value="雨花台区">雨花台区</option>
+			<option value="江宁区">江宁区</option>
+			<option value="六合区">六合区</option>
+			<option value="溧水县">溧水县</option>
+			<option value="高淳县">高淳县</option>
+			<option value="崇安区">崇安区</option>
+			<option value="南长区">南长区</option>
+			<option value="北塘区">北塘区</option>
+			<option value="锡山区">锡山区</option>
+			<option value="惠山区">惠山区</option>
+			<option value="滨湖区">滨湖区</option>
+			<option value="江阴市">江阴市</option>
+			<option value="宜兴市">宜兴市</option>
+			<option value="鼓楼区">鼓楼区</option>
+			<option value="云龙区">云龙区</option>
+			<option value="九里区">九里区</option>
+			<option value="贾汪区">贾汪区</option>
+			<option value="泉山区">泉山区</option>
+			<option value="丰县">丰县</option>
+			<option value="沛县">沛县</option>
+			<option value="铜山县">铜山县</option>
+			<option value="睢宁县">睢宁县</option>
+			<option value="新沂市">新沂市</option>
+			<option value="邳州市">邳州市</option>
+			<option value="天宁区">天宁区</option>
+			<option value="钟楼区">钟楼区</option>
+			<option value="戚墅堰区">戚墅堰区</option>
+			<option value="新北区">新北区</option>
+			<option value="武进区">武进区</option>
+			<option value="溧阳市">溧阳市</option>
+			<option value="金坛市">金坛市</option>
+			<option value="沧浪区">沧浪区</option>
+			<option value="平江区">平江区</option>
+			<option value="金阊区">金阊区</option>
+			<option value="虎丘区">虎丘区</option>
+			<option value="吴中区">吴中区</option>
+			<option value="相城区">相城区</option>
+			<option value="常熟市">常熟市</option>
+			<option value="张家港市">张家港市</option>
+			<option value="昆山市">昆山市</option>
+			<option value="吴江市">吴江市</option>
+			<option value="太仓市">太仓市</option>
+			<option value="崇川区">崇川区</option>
+			<option value="港闸区">港闸区</option>
+			<option value="海安县">海安县</option>
+			<option value="如东县">如东县</option>
+			<option value="启东市">启东市</option>
+			<option value="如皋市">如皋市</option>
+			<option value="通州市">通州市</option>
+			<option value="海门市">海门市</option>
+			<option value="连云区">连云区</option>
+			<option value="新浦区">新浦区</option>
+			<option value="海州区">海州区</option>
+			<option value="赣榆县">赣榆县</option>
+			<option value="东海县">东海县</option>
+			<option value="灌云县">灌云县</option>
+			<option value="灌南县">灌南县</option>
+			<option value="清河区">清河区</option>
+			<option value="楚州区">楚州区</option>
+			<option value="淮阴区">淮阴区</option>
+			<option value="清浦区">清浦区</option>
+			<option value="涟水县">涟水县</option>
+			<option value="洪泽县">洪泽县</option>
+			<option value="盱眙县">盱眙县</option>
+			<option value="金湖县">金湖县</option>
+			<option value="亭湖区">亭湖区</option>
+			<option value="盐都区">盐都区</option>
+			<option value="响水县">响水县</option>
+			<option value="滨海县">滨海县</option>
+			<option value="阜宁县">阜宁县</option>
+			<option value="射阳县">射阳县</option>
+			<option value="建湖县">建湖县</option>
+			<option value="东台市">东台市</option>
+			<option value="大丰市">大丰市</option>
+			<option value="广陵区">广陵区</option>
+			<option value="邗江区">邗江区</option>
+			<option value="郊区">郊区</option>
+			<option value="宝应县">宝应县</option>
+			<option value="仪征市">仪征市</option>
+			<option value="高邮市">高邮市</option>
+			<option value="江都市">江都市</option>
+			<option value="京口区">京口区</option>
+			<option value="润州区">润州区</option>
+			<option value="丹徒区">丹徒区</option>
+			<option value="丹阳市">丹阳市</option>
+			<option value="扬中市">扬中市</option>
+			<option value="句容市">句容市</option>
+			<option value="海陵区">海陵区</option>
+			<option value="高港区">高港区</option>
+			<option value="兴化市">兴化市</option>
+			<option value="靖江市">靖江市</option>
+			<option value="泰兴市">泰兴市</option>
+			<option value="姜堰市">姜堰市</option>
+			<option value="宿城区">宿城区</option>
+			<option value="宿豫区">宿豫区</option>
+			<option value="沭阳县">沭阳县</option>
+			<option value="泗阳县">泗阳县</option>
+			<option value="泗洪县">泗洪县</option>
+			<option value="上城区">上城区</option>
+			<option value="下城区">下城区</option>
+			<option value="江干区">江干区</option>
+			<option value="拱墅区">拱墅区</option>
+			<option value="西湖区">西湖区</option>
+			<option value="滨江区">滨江区</option>
+			<option value="萧山区">萧山区</option>
+			<option value="余杭区">余杭区</option>
+			<option value="桐庐县">桐庐县</option>
+			<option value="淳安县">淳安县</option>
+			<option value="建德市">建德市</option>
+			<option value="富阳市">富阳市</option>
+			<option value="临安市">临安市</option>
+			<option value="海曙区">海曙区</option>
+			<option value="江东区">江东区</option>
+			<option value="江北区">江北区</option>
+			<option value="北仑区">北仑区</option>
+			<option value="镇海区">镇海区</option>
+			<option value="鄞州区">鄞州区</option>
+			<option value="象山县">象山县</option>
+			<option value="宁海县">宁海县</option>
+			<option value="余姚市">余姚市</option>
+			<option value="慈溪市">慈溪市</option>
+			<option value="奉化市">奉化市</option>
+			<option value="鹿城区">鹿城区</option>
+			<option value="龙湾区">龙湾区</option>
+			<option value="瓯海区">瓯海区</option>
+			<option value="洞头县">洞头县</option>
+			<option value="永嘉县">永嘉县</option>
+			<option value="平阳县">平阳县</option>
+			<option value="苍南县">苍南县</option>
+			<option value="文成县">文成县</option>
+			<option value="泰顺县">泰顺县</option>
+			<option value="瑞安市">瑞安市</option>
+			<option value="乐清市">乐清市</option>
+			<option value="秀城区">秀城区</option>
+			<option value="秀洲区">秀洲区</option>
+			<option value="嘉善县">嘉善县</option>
+			<option value="海盐县">海盐县</option>
+			<option value="海宁市">海宁市</option>
+			<option value="平湖市">平湖市</option>
+			<option value="桐乡市">桐乡市</option>
+			<option value="吴兴区">吴兴区</option>
+			<option value="南浔区">南浔区</option>
+			<option value="德清县">德清县</option>
+			<option value="长兴县">长兴县</option>
+			<option value="安吉县">安吉县</option>
+			<option value="越城区">越城区</option>
+			<option value="绍兴县">绍兴县</option>
+			<option value="新昌县">新昌县</option>
+			<option value="诸暨市">诸暨市</option>
+			<option value="上虞市">上虞市</option>
+			<option value="嵊州市">嵊州市</option>
+			<option value="婺城区">婺城区</option>
+			<option value="金东区">金东区</option>
+			<option value="武义县">武义县</option>
+			<option value="浦江县">浦江县</option>
+			<option value="磐安县">磐安县</option>
+			<option value="兰溪市">兰溪市</option>
+			<option value="义乌市">义乌市</option>
+			<option value="东阳市">东阳市</option>
+			<option value="永康市">永康市</option>
+			<option value="柯城区">柯城区</option>
+			<option value="衢江区">衢江区</option>
+			<option value="常山县">常山县</option>
+			<option value="开化县">开化县</option>
+			<option value="龙游县">龙游县</option>
+			<option value="江山市">江山市</option>
+			<option value="定海区">定海区</option>
+			<option value="普陀区">普陀区</option>
+			<option value="岱山县">岱山县</option>
+			<option value="嵊泗县">嵊泗县</option>
+			<option value="椒江区">椒江区</option>
+			<option value="黄岩区">黄岩区</option>
+			<option value="路桥区">路桥区</option>
+			<option value="玉环县">玉环县</option>
+			<option value="三门县">三门县</option>
+			<option value="天台县">天台县</option>
+			<option value="仙居县">仙居县</option>
+			<option value="温岭市">温岭市</option>
+			<option value="临海市">临海市</option>
+			<option value="莲都区">莲都区</option>
+			<option value="青田县">青田县</option>
+			<option value="缙云县">缙云县</option>
+			<option value="遂昌县">遂昌县</option>
+			<option value="松阳县">松阳县</option>
+			<option value="云和县">云和县</option>
+			<option value="庆元县">庆元县</option>
+			<option value="景宁畲族自治县">景宁畲族自治县</option>
+			<option value="龙泉市">龙泉市</option>
+			<option value="瑶海区">瑶海区</option>
+			<option value="庐阳区">庐阳区</option>
+			<option value="蜀山区">蜀山区</option>
+			<option value="包河区">包河区</option>
+			<option value="长丰县">长丰县</option>
+			<option value="肥东县">肥东县</option>
+			<option value="肥西县">肥西县</option>
+			<option value="镜湖区">镜湖区</option>
+			<option value="马塘区">马塘区</option>
+			<option value="新芜区">新芜区</option>
+			<option value="鸠江区">鸠江区</option>
+			<option value="芜湖县">芜湖县</option>
+			<option value="繁昌县">繁昌县</option>
+			<option value="南陵县">南陵县</option>
+			<option value="龙子湖区">龙子湖区</option>
+			<option value="蚌山区">蚌山区</option>
+			<option value="禹会区">禹会区</option>
+			<option value="淮上区">淮上区</option>
+			<option value="怀远县">怀远县</option>
+			<option value="五河县">五河县</option>
+			<option value="固镇县">固镇县</option>
+			<option value="大通区">大通区</option>
+			<option value="田家庵区">田家庵区</option>
+			<option value="谢家集区">谢家集区</option>
+			<option value="八公山区">八公山区</option>
+			<option value="潘集区">潘集区</option>
+			<option value="凤台县">凤台县</option>
+			<option value="金家庄区">金家庄区</option>
+			<option value="花山区">花山区</option>
+			<option value="雨山区">雨山区</option>
+			<option value="当涂县">当涂县</option>
+			<option value="杜集区">杜集区</option>
+			<option value="相山区">相山区</option>
+			<option value="烈山区">烈山区</option>
+			<option value="濉溪县">濉溪县</option>
+			<option value="铜官山区">铜官山区</option>
+			<option value="狮子山区">狮子山区</option>
+			<option value="郊区">郊区</option>
+			<option value="铜陵县">铜陵县</option>
+			<option value="迎江区">迎江区</option>
+			<option value="大观区">大观区</option>
+			<option value="郊区">郊区</option>
+			<option value="怀宁县">怀宁县</option>
+			<option value="枞阳县">枞阳县</option>
+			<option value="潜山县">潜山县</option>
+			<option value="太湖县">太湖县</option>
+			<option value="宿松县">宿松县</option>
+			<option value="望江县">望江县</option>
+			<option value="岳西县">岳西县</option>
+			<option value="桐城市">桐城市</option>
+			<option value="屯溪区">屯溪区</option>
+			<option value="黄山区">黄山区</option>
+			<option value="徽州区">徽州区</option>
+			<option value="歙县">歙县</option>
+			<option value="休宁县">休宁县</option>
+			<option value="黟县">黟县</option>
+			<option value="祁门县">祁门县</option>
+			<option value="琅琊区">琅琊区</option>
+			<option value="南谯区">南谯区</option>
+			<option value="来安县">来安县</option>
+			<option value="全椒县">全椒县</option>
+			<option value="定远县">定远县</option>
+			<option value="凤阳县">凤阳县</option>
+			<option value="天长市">天长市</option>
+			<option value="明光市">明光市</option>
+			<option value="颍州区">颍州区</option>
+			<option value="颍东区">颍东区</option>
+			<option value="颍泉区">颍泉区</option>
+			<option value="临泉县">临泉县</option>
+			<option value="太和县">太和县</option>
+			<option value="阜南县">阜南县</option>
+			<option value="颍上县">颍上县</option>
+			<option value="界首市">界首市</option>
+			<option value="墉桥区">墉桥区</option>
+			<option value="砀山县">砀山县</option>
+			<option value="萧县">萧县</option>
+			<option value="灵璧县">灵璧县</option>
+			<option value="泗县">泗县</option>
+			<option value="居巢区">居巢区</option>
+			<option value="庐江县">庐江县</option>
+			<option value="无为县">无为县</option>
+			<option value="含山县">含山县</option>
+			<option value="和县">和县</option>
+			<option value="金安区">金安区</option>
+			<option value="裕安区">裕安区</option>
+			<option value="寿县">寿县</option>
+			<option value="霍邱县">霍邱县</option>
+			<option value="舒城县">舒城县</option>
+			<option value="金寨县">金寨县</option>
+			<option value="霍山县">霍山县</option>
+			<option value="谯城区">谯城区</option>
+			<option value="涡阳县">涡阳县</option>
+			<option value="蒙城县">蒙城县</option>
+			<option value="利辛县">利辛县</option>
+			<option value="贵池区">贵池区</option>
+			<option value="东至县">东至县</option>
+			<option value="石台县">石台县</option>
+			<option value="青阳县">青阳县</option>
+			<option value="宣州区">宣州区</option>
+			<option value="郎溪县">郎溪县</option>
+			<option value="广德县">广德县</option>
+			<option value="泾县">泾县</option>
+			<option value="绩溪县">绩溪县</option>
+			<option value="旌德县">旌德县</option>
+			<option value="宁国市">宁国市</option>
+			<option value="鼓楼区">鼓楼区</option>
+			<option value="台江区">台江区</option>
+			<option value="仓山区">仓山区</option>
+			<option value="马尾区">马尾区</option>
+			<option value="晋安区">晋安区</option>
+			<option value="闽侯县">闽侯县</option>
+			<option value="连江县">连江县</option>
+			<option value="罗源县">罗源县</option>
+			<option value="闽清县">闽清县</option>
+			<option value="永泰县">永泰县</option>
+			<option value="平潭县">平潭县</option>
+			<option value="福清市">福清市</option>
+			<option value="长乐市">长乐市</option>
+			<option value="思明区">思明区</option>
+			<option value="海沧区">海沧区</option>
+			<option value="湖里区">湖里区</option>
+			<option value="集美区">集美区</option>
+			<option value="同安区">同安区</option>
+			<option value="翔安区">翔安区</option>
+			<option value="城厢区">城厢区</option>
+			<option value="涵江区">涵江区</option>
+			<option value="荔城区">荔城区</option>
+			<option value="秀屿区">秀屿区</option>
+			<option value="仙游县">仙游县</option>
+			<option value="梅列区">梅列区</option>
+			<option value="三元区">三元区</option>
+			<option value="明溪县">明溪县</option>
+			<option value="清流县">清流县</option>
+			<option value="宁化县">宁化县</option>
+			<option value="大田县">大田县</option>
+			<option value="尤溪县">尤溪县</option>
+			<option value="沙县">沙县</option>
+			<option value="将乐县">将乐县</option>
+			<option value="泰宁县">泰宁县</option>
+			<option value="建宁县">建宁县</option>
+			<option value="永安市">永安市</option>
+			<option value="鲤城区">鲤城区</option>
+			<option value="丰泽区">丰泽区</option>
+			<option value="洛江区">洛江区</option>
+			<option value="泉港区">泉港区</option>
+			<option value="惠安县">惠安县</option>
+			<option value="安溪县">安溪县</option>
+			<option value="永春县">永春县</option>
+			<option value="德化县">德化县</option>
+			<option value="金门县">金门县</option>
+			<option value="石狮市">石狮市</option>
+			<option value="晋江市">晋江市</option>
+			<option value="南安市">南安市</option>
+			<option value="芗城区">芗城区</option>
+			<option value="龙文区">龙文区</option>
+			<option value="云霄县">云霄县</option>
+			<option value="漳浦县">漳浦县</option>
+			<option value="诏安县">诏安县</option>
+			<option value="长泰县">长泰县</option>
+			<option value="东山县">东山县</option>
+			<option value="南靖县">南靖县</option>
+			<option value="平和县">平和县</option>
+			<option value="华安县">华安县</option>
+			<option value="龙海市">龙海市</option>
+			<option value="延平区">延平区</option>
+			<option value="顺昌县">顺昌县</option>
+			<option value="浦城县">浦城县</option>
+			<option value="光泽县">光泽县</option>
+			<option value="松溪县">松溪县</option>
+			<option value="政和县">政和县</option>
+			<option value="邵武市">邵武市</option>
+			<option value="武夷山市">武夷山市</option>
+			<option value="建瓯市">建瓯市</option>
+			<option value="建阳市">建阳市</option>
+			<option value="新罗区">新罗区</option>
+			<option value="长汀县">长汀县</option>
+			<option value="永定县">永定县</option>
+			<option value="上杭县">上杭县</option>
+			<option value="武平县">武平县</option>
+			<option value="连城县">连城县</option>
+			<option value="漳平市">漳平市</option>
+			<option value="蕉城区">蕉城区</option>
+			<option value="霞浦县">霞浦县</option>
+			<option value="古田县">古田县</option>
+			<option value="屏南县">屏南县</option>
+			<option value="寿宁县">寿宁县</option>
+			<option value="周宁县">周宁县</option>
+			<option value="柘荣县">柘荣县</option>
+			<option value="福安市">福安市</option>
+			<option value="福鼎市">福鼎市</option>
+			<option value="东湖区">东湖区</option>
+			<option value="西湖区">西湖区</option>
+			<option value="青云谱区">青云谱区</option>
+			<option value="湾里区">湾里区</option>
+			<option value="青山湖区">青山湖区</option>
+			<option value="南昌县">南昌县</option>
+			<option value="新建县">新建县</option>
+			<option value="安义县">安义县</option>
+			<option value="进贤县">进贤县</option>
+			<option value="昌江区">昌江区</option>
+			<option value="珠山区">珠山区</option>
+			<option value="浮梁县">浮梁县</option>
+			<option value="乐平市">乐平市</option>
+			<option value="安源区">安源区</option>
+			<option value="湘东区">湘东区</option>
+			<option value="莲花县">莲花县</option>
+			<option value="上栗县">上栗县</option>
+			<option value="芦溪县">芦溪县</option>
+			<option value="庐山区">庐山区</option>
+			<option value="浔阳区">浔阳区</option>
+			<option value="九江县">九江县</option>
+			<option value="武宁县">武宁县</option>
+			<option value="修水县">修水县</option>
+			<option value="永修县">永修县</option>
+			<option value="德安县">德安县</option>
+			<option value="星子县">星子县</option>
+			<option value="都昌县">都昌县</option>
+			<option value="湖口县">湖口县</option>
+			<option value="彭泽县">彭泽县</option>
+			<option value="瑞昌市">瑞昌市</option>
+			<option value="渝水区">渝水区</option>
+			<option value="分宜县">分宜县</option>
+			<option value="月湖区">月湖区</option>
+			<option value="余江县">余江县</option>
+			<option value="贵溪市">贵溪市</option>
+			<option value="章贡区">章贡区</option>
+			<option value="赣县">赣县</option>
+			<option value="信丰县">信丰县</option>
+			<option value="大余县">大余县</option>
+			<option value="上犹县">上犹县</option>
+			<option value="崇义县">崇义县</option>
+			<option value="安远县">安远县</option>
+			<option value="龙南县">龙南县</option>
+			<option value="定南县">定南县</option>
+			<option value="全南县">全南县</option>
+			<option value="宁都县">宁都县</option>
+			<option value="于都县">于都县</option>
+			<option value="兴国县">兴国县</option>
+			<option value="会昌县">会昌县</option>
+			<option value="寻乌县">寻乌县</option>
+			<option value="石城县">石城县</option>
+			<option value="瑞金市">瑞金市</option>
+			<option value="南康市">南康市</option>
+			<option value="吉州区">吉州区</option>
+			<option value="青原区">青原区</option>
+			<option value="吉安县">吉安县</option>
+			<option value="吉水县">吉水县</option>
+			<option value="峡江县">峡江县</option>
+			<option value="新干县">新干县</option>
+			<option value="永丰县">永丰县</option>
+			<option value="泰和县">泰和县</option>
+			<option value="遂川县">遂川县</option>
+			<option value="万安县">万安县</option>
+			<option value="安福县">安福县</option>
+			<option value="永新县">永新县</option>
+			<option value="井冈山市">井冈山市</option>
+			<option value="袁州区">袁州区</option>
+			<option value="奉新县">奉新县</option>
+			<option value="万载县">万载县</option>
+			<option value="上高县">上高县</option>
+			<option value="宜丰县">宜丰县</option>
+			<option value="靖安县">靖安县</option>
+			<option value="铜鼓县">铜鼓县</option>
+			<option value="丰城市">丰城市</option>
+			<option value="樟树市">樟树市</option>
+			<option value="高安市">高安市</option>
+			<option value="临川区">临川区</option>
+			<option value="南城县">南城县</option>
+			<option value="黎川县">黎川县</option>
+			<option value="南丰县">南丰县</option>
+			<option value="崇仁县">崇仁县</option>
+			<option value="乐安县">乐安县</option>
+			<option value="宜黄县">宜黄县</option>
+			<option value="金溪县">金溪县</option>
+			<option value="资溪县">资溪县</option>
+			<option value="东乡县">东乡县</option>
+			<option value="广昌县">广昌县</option>
+			<option value="信州区">信州区</option>
+			<option value="上饶县">上饶县</option>
+			<option value="广丰县">广丰县</option>
+			<option value="玉山县">玉山县</option>
+			<option value="铅山县">铅山县</option>
+			<option value="横峰县">横峰县</option>
+			<option value="弋阳县">弋阳县</option>
+			<option value="余干县">余干县</option>
+			<option value="鄱阳县">鄱阳县</option>
+			<option value="万年县">万年县</option>
+			<option value="婺源县">婺源县</option>
+			<option value="德兴市">德兴市</option>
+			<option value="历下区">历下区</option>
+			<option value="市中区">市中区</option>
+			<option value="槐荫区">槐荫区</option>
+			<option value="天桥区">天桥区</option>
+			<option value="历城区">历城区</option>
+			<option value="长清区">长清区</option>
+			<option value="平阴县">平阴县</option>
+			<option value="济阳县">济阳县</option>
+			<option value="商河县">商河县</option>
+			<option value="章丘市">章丘市</option>
+			<option value="市南区">市南区</option>
+			<option value="市北区">市北区</option>
+			<option value="四方区">四方区</option>
+			<option value="黄岛区">黄岛区</option>
+			<option value="崂山区">崂山区</option>
+			<option value="李沧区">李沧区</option>
+			<option value="城阳区">城阳区</option>
+			<option value="胶州市">胶州市</option>
+			<option value="即墨市">即墨市</option>
+			<option value="平度市">平度市</option>
+			<option value="胶南市">胶南市</option>
+			<option value="莱西市">莱西市</option>
+			<option value="淄川区">淄川区</option>
+			<option value="张店区">张店区</option>
+			<option value="博山区">博山区</option>
+			<option value="临淄区">临淄区</option>
+			<option value="周村区">周村区</option>
+			<option value="桓台县">桓台县</option>
+			<option value="高青县">高青县</option>
+			<option value="沂源县">沂源县</option>
+			<option value="市中区">市中区</option>
+			<option value="薛城区">薛城区</option>
+			<option value="峄城区">峄城区</option>
+			<option value="台儿庄区">台儿庄区</option>
+			<option value="山亭区">山亭区</option>
+			<option value="滕州市">滕州市</option>
+			<option value="东营区">东营区</option>
+			<option value="河口区">河口区</option>
+			<option value="垦利县">垦利县</option>
+			<option value="利津县">利津县</option>
+			<option value="广饶县">广饶县</option>
+			<option value="芝罘区">芝罘区</option>
+			<option value="福山区">福山区</option>
+			<option value="牟平区">牟平区</option>
+			<option value="莱山区">莱山区</option>
+			<option value="长岛县">长岛县</option>
+			<option value="龙口市">龙口市</option>
+			<option value="莱阳市">莱阳市</option>
+			<option value="莱州市">莱州市</option>
+			<option value="蓬莱市">蓬莱市</option>
+			<option value="招远市">招远市</option>
+			<option value="栖霞市">栖霞市</option>
+			<option value="海阳市">海阳市</option>
+			<option value="潍城区">潍城区</option>
+			<option value="寒亭区">寒亭区</option>
+			<option value="坊子区">坊子区</option>
+			<option value="奎文区">奎文区</option>
+			<option value="临朐县">临朐县</option>
+			<option value="昌乐县">昌乐县</option>
+			<option value="青州市">青州市</option>
+			<option value="诸城市">诸城市</option>
+			<option value="寿光市">寿光市</option>
+			<option value="安丘市">安丘市</option>
+			<option value="高密市">高密市</option>
+			<option value="昌邑市">昌邑市</option>
+			<option value="市中区">市中区</option>
+			<option value="任城区">任城区</option>
+			<option value="微山县">微山县</option>
+			<option value="鱼台县">鱼台县</option>
+			<option value="金乡县">金乡县</option>
+			<option value="嘉祥县">嘉祥县</option>
+			<option value="汶上县">汶上县</option>
+			<option value="泗水县">泗水县</option>
+			<option value="梁山县">梁山县</option>
+			<option value="曲阜市">曲阜市</option>
+			<option value="兖州市">兖州市</option>
+			<option value="邹城市">邹城市</option>
+			<option value="泰山区">泰山区</option>
+			<option value="岱岳区">岱岳区</option>
+			<option value="宁阳县">宁阳县</option>
+			<option value="东平县">东平县</option>
+			<option value="新泰市">新泰市</option>
+			<option value="肥城市">肥城市</option>
+			<option value="环翠区">环翠区</option>
+			<option value="文登市">文登市</option>
+			<option value="荣成市">荣成市</option>
+			<option value="乳山市">乳山市</option>
+			<option value="东港区">东港区</option>
+			<option value="岚山区">岚山区</option>
+			<option value="五莲县">五莲县</option>
+			<option value="莒县">莒县</option>
+			<option value="莱城区">莱城区</option>
+			<option value="钢城区">钢城区</option>
+			<option value="兰山区">兰山区</option>
+			<option value="罗庄区">罗庄区</option>
+			<option value="河东区">河东区</option>
+			<option value="沂南县">沂南县</option>
+			<option value="郯城县">郯城县</option>
+			<option value="沂水县">沂水县</option>
+			<option value="苍山县">苍山县</option>
+			<option value="费县">费县</option>
+			<option value="平邑县">平邑县</option>
+			<option value="莒南县">莒南县</option>
+			<option value="蒙阴县">蒙阴县</option>
+			<option value="临沭县">临沭县</option>
+			<option value="德城区">德城区</option>
+			<option value="陵县">陵县</option>
+			<option value="宁津县">宁津县</option>
+			<option value="庆云县">庆云县</option>
+			<option value="临邑县">临邑县</option>
+			<option value="齐河县">齐河县</option>
+			<option value="平原县">平原县</option>
+			<option value="夏津县">夏津县</option>
+			<option value="武城县">武城县</option>
+			<option value="乐陵市">乐陵市</option>
+			<option value="禹城市">禹城市</option>
+			<option value="东昌府区">东昌府区</option>
+			<option value="阳谷县">阳谷县</option>
+			<option value="莘县">莘县</option>
+			<option value="茌平县">茌平县</option>
+			<option value="东阿县">东阿县</option>
+			<option value="冠县">冠县</option>
+			<option value="高唐县">高唐县</option>
+			<option value="临清市">临清市</option>
+			<option value="滨城区">滨城区</option>
+			<option value="惠民县">惠民县</option>
+			<option value="阳信县">阳信县</option>
+			<option value="无棣县">无棣县</option>
+			<option value="沾化县">沾化县</option>
+			<option value="博兴县">博兴县</option>
+			<option value="邹平县">邹平县</option>
+			<option value="牡丹区">牡丹区</option>
+			<option value="曹县">曹县</option>
+			<option value="单县">单县</option>
+			<option value="成武县">成武县</option>
+			<option value="巨野县">巨野县</option>
+			<option value="郓城县">郓城县</option>
+			<option value="鄄城县">鄄城县</option>
+			<option value="定陶县">定陶县</option>
+			<option value="东明县">东明县</option>
+			<option value="中原区">中原区</option>
+			<option value="二七区">二七区</option>
+			<option value="管城回族区">管城回族区</option>
+			<option value="金水区">金水区</option>
+			<option value="上街区">上街区</option>
+			<option value="邙山区">邙山区</option>
+			<option value="中牟县">中牟县</option>
+			<option value="巩义市">巩义市</option>
+			<option value="荥阳市">荥阳市</option>
+			<option value="新密市">新密市</option>
+			<option value="新郑市">新郑市</option>
+			<option value="登封市">登封市</option>
+			<option value="龙亭区">龙亭区</option>
+			<option value="顺河回族区">顺河回族区</option>
+			<option value="鼓楼区">鼓楼区</option>
+			<option value="南关区">南关区</option>
+			<option value="郊区">郊区</option>
+			<option value="杞县">杞县</option>
+			<option value="通许县">通许县</option>
+			<option value="尉氏县">尉氏县</option>
+			<option value="开封县">开封县</option>
+			<option value="兰考县">兰考县</option>
+			<option value="老城区">老城区</option>
+			<option value="西工区">西工区</option>
+			<option value="廛河回族区">廛河回族区</option>
+			<option value="涧西区">涧西区</option>
+			<option value="吉利区">吉利区</option>
+			<option value="洛龙区">洛龙区</option>
+			<option value="孟津县">孟津县</option>
+			<option value="新安县">新安县</option>
+			<option value="栾川县">栾川县</option>
+			<option value="嵩县">嵩县</option>
+			<option value="汝阳县">汝阳县</option>
+			<option value="宜阳县">宜阳县</option>
+			<option value="洛宁县">洛宁县</option>
+			<option value="伊川县">伊川县</option>
+			<option value="偃师市">偃师市</option>
+			<option value="新华区">新华区</option>
+			<option value="卫东区">卫东区</option>
+			<option value="石龙区">石龙区</option>
+			<option value="湛河区">湛河区</option>
+			<option value="宝丰县">宝丰县</option>
+			<option value="叶县">叶县</option>
+			<option value="鲁山县">鲁山县</option>
+			<option value="郏县">郏县</option>
+			<option value="舞钢市">舞钢市</option>
+			<option value="汝州市">汝州市</option>
+			<option value="文峰区">文峰区</option>
+			<option value="北关区">北关区</option>
+			<option value="殷都区">殷都区</option>
+			<option value="龙安区">龙安区</option>
+			<option value="安阳县">安阳县</option>
+			<option value="汤阴县">汤阴县</option>
+			<option value="滑县">滑县</option>
+			<option value="内黄县">内黄县</option>
+			<option value="林州市">林州市</option>
+			<option value="鹤山区">鹤山区</option>
+			<option value="山城区">山城区</option>
+			<option value="淇滨区">淇滨区</option>
+			<option value="浚县">浚县</option>
+			<option value="淇县">淇县</option>
+			<option value="红旗区">红旗区</option>
+			<option value="卫滨区">卫滨区</option>
+			<option value="凤泉区">凤泉区</option>
+			<option value="牧野区">牧野区</option>
+			<option value="新乡县">新乡县</option>
+			<option value="获嘉县">获嘉县</option>
+			<option value="原阳县">原阳县</option>
+			<option value="延津县">延津县</option>
+			<option value="封丘县">封丘县</option>
+			<option value="长垣县">长垣县</option>
+			<option value="卫辉市">卫辉市</option>
+			<option value="辉县市">辉县市</option>
+			<option value="解放区">解放区</option>
+			<option value="中站区">中站区</option>
+			<option value="马村区">马村区</option>
+			<option value="山阳区">山阳区</option>
+			<option value="修武县">修武县</option>
+			<option value="博爱县">博爱县</option>
+			<option value="武陟县">武陟县</option>
+			<option value="温县">温县</option>
+			<option value="济源市">济源市</option>
+			<option value="沁阳市">沁阳市</option>
+			<option value="孟州市">孟州市</option>
+			<option value="华龙区">华龙区</option>
+			<option value="清丰县">清丰县</option>
+			<option value="南乐县">南乐县</option>
+			<option value="范县">范县</option>
+			<option value="台前县">台前县</option>
+			<option value="濮阳县">濮阳县</option>
+			<option value="魏都区">魏都区</option>
+			<option value="许昌县">许昌县</option>
+			<option value="鄢陵县">鄢陵县</option>
+			<option value="襄城县">襄城县</option>
+			<option value="禹州市">禹州市</option>
+			<option value="长葛市">长葛市</option>
+			<option value="源汇区">源汇区</option>
+			<option value="郾城区">郾城区</option>
+			<option value="召陵区">召陵区</option>
+			<option value="舞阳县">舞阳县</option>
+			<option value="临颍县">临颍县</option>
+			<option value="湖滨区">湖滨区</option>
+			<option value="渑池县">渑池县</option>
+			<option value="陕县">陕县</option>
+			<option value="卢氏县">卢氏县</option>
+			<option value="义马市">义马市</option>
+			<option value="灵宝市">灵宝市</option>
+			<option value="宛城区">宛城区</option>
+			<option value="卧龙区">卧龙区</option>
+			<option value="南召县">南召县</option>
+			<option value="方城县">方城县</option>
+			<option value="西峡县">西峡县</option>
+			<option value="镇平县">镇平县</option>
+			<option value="内乡县">内乡县</option>
+			<option value="淅川县">淅川县</option>
+			<option value="社旗县">社旗县</option>
+			<option value="唐河县">唐河县</option>
+			<option value="新野县">新野县</option>
+			<option value="桐柏县">桐柏县</option>
+			<option value="邓州市">邓州市</option>
+			<option value="梁园区">梁园区</option>
+			<option value="睢阳区">睢阳区</option>
+			<option value="民权县">民权县</option>
+			<option value="睢县">睢县</option>
+			<option value="宁陵县">宁陵县</option>
+			<option value="柘城县">柘城县</option>
+			<option value="虞城县">虞城县</option>
+			<option value="夏邑县">夏邑县</option>
+			<option value="永城市">永城市</option>
+			<option value="师河区">师河区</option>
+			<option value="平桥区">平桥区</option>
+			<option value="罗山县">罗山县</option>
+			<option value="光山县">光山县</option>
+			<option value="新县">新县</option>
+			<option value="商城县">商城县</option>
+			<option value="固始县">固始县</option>
+			<option value="潢川县">潢川县</option>
+			<option value="淮滨县">淮滨县</option>
+			<option value="息县">息县</option>
+			<option value="川汇区">川汇区</option>
+			<option value="扶沟县">扶沟县</option>
+			<option value="西华县">西华县</option>
+			<option value="商水县">商水县</option>
+			<option value="沈丘县">沈丘县</option>
+			<option value="郸城县">郸城县</option>
+			<option value="淮阳县">淮阳县</option>
+			<option value="太康县">太康县</option>
+			<option value="鹿邑县">鹿邑县</option>
+			<option value="项城市">项城市</option>
+			<option value="驿城区">驿城区</option>
+			<option value="西平县">西平县</option>
+			<option value="上蔡县">上蔡县</option>
+			<option value="平舆县">平舆县</option>
+			<option value="正阳县">正阳县</option>
+			<option value="确山县">确山县</option>
+			<option value="泌阳县">泌阳县</option>
+			<option value="汝南县">汝南县</option>
+			<option value="遂平县">遂平县</option>
+			<option value="新蔡县">新蔡县</option>
+			<option value="江岸区">江岸区</option>
+			<option value="江汉区">江汉区</option>
+			<option value="乔口区">乔口区</option>
+			<option value="汉阳区">汉阳区</option>
+			<option value="武昌区">武昌区</option>
+			<option value="青山区">青山区</option>
+			<option value="洪山区">洪山区</option>
+			<option value="东西湖区">东西湖区</option>
+			<option value="汉南区">汉南区</option>
+			<option value="蔡甸区">蔡甸区</option>
+			<option value="江夏区">江夏区</option>
+			<option value="黄陂区">黄陂区</option>
+			<option value="新洲区">新洲区</option>
+			<option value="黄石港区">黄石港区</option>
+			<option value="西塞山区">西塞山区</option>
+			<option value="下陆区">下陆区</option>
+			<option value="铁山区">铁山区</option>
+			<option value="阳新县">阳新县</option>
+			<option value="大冶市">大冶市</option>
+			<option value="茅箭区">茅箭区</option>
+			<option value="张湾区">张湾区</option>
+			<option value="郧县">郧县</option>
+			<option value="郧西县">郧西县</option>
+			<option value="竹山县">竹山县</option>
+			<option value="竹溪县">竹溪县</option>
+			<option value="房县">房县</option>
+			<option value="丹江口市">丹江口市</option>
+			<option value="西陵区">西陵区</option>
+			<option value="伍家岗区">伍家岗区</option>
+			<option value="点军区">点军区</option>
+			<option value="�亭区">�亭区</option>
+			<option value="夷陵区">夷陵区</option>
+			<option value="远安县">远安县</option>
+			<option value="兴山县">兴山县</option>
+			<option value="秭归县">秭归县</option>
+			<option value="长阳土家族自治县">长阳土家族自治县</option>
+			<option value="五峰土家族自治县">五峰土家族自治县</option>
+			<option value="宜都市">宜都市</option>
+			<option value="当阳市">当阳市</option>
+			<option value="枝江市">枝江市</option>
+			<option value="襄城区">襄城区</option>
+			<option value="樊城区">樊城区</option>
+			<option value="襄阳区">襄阳区</option>
+			<option value="南漳县">南漳县</option>
+			<option value="谷城县">谷城县</option>
+			<option value="保康县">保康县</option>
+			<option value="老河口市">老河口市</option>
+			<option value="枣阳市">枣阳市</option>
+			<option value="宜城市">宜城市</option>
+			<option value="梁子湖区">梁子湖区</option>
+			<option value="华容区">华容区</option>
+			<option value="鄂城区">鄂城区</option>
+			<option value="东宝区">东宝区</option>
+			<option value="掇刀区">掇刀区</option>
+			<option value="京山县">京山县</option>
+			<option value="沙洋县">沙洋县</option>
+			<option value="钟祥市">钟祥市</option>
+			<option value="孝南区">孝南区</option>
+			<option value="孝昌县">孝昌县</option>
+			<option value="大悟县">大悟县</option>
+			<option value="云梦县">云梦县</option>
+			<option value="应城市">应城市</option>
+			<option value="安陆市">安陆市</option>
+			<option value="汉川市">汉川市</option>
+			<option value="沙市区">沙市区</option>
+			<option value="荆州区">荆州区</option>
+			<option value="公安县">公安县</option>
+			<option value="监利县">监利县</option>
+			<option value="江陵县">江陵县</option>
+			<option value="石首市">石首市</option>
+			<option value="洪湖市">洪湖市</option>
+			<option value="松滋市">松滋市</option>
+			<option value="黄州区">黄州区</option>
+			<option value="团风县">团风县</option>
+			<option value="红安县">红安县</option>
+			<option value="罗田县">罗田县</option>
+			<option value="英山县">英山县</option>
+			<option value="浠水县">浠水县</option>
+			<option value="蕲春县">蕲春县</option>
+			<option value="黄梅县">黄梅县</option>
+			<option value="麻城市">麻城市</option>
+			<option value="武穴市">武穴市</option>
+			<option value="咸安区">咸安区</option>
+			<option value="嘉鱼县">嘉鱼县</option>
+			<option value="通城县">通城县</option>
+			<option value="崇阳县">崇阳县</option>
+			<option value="通山县">通山县</option>
+			<option value="赤壁市">赤壁市</option>
+			<option value="曾都区">曾都区</option>
+			<option value="广水市">广水市</option>
+			<option value="恩施市">恩施市</option>
+			<option value="利川市">利川市</option>
+			<option value="建始县">建始县</option>
+			<option value="巴东县">巴东县</option>
+			<option value="宣恩县">宣恩县</option>
+			<option value="咸丰县">咸丰县</option>
+			<option value="来凤县">来凤县</option>
+			<option value="鹤峰县">鹤峰县</option>
+			<option value="仙桃市">仙桃市</option>
+			<option value="潜江市">潜江市</option>
+			<option value="天门市">天门市</option>
+			<option value="神农架林区">神农架林区</option>
+			<option value="芙蓉区">芙蓉区</option>
+			<option value="天心区">天心区</option>
+			<option value="岳麓区">岳麓区</option>
+			<option value="开福区">开福区</option>
+			<option value="雨花区">雨花区</option>
+			<option value="长沙县">长沙县</option>
+			<option value="望城县">望城县</option>
+			<option value="宁乡县">宁乡县</option>
+			<option value="浏阳市">浏阳市</option>
+			<option value="荷塘区">荷塘区</option>
+			<option value="芦淞区">芦淞区</option>
+			<option value="石峰区">石峰区</option>
+			<option value="天元区">天元区</option>
+			<option value="株洲县">株洲县</option>
+			<option value="攸县">攸县</option>
+			<option value="茶陵县">茶陵县</option>
+			<option value="炎陵县">炎陵县</option>
+			<option value="醴陵市">醴陵市</option>
+			<option value="雨湖区">雨湖区</option>
+			<option value="岳塘区">岳塘区</option>
+			<option value="湘潭县">湘潭县</option>
+			<option value="湘乡市">湘乡市</option>
+			<option value="韶山市">韶山市</option>
+			<option value="珠晖区">珠晖区</option>
+			<option value="雁峰区">雁峰区</option>
+			<option value="石鼓区">石鼓区</option>
+			<option value="蒸湘区">蒸湘区</option>
+			<option value="南岳区">南岳区</option>
+			<option value="衡阳县">衡阳县</option>
+			<option value="衡南县">衡南县</option>
+			<option value="衡山县">衡山县</option>
+			<option value="衡东县">衡东县</option>
+			<option value="祁东县">祁东县</option>
+			<option value="耒阳市">耒阳市</option>
+			<option value="常宁市">常宁市</option>
+			<option value="双清区">双清区</option>
+			<option value="大祥区">大祥区</option>
+			<option value="北塔区">北塔区</option>
+			<option value="邵东县">邵东县</option>
+			<option value="新邵县">新邵县</option>
+			<option value="邵阳县">邵阳县</option>
+			<option value="隆回县">隆回县</option>
+			<option value="洞口县">洞口县</option>
+			<option value="绥宁县">绥宁县</option>
+			<option value="新宁县">新宁县</option>
+			<option value="城步苗族自治县">城步苗族自治县</option>
+			<option value="武冈市">武冈市</option>
+			<option value="岳阳楼区">岳阳楼区</option>
+			<option value="云溪区">云溪区</option>
+			<option value="君山区">君山区</option>
+			<option value="岳阳县">岳阳县</option>
+			<option value="华容县">华容县</option>
+			<option value="湘阴县">湘阴县</option>
+			<option value="平江县">平江县</option>
+			<option value="汨罗市">汨罗市</option>
+			<option value="临湘市">临湘市</option>
+			<option value="武陵区">武陵区</option>
+			<option value="鼎城区">鼎城区</option>
+			<option value="安乡县">安乡县</option>
+			<option value="汉寿县">汉寿县</option>
+			<option value="澧县">澧县</option>
+			<option value="临澧县">临澧县</option>
+			<option value="桃源县">桃源县</option>
+			<option value="石门县">石门县</option>
+			<option value="津市市">津市市</option>
+			<option value="永定区">永定区</option>
+			<option value="武陵源区">武陵源区</option>
+			<option value="慈利县">慈利县</option>
+			<option value="桑植县">桑植县</option>
+			<option value="资阳区">资阳区</option>
+			<option value="赫山区">赫山区</option>
+			<option value="南县">南县</option>
+			<option value="桃江县">桃江县</option>
+			<option value="安化县">安化县</option>
+			<option value="沅江市">沅江市</option>
+			<option value="北湖区">北湖区</option>
+			<option value="苏仙区">苏仙区</option>
+			<option value="桂阳县">桂阳县</option>
+			<option value="宜章县">宜章县</option>
+			<option value="永兴县">永兴县</option>
+			<option value="嘉禾县">嘉禾县</option>
+			<option value="临武县">临武县</option>
+			<option value="汝城县">汝城县</option>
+			<option value="桂东县">桂东县</option>
+			<option value="安仁县">安仁县</option>
+			<option value="资兴市">资兴市</option>
+			<option value="芝山区">芝山区</option>
+			<option value="冷水滩区">冷水滩区</option>
+			<option value="祁阳县">祁阳县</option>
+			<option value="东安县">东安县</option>
+			<option value="双牌县">双牌县</option>
+			<option value="道县">道县</option>
+			<option value="江永县">江永县</option>
+			<option value="宁远县">宁远县</option>
+			<option value="蓝山县">蓝山县</option>
+			<option value="新田县">新田县</option>
+			<option value="江华瑶族自治县">江华瑶族自治县</option>
+			<option value="鹤城区">鹤城区</option>
+			<option value="中方县">中方县</option>
+			<option value="沅陵县">沅陵县</option>
+			<option value="辰溪县">辰溪县</option>
+			<option value="溆浦县">溆浦县</option>
+			<option value="会同县">会同县</option>
+			<option value="麻阳苗族自治县">麻阳苗族自治县</option>
+			<option value="新晃侗族自治县">新晃侗族自治县</option>
+			<option value="芷江侗族自治县">芷江侗族自治县</option>
+			<option value="靖州苗族侗族自治县">靖州苗族侗族自治县</option>
+			<option value="通道侗族自治县">通道侗族自治县</option>
+			<option value="洪江市">洪江市</option>
+			<option value="娄星区">娄星区</option>
+			<option value="双峰县">双峰县</option>
+			<option value="新化县">新化县</option>
+			<option value="冷水江市">冷水江市</option>
+			<option value="涟源市">涟源市</option>
+			<option value="吉首市">吉首市</option>
+			<option value="泸溪县">泸溪县</option>
+			<option value="凤凰县">凤凰县</option>
+			<option value="花垣县">花垣县</option>
+			<option value="保靖县">保靖县</option>
+			<option value="古丈县">古丈县</option>
+			<option value="永顺县">永顺县</option>
+			<option value="龙山县">龙山县</option>
+			<option value="东山区">东山区</option>
+			<option value="荔湾区">荔湾区</option>
+			<option value="越秀区">越秀区</option>
+			<option value="海珠区">海珠区</option>
+			<option value="天河区">天河区</option>
+			<option value="芳村区">芳村区</option>
+			<option value="白云区">白云区</option>
+			<option value="黄埔区">黄埔区</option>
+			<option value="番禺区">番禺区</option>
+			<option value="花都区">花都区</option>
+			<option value="增城市">增城市</option>
+			<option value="从化市">从化市</option>
+			<option value="武江区">武江区</option>
+			<option value="浈江区">浈江区</option>
+			<option value="曲江区">曲江区</option>
+			<option value="始兴县">始兴县</option>
+			<option value="仁化县">仁化县</option>
+			<option value="翁源县">翁源县</option>
+			<option value="乳源瑶族自治县">乳源瑶族自治县</option>
+			<option value="新丰县">新丰县</option>
+			<option value="乐昌市">乐昌市</option>
+			<option value="南雄市">南雄市</option>
+			<option value="罗湖区">罗湖区</option>
+			<option value="福田区">福田区</option>
+			<option value="南山区">南山区</option>
+			<option value="宝安区">宝安区</option>
+			<option value="龙岗区">龙岗区</option>
+			<option value="盐田区">盐田区</option>
+			<option value="香洲区">香洲区</option>
+			<option value="斗门区">斗门区</option>
+			<option value="金湾区">金湾区</option>
+			<option value="龙湖区">龙湖区</option>
+			<option value="金平区">金平区</option>
+			<option value="濠江区">濠江区</option>
+			<option value="潮阳区">潮阳区</option>
+			<option value="潮南区">潮南区</option>
+			<option value="澄海区">澄海区</option>
+			<option value="南澳县">南澳县</option>
+			<option value="禅城区">禅城区</option>
+			<option value="南海区">南海区</option>
+			<option value="顺德区">顺德区</option>
+			<option value="三水区">三水区</option>
+			<option value="高明区">高明区</option>
+			<option value="蓬江区">蓬江区</option>
+			<option value="江海区">江海区</option>
+			<option value="新会区">新会区</option>
+			<option value="台山市">台山市</option>
+			<option value="开平市">开平市</option>
+			<option value="鹤山市">鹤山市</option>
+			<option value="恩平市">恩平市</option>
+			<option value="赤坎区">赤坎区</option>
+			<option value="霞山区">霞山区</option>
+			<option value="坡头区">坡头区</option>
+			<option value="麻章区">麻章区</option>
+			<option value="遂溪县">遂溪县</option>
+			<option value="徐闻县">徐闻县</option>
+			<option value="廉江市">廉江市</option>
+			<option value="雷州市">雷州市</option>
+			<option value="吴川市">吴川市</option>
+			<option value="茂南区">茂南区</option>
+			<option value="茂港区">茂港区</option>
+			<option value="电白县">电白县</option>
+			<option value="高州市">高州市</option>
+			<option value="化州市">化州市</option>
+			<option value="信宜市">信宜市</option>
+			<option value="端州区">端州区</option>
+			<option value="鼎湖区">鼎湖区</option>
+			<option value="广宁县">广宁县</option>
+			<option value="怀集县">怀集县</option>
+			<option value="封开县">封开县</option>
+			<option value="德庆县">德庆县</option>
+			<option value="高要市">高要市</option>
+			<option value="四会市">四会市</option>
+			<option value="惠城区">惠城区</option>
+			<option value="惠阳区">惠阳区</option>
+			<option value="博罗县">博罗县</option>
+			<option value="惠东县">惠东县</option>
+			<option value="龙门县">龙门县</option>
+			<option value="梅江区">梅江区</option>
+			<option value="梅县">梅县</option>
+			<option value="大埔县">大埔县</option>
+			<option value="丰顺县">丰顺县</option>
+			<option value="五华县">五华县</option>
+			<option value="平远县">平远县</option>
+			<option value="蕉岭县">蕉岭县</option>
+			<option value="兴宁市">兴宁市</option>
+			<option value="城区">城区</option>
+			<option value="海丰县">海丰县</option>
+			<option value="陆河县">陆河县</option>
+			<option value="陆丰市">陆丰市</option>
+			<option value="源城区">源城区</option>
+			<option value="紫金县">紫金县</option>
+			<option value="龙川县">龙川县</option>
+			<option value="连平县">连平县</option>
+			<option value="和平县">和平县</option>
+			<option value="东源县">东源县</option>
+			<option value="江城区">江城区</option>
+			<option value="阳西县">阳西县</option>
+			<option value="阳东县">阳东县</option>
+			<option value="阳春市">阳春市</option>
+			<option value="清城区">清城区</option>
+			<option value="佛冈县">佛冈县</option>
+			<option value="阳山县">阳山县</option>
+			<option value="连山壮族瑶族自治县">连山壮族瑶族自治县</option>
+			<option value="连南瑶族自治县">连南瑶族自治县</option>
+			<option value="清新县">清新县</option>
+			<option value="英德市">英德市</option>
+			<option value="连州市">连州市</option>
+			<option value="湘桥区">湘桥区</option>
+			<option value="潮安县">潮安县</option>
+			<option value="饶平县">饶平县</option>
+			<option value="榕城区">榕城区</option>
+			<option value="揭东县">揭东县</option>
+			<option value="揭西县">揭西县</option>
+			<option value="惠来县">惠来县</option>
+			<option value="普宁市">普宁市</option>
+			<option value="云城区">云城区</option>
+			<option value="新兴县">新兴县</option>
+			<option value="郁南县">郁南县</option>
+			<option value="云安县">云安县</option>
+			<option value="罗定市">罗定市</option>
+			<option value="兴宁区">兴宁区</option>
+			<option value="青秀区">青秀区</option>
+			<option value="江南区">江南区</option>
+			<option value="西乡塘区">西乡塘区</option>
+			<option value="良庆区">良庆区</option>
+			<option value="邕宁区">邕宁区</option>
+			<option value="武鸣县">武鸣县</option>
+			<option value="隆安县">隆安县</option>
+			<option value="马山县">马山县</option>
+			<option value="上林县">上林县</option>
+			<option value="宾阳县">宾阳县</option>
+			<option value="横县">横县</option>
+			<option value="城中区">城中区</option>
+			<option value="鱼峰区">鱼峰区</option>
+			<option value="柳南区">柳南区</option>
+			<option value="柳北区">柳北区</option>
+			<option value="柳江县">柳江县</option>
+			<option value="柳城县">柳城县</option>
+			<option value="鹿寨县">鹿寨县</option>
+			<option value="融安县">融安县</option>
+			<option value="融水苗族自治县">融水苗族自治县</option>
+			<option value="三江侗族自治县">三江侗族自治县</option>
+			<option value="秀峰区">秀峰区</option>
+			<option value="叠彩区">叠彩区</option>
+			<option value="象山区">象山区</option>
+			<option value="七星区">七星区</option>
+			<option value="雁山区">雁山区</option>
+			<option value="阳朔县">阳朔县</option>
+			<option value="临桂县">临桂县</option>
+			<option value="灵川县">灵川县</option>
+			<option value="全州县">全州县</option>
+			<option value="兴安县">兴安县</option>
+			<option value="永福县">永福县</option>
+			<option value="灌阳县">灌阳县</option>
+			<option value="龙胜各族自治县">龙胜各族自治县</option>
+			<option value="资源县">资源县</option>
+			<option value="平乐县">平乐县</option>
+			<option value="荔蒲县">荔蒲县</option>
+			<option value="恭城瑶族自治县">恭城瑶族自治县</option>
+			<option value="万秀区">万秀区</option>
+			<option value="蝶山区">蝶山区</option>
+			<option value="长洲区">长洲区</option>
+			<option value="苍梧县">苍梧县</option>
+			<option value="藤县">藤县</option>
+			<option value="蒙山县">蒙山县</option>
+			<option value="岑溪市">岑溪市</option>
+			<option value="海城区">海城区</option>
+			<option value="银海区">银海区</option>
+			<option value="铁山港区">铁山港区</option>
+			<option value="合浦县">合浦县</option>
+			<option value="港口区">港口区</option>
+			<option value="防城区">防城区</option>
+			<option value="上思县">上思县</option>
+			<option value="东兴市">东兴市</option>
+			<option value="钦南区">钦南区</option>
+			<option value="钦北区">钦北区</option>
+			<option value="灵山县">灵山县</option>
+			<option value="浦北县">浦北县</option>
+			<option value="港北区">港北区</option>
+			<option value="港南区">港南区</option>
+			<option value="覃塘区">覃塘区</option>
+			<option value="平南县">平南县</option>
+			<option value="桂平市">桂平市</option>
+			<option value="玉州区">玉州区</option>
+			<option value="容县">容县</option>
+			<option value="陆川县">陆川县</option>
+			<option value="博白县">博白县</option>
+			<option value="兴业县">兴业县</option>
+			<option value="北流市">北流市</option>
+			<option value="右江区">右江区</option>
+			<option value="田阳县">田阳县</option>
+			<option value="田东县">田东县</option>
+			<option value="平果县">平果县</option>
+			<option value="德保县">德保县</option>
+			<option value="靖西县">靖西县</option>
+			<option value="那坡县">那坡县</option>
+			<option value="凌云县">凌云县</option>
+			<option value="乐业县">乐业县</option>
+			<option value="田林县">田林县</option>
+			<option value="西林县">西林县</option>
+			<option value="隆林各族自治县">隆林各族自治县</option>
+			<option value="八步区">八步区</option>
+			<option value="昭平县">昭平县</option>
+			<option value="钟山县">钟山县</option>
+			<option value="富川瑶族自治县">富川瑶族自治县</option>
+			<option value="金城江区">金城江区</option>
+			<option value="南丹县">南丹县</option>
+			<option value="天峨县">天峨县</option>
+			<option value="凤山县">凤山县</option>
+			<option value="东兰县">东兰县</option>
+			<option value="罗城仫佬族自治县">罗城仫佬族自治县</option>
+			<option value="环江毛南族自治县">环江毛南族自治县</option>
+			<option value="巴马瑶族自治县">巴马瑶族自治县</option>
+			<option value="都安瑶族自治县">都安瑶族自治县</option>
+			<option value="大化瑶族自治县">大化瑶族自治县</option>
+			<option value="宜州市">宜州市</option>
+			<option value="兴宾区">兴宾区</option>
+			<option value="忻城县">忻城县</option>
+			<option value="象州县">象州县</option>
+			<option value="武宣县">武宣县</option>
+			<option value="金秀瑶族自治县">金秀瑶族自治县</option>
+			<option value="合山市">合山市</option>
+			<option value="江洲区">江洲区</option>
+			<option value="扶绥县">扶绥县</option>
+			<option value="宁明县">宁明县</option>
+			<option value="龙州县">龙州县</option>
+			<option value="大新县">大新县</option>
+			<option value="天等县">天等县</option>
+			<option value="凭祥市">凭祥市</option>
+			<option value="秀英区">秀英区</option>
+			<option value="龙华区">龙华区</option>
+			<option value="琼山区">琼山区</option>
+			<option value="美兰区">美兰区</option>
+			<option value="五指山市">五指山市</option>
+			<option value="琼海市">琼海市</option>
+			<option value="儋州市">儋州市</option>
+			<option value="文昌市">文昌市</option>
+			<option value="万宁市">万宁市</option>
+			<option value="东方市">东方市</option>
+			<option value="定安县">定安县</option>
+			<option value="屯昌县">屯昌县</option>
+			<option value="澄迈县">澄迈县</option>
+			<option value="临高县">临高县</option>
+			<option value="白沙黎族自治县">白沙黎族自治县</option>
+			<option value="昌江黎族自治县">昌江黎族自治县</option>
+			<option value="乐东黎族自治县">乐东黎族自治县</option>
+			<option value="陵水黎族自治县">陵水黎族自治县</option>
+			<option value="保亭黎族苗族自治县">保亭黎族苗族自治县</option>
+			<option value="琼中黎族苗族自治县">琼中黎族苗族自治县</option>
+			<option value="西沙群岛">西沙群岛</option>
+			<option value="南沙群岛">南沙群岛</option>
+			<option value="中沙群岛的岛礁及其海域">中沙群岛的岛礁及其海域</option>
+			<option value="万州区">万州区</option>
+			<option value="涪陵区">涪陵区</option>
+			<option value="渝中区">渝中区</option>
+			<option value="大渡口区">大渡口区</option>
+			<option value="江北区">江北区</option>
+			<option value="沙坪坝区">沙坪坝区</option>
+			<option value="九龙坡区">九龙坡区</option>
+			<option value="南岸区">南岸区</option>
+			<option value="北碚区">北碚区</option>
+			<option value="万盛区">万盛区</option>
+			<option value="双桥区">双桥区</option>
+			<option value="渝北区">渝北区</option>
+			<option value="巴南区">巴南区</option>
+			<option value="黔江区">黔江区</option>
+			<option value="长寿区">长寿区</option>
+			<option value="綦江县">綦江县</option>
+			<option value="潼南县">潼南县</option>
+			<option value="铜梁县">铜梁县</option>
+			<option value="大足县">大足县</option>
+			<option value="荣昌县">荣昌县</option>
+			<option value="璧山县">璧山县</option>
+			<option value="梁平县">梁平县</option>
+			<option value="城口县">城口县</option>
+			<option value="丰都县">丰都县</option>
+			<option value="垫江县">垫江县</option>
+			<option value="武隆县">武隆县</option>
+			<option value="忠县">忠县</option>
+			<option value="开县">开县</option>
+			<option value="云阳县">云阳县</option>
+			<option value="奉节县">奉节县</option>
+			<option value="巫山县">巫山县</option>
+			<option value="巫溪县">巫溪县</option>
+			<option value="石柱土家族自治县">石柱土家族自治县</option>
+			<option value="秀山土家族苗族自治县">秀山土家族苗族自治县</option>
+			<option value="酉阳土家族苗族自治县">酉阳土家族苗族自治县</option>
+			<option value="彭水苗族土家族自治县">彭水苗族土家族自治县</option>
+			<option value="江津市">江津市</option>
+			<option value="合川市">合川市</option>
+			<option value="永川市">永川市</option>
+			<option value="南川市">南川市</option>
+			<option value="锦江区">锦江区</option>
+			<option value="青羊区">青羊区</option>
+			<option value="金牛区">金牛区</option>
+			<option value="武侯区">武侯区</option>
+			<option value="成华区">成华区</option>
+			<option value="龙泉驿区">龙泉驿区</option>
+			<option value="青白江区">青白江区</option>
+			<option value="新都区">新都区</option>
+			<option value="温江区">温江区</option>
+			<option value="金堂县">金堂县</option>
+			<option value="双流县">双流县</option>
+			<option value="郫县">郫县</option>
+			<option value="大邑县">大邑县</option>
+			<option value="蒲江县">蒲江县</option>
+			<option value="新津县">新津县</option>
+			<option value="都江堰市">都江堰市</option>
+			<option value="彭州市">彭州市</option>
+			<option value="邛崃市">邛崃市</option>
+			<option value="崇州市">崇州市</option>
+			<option value="自流井区">自流井区</option>
+			<option value="贡井区">贡井区</option>
+			<option value="大安区">大安区</option>
+			<option value="沿滩区">沿滩区</option>
+			<option value="荣县">荣县</option>
+			<option value="富顺县">富顺县</option>
+			<option value="东区">东区</option>
+			<option value="西区">西区</option>
+			<option value="仁和区">仁和区</option>
+			<option value="米易县">米易县</option>
+			<option value="盐边县">盐边县</option>
+			<option value="江阳区">江阳区</option>
+			<option value="纳溪区">纳溪区</option>
+			<option value="龙马潭区">龙马潭区</option>
+			<option value="泸县">泸县</option>
+			<option value="合江县">合江县</option>
+			<option value="叙永县">叙永县</option>
+			<option value="古蔺县">古蔺县</option>
+			<option value="旌阳区">旌阳区</option>
+			<option value="中江县">中江县</option>
+			<option value="罗江县">罗江县</option>
+			<option value="广汉市">广汉市</option>
+			<option value="什邡市">什邡市</option>
+			<option value="绵竹市">绵竹市</option>
+			<option value="涪城区">涪城区</option>
+			<option value="游仙区">游仙区</option>
+			<option value="三台县">三台县</option>
+			<option value="盐亭县">盐亭县</option>
+			<option value="安县">安县</option>
+			<option value="梓潼县">梓潼县</option>
+			<option value="北川羌族自治县">北川羌族自治县</option>
+			<option value="平武县">平武县</option>
+			<option value="江油市">江油市</option>
+			<option value="市中区">市中区</option>
+			<option value="元坝区">元坝区</option>
+			<option value="朝天区">朝天区</option>
+			<option value="旺苍县">旺苍县</option>
+			<option value="青川县">青川县</option>
+			<option value="剑阁县">剑阁县</option>
+			<option value="苍溪县">苍溪县</option>
+			<option value="船山区">船山区</option>
+			<option value="安居区">安居区</option>
+			<option value="蓬溪县">蓬溪县</option>
+			<option value="射洪县">射洪县</option>
+			<option value="大英县">大英县</option>
+			<option value="市中区">市中区</option>
+			<option value="东兴区">东兴区</option>
+			<option value="威远县">威远县</option>
+			<option value="资中县">资中县</option>
+			<option value="隆昌县">隆昌县</option>
+			<option value="市中区">市中区</option>
+			<option value="沙湾区">沙湾区</option>
+			<option value="五通桥区">五通桥区</option>
+			<option value="金口河区">金口河区</option>
+			<option value="犍为县">犍为县</option>
+			<option value="井研县">井研县</option>
+			<option value="夹江县">夹江县</option>
+			<option value="沐川县">沐川县</option>
+			<option value="峨边彝族自治县">峨边彝族自治县</option>
+			<option value="马边彝族自治县">马边彝族自治县</option>
+			<option value="峨眉山市">峨眉山市</option>
+			<option value="顺庆区">顺庆区</option>
+			<option value="高坪区">高坪区</option>
+			<option value="嘉陵区">嘉陵区</option>
+			<option value="南部县">南部县</option>
+			<option value="营山县">营山县</option>
+			<option value="蓬安县">蓬安县</option>
+			<option value="仪陇县">仪陇县</option>
+			<option value="西充县">西充县</option>
+			<option value="阆中市">阆中市</option>
+			<option value="东坡区">东坡区</option>
+			<option value="仁寿县">仁寿县</option>
+			<option value="彭山县">彭山县</option>
+			<option value="洪雅县">洪雅县</option>
+			<option value="丹棱县">丹棱县</option>
+			<option value="青神县">青神县</option>
+			<option value="翠屏区">翠屏区</option>
+			<option value="宜宾县">宜宾县</option>
+			<option value="南溪县">南溪县</option>
+			<option value="江安县">江安县</option>
+			<option value="长宁县">长宁县</option>
+			<option value="高县">高县</option>
+			<option value="珙县">珙县</option>
+			<option value="筠连县">筠连县</option>
+			<option value="兴文县">兴文县</option>
+			<option value="屏山县">屏山县</option>
+			<option value="广安区">广安区</option>
+			<option value="岳池县">岳池县</option>
+			<option value="武胜县">武胜县</option>
+			<option value="邻水县">邻水县</option>
+			<option value="华莹市">华莹市</option>
+			<option value="通川区">通川区</option>
+			<option value="达县">达县</option>
+			<option value="宣汉县">宣汉县</option>
+			<option value="开江县">开江县</option>
+			<option value="大竹县">大竹县</option>
+			<option value="渠县">渠县</option>
+			<option value="万源市">万源市</option>
+			<option value="雨城区">雨城区</option>
+			<option value="名山县">名山县</option>
+			<option value="荥经县">荥经县</option>
+			<option value="汉源县">汉源县</option>
+			<option value="石棉县">石棉县</option>
+			<option value="天全县">天全县</option>
+			<option value="芦山县">芦山县</option>
+			<option value="宝兴县">宝兴县</option>
+			<option value="巴州区">巴州区</option>
+			<option value="通江县">通江县</option>
+			<option value="南江县">南江县</option>
+			<option value="平昌县">平昌县</option>
+			<option value="雁江区">雁江区</option>
+			<option value="安岳县">安岳县</option>
+			<option value="乐至县">乐至县</option>
+			<option value="简阳市">简阳市</option>
+			<option value="汶川县">汶川县</option>
+			<option value="理县">理县</option>
+			<option value="茂县">茂县</option>
+			<option value="松潘县">松潘县</option>
+			<option value="九寨沟县">九寨沟县</option>
+			<option value="金川县">金川县</option>
+			<option value="小金县">小金县</option>
+			<option value="黑水县">黑水县</option>
+			<option value="马尔康县">马尔康县</option>
+			<option value="壤塘县">壤塘县</option>
+			<option value="阿坝县">阿坝县</option>
+			<option value="若尔盖县">若尔盖县</option>
+			<option value="红原县">红原县</option>
+			<option value="康定县">康定县</option>
+			<option value="泸定县">泸定县</option>
+			<option value="丹巴县">丹巴县</option>
+			<option value="九龙县">九龙县</option>
+			<option value="雅江县">雅江县</option>
+			<option value="道孚县">道孚县</option>
+			<option value="炉霍县">炉霍县</option>
+			<option value="甘孜县">甘孜县</option>
+			<option value="新龙县">新龙县</option>
+			<option value="德格县">德格县</option>
+			<option value="白玉县">白玉县</option>
+			<option value="石渠县">石渠县</option>
+			<option value="色达县">色达县</option>
+			<option value="理塘县">理塘县</option>
+			<option value="巴塘县">巴塘县</option>
+			<option value="乡城县">乡城县</option>
+			<option value="稻城县">稻城县</option>
+			<option value="得荣县">得荣县</option>
+			<option value="西昌市">西昌市</option>
+			<option value="木里藏族自治县">木里藏族自治县</option>
+			<option value="盐源县">盐源县</option>
+			<option value="德昌县">德昌县</option>
+			<option value="会理县">会理县</option>
+			<option value="会东县">会东县</option>
+			<option value="宁南县">宁南县</option>
+			<option value="普格县">普格县</option>
+			<option value="布拖县">布拖县</option>
+			<option value="金阳县">金阳县</option>
+			<option value="昭觉县">昭觉县</option>
+			<option value="喜德县">喜德县</option>
+			<option value="冕宁县">冕宁县</option>
+			<option value="越西县">越西县</option>
+			<option value="甘洛县">甘洛县</option>
+			<option value="美姑县">美姑县</option>
+			<option value="雷波县">雷波县</option>
+			<option value="南明区">南明区</option>
+			<option value="云岩区">云岩区</option>
+			<option value="花溪区">花溪区</option>
+			<option value="乌当区">乌当区</option>
+			<option value="白云区">白云区</option>
+			<option value="小河区">小河区</option>
+			<option value="开阳县">开阳县</option>
+			<option value="息烽县">息烽县</option>
+			<option value="修文县">修文县</option>
+			<option value="清镇市">清镇市</option>
+			<option value="钟山区">钟山区</option>
+			<option value="六枝特区">六枝特区</option>
+			<option value="水城县">水城县</option>
+			<option value="盘县">盘县</option>
+			<option value="红花岗区">红花岗区</option>
+			<option value="汇川区">汇川区</option>
+			<option value="遵义县">遵义县</option>
+			<option value="桐梓县">桐梓县</option>
+			<option value="绥阳县">绥阳县</option>
+			<option value="正安县">正安县</option>
+			<option value="道真仡佬族苗族自治县">道真仡佬族苗族自治县</option>
+			<option value="务川仡佬族苗族自治县">务川仡佬族苗族自治县</option>
+			<option value="凤冈县">凤冈县</option>
+			<option value="湄潭县">湄潭县</option>
+			<option value="余庆县">余庆县</option>
+			<option value="习水县">习水县</option>
+			<option value="赤水市">赤水市</option>
+			<option value="仁怀市">仁怀市</option>
+			<option value="西秀区">西秀区</option>
+			<option value="平坝县">平坝县</option>
+			<option value="普定县">普定县</option>
+			<option value="镇宁布依族苗族自治县">镇宁布依族苗族自治县</option>
+			<option value="关岭布依族苗族自治县">关岭布依族苗族自治县</option>
+			<option value="紫云苗族布依族自治县">紫云苗族布依族自治县</option>
+			<option value="铜仁市">铜仁市</option>
+			<option value="江口县">江口县</option>
+			<option value="玉屏侗族自治县">玉屏侗族自治县</option>
+			<option value="石阡县">石阡县</option>
+			<option value="思南县">思南县</option>
+			<option value="印江土家族苗族自治县">印江土家族苗族自治县</option>
+			<option value="德江县">德江县</option>
+			<option value="沿河土家族自治县">沿河土家族自治县</option>
+			<option value="松桃苗族自治县">松桃苗族自治县</option>
+			<option value="万山特区">万山特区</option>
+			<option value="兴义市">兴义市</option>
+			<option value="兴仁县">兴仁县</option>
+			<option value="普安县">普安县</option>
+			<option value="晴隆县">晴隆县</option>
+			<option value="贞丰县">贞丰县</option>
+			<option value="望谟县">望谟县</option>
+			<option value="册亨县">册亨县</option>
+			<option value="安龙县">安龙县</option>
+			<option value="毕节市">毕节市</option>
+			<option value="大方县">大方县</option>
+			<option value="黔西县">黔西县</option>
+			<option value="金沙县">金沙县</option>
+			<option value="织金县">织金县</option>
+			<option value="纳雍县">纳雍县</option>
+			<option value="威宁彝族回族苗族自治县">威宁彝族回族苗族自治县</option>
+			<option value="赫章县">赫章县</option>
+			<option value="凯里市">凯里市</option>
+			<option value="黄平县">黄平县</option>
+			<option value="施秉县">施秉县</option>
+			<option value="三穗县">三穗县</option>
+			<option value="镇远县">镇远县</option>
+			<option value="岑巩县">岑巩县</option>
+			<option value="天柱县">天柱县</option>
+			<option value="锦屏县">锦屏县</option>
+			<option value="剑河县">剑河县</option>
+			<option value="台江县">台江县</option>
+			<option value="黎平县">黎平县</option>
+			<option value="榕江县">榕江县</option>
+			<option value="从江县">从江县</option>
+			<option value="雷山县">雷山县</option>
+			<option value="麻江县">麻江县</option>
+			<option value="丹寨县">丹寨县</option>
+			<option value="都匀市">都匀市</option>
+			<option value="福泉市">福泉市</option>
+			<option value="荔波县">荔波县</option>
+			<option value="贵定县">贵定县</option>
+			<option value="瓮安县">瓮安县</option>
+			<option value="独山县">独山县</option>
+			<option value="平塘县">平塘县</option>
+			<option value="罗甸县">罗甸县</option>
+			<option value="长顺县">长顺县</option>
+			<option value="龙里县">龙里县</option>
+			<option value="惠水县">惠水县</option>
+			<option value="三都水族自治县">三都水族自治县</option>
+			<option value="五华区">五华区</option>
+			<option value="盘龙区">盘龙区</option>
+			<option value="官渡区">官渡区</option>
+			<option value="西山区">西山区</option>
+			<option value="东川区">东川区</option>
+			<option value="呈贡县">呈贡县</option>
+			<option value="晋宁县">晋宁县</option>
+			<option value="富民县">富民县</option>
+			<option value="宜良县">宜良县</option>
+			<option value="石林彝族自治县">石林彝族自治县</option>
+			<option value="嵩明县">嵩明县</option>
+			<option value="禄劝彝族苗族自治县">禄劝彝族苗族自治县</option>
+			<option value="寻甸回族彝族自治县">寻甸回族彝族自治县</option>
+			<option value="安宁市">安宁市</option>
+			<option value="麒麟区">麒麟区</option>
+			<option value="马龙县">马龙县</option>
+			<option value="陆良县">陆良县</option>
+			<option value="师宗县">师宗县</option>
+			<option value="罗平县">罗平县</option>
+			<option value="富源县">富源县</option>
+			<option value="会泽县">会泽县</option>
+			<option value="沾益县">沾益县</option>
+			<option value="宣威市">宣威市</option>
+			<option value="红塔区">红塔区</option>
+			<option value="江川县">江川县</option>
+			<option value="澄江县">澄江县</option>
+			<option value="通海县">通海县</option>
+			<option value="华宁县">华宁县</option>
+			<option value="易门县">易门县</option>
+			<option value="峨山彝族自治县">峨山彝族自治县</option>
+			<option value="新平彝族傣族自治县">新平彝族傣族自治县</option>
+			<option value="元江哈尼族彝族傣族自治县">元江哈尼族彝族傣族自治县</option>
+			<option value="隆阳区">隆阳区</option>
+			<option value="施甸县">施甸县</option>
+			<option value="腾冲县">腾冲县</option>
+			<option value="龙陵县">龙陵县</option>
+			<option value="昌宁县">昌宁县</option>
+			<option value="昭阳区">昭阳区</option>
+			<option value="鲁甸县">鲁甸县</option>
+			<option value="巧家县">巧家县</option>
+			<option value="盐津县">盐津县</option>
+			<option value="大关县">大关县</option>
+			<option value="永善县">永善县</option>
+			<option value="绥江县">绥江县</option>
+			<option value="镇雄县">镇雄县</option>
+			<option value="彝良县">彝良县</option>
+			<option value="威信县">威信县</option>
+			<option value="水富县">水富县</option>
+			<option value="古城区">古城区</option>
+			<option value="玉龙纳西族自治县">玉龙纳西族自治县</option>
+			<option value="永胜县">永胜县</option>
+			<option value="华坪县">华坪县</option>
+			<option value="宁蒗彝族自治县">宁蒗彝族自治县</option>
+			<option value="翠云区">翠云区</option>
+			<option value="普洱哈尼族彝族自治县">普洱哈尼族彝族自治县</option>
+			<option value="墨江哈尼族自治县">墨江哈尼族自治县</option>
+			<option value="景东彝族自治县">景东彝族自治县</option>
+			<option value="景谷傣族彝族自治县">景谷傣族彝族自治县</option>
+			<option value="镇沅彝族哈尼族拉祜族自治县">镇沅彝族哈尼族拉祜族自治县</option>
+			<option value="江城哈尼族彝族自治县">江城哈尼族彝族自治县</option>
+			<option value="孟连傣族拉祜族佤族自治县">孟连傣族拉祜族佤族自治县</option>
+			<option value="澜沧拉祜族自治县">澜沧拉祜族自治县</option>
+			<option value="西盟佤族自治县">西盟佤族自治县</option>
+			<option value="临翔区">临翔区</option>
+			<option value="凤庆县">凤庆县</option>
+			<option value="云县">云县</option>
+			<option value="永德县">永德县</option>
+			<option value="镇康县">镇康县</option>
+			<option value="双江拉祜族佤族布朗族傣族自治县">双江拉祜族佤族布朗族傣族自治县</option>
+			<option value="耿马傣族佤族自治县">耿马傣族佤族自治县</option>
+			<option value="沧源佤族自治县">沧源佤族自治县</option>
+			<option value="楚雄市">楚雄市</option>
+			<option value="双柏县">双柏县</option>
+			<option value="牟定县">牟定县</option>
+			<option value="南华县">南华县</option>
+			<option value="姚安县">姚安县</option>
+			<option value="大姚县">大姚县</option>
+			<option value="永仁县">永仁县</option>
+			<option value="元谋县">元谋县</option>
+			<option value="武定县">武定县</option>
+			<option value="禄丰县">禄丰县</option>
+			<option value="个旧市">个旧市</option>
+			<option value="开远市">开远市</option>
+			<option value="蒙自县">蒙自县</option>
+			<option value="屏边苗族自治县">屏边苗族自治县</option>
+			<option value="建水县">建水县</option>
+			<option value="石屏县">石屏县</option>
+			<option value="弥勒县">弥勒县</option>
+			<option value="泸西县">泸西县</option>
+			<option value="元阳县">元阳县</option>
+			<option value="红河县">红河县</option>
+			<option value="金平苗族瑶族傣族自治县">金平苗族瑶族傣族自治县</option>
+			<option value="绿春县">绿春县</option>
+			<option value="河口瑶族自治县">河口瑶族自治县</option>
+			<option value="文山县">文山县</option>
+			<option value="砚山县">砚山县</option>
+			<option value="西畴县">西畴县</option>
+			<option value="麻栗坡县">麻栗坡县</option>
+			<option value="马关县">马关县</option>
+			<option value="丘北县">丘北县</option>
+			<option value="广南县">广南县</option>
+			<option value="富宁县">富宁县</option>
+			<option value="景洪市">景洪市</option>
+			<option value="勐海县">勐海县</option>
+			<option value="勐腊县">勐腊县</option>
+			<option value="大理市">大理市</option>
+			<option value="漾濞彝族自治县">漾濞彝族自治县</option>
+			<option value="祥云县">祥云县</option>
+			<option value="宾川县">宾川县</option>
+			<option value="弥渡县">弥渡县</option>
+			<option value="南涧彝族自治县">南涧彝族自治县</option>
+			<option value="巍山彝族回族自治县">巍山彝族回族自治县</option>
+			<option value="永平县">永平县</option>
+			<option value="云龙县">云龙县</option>
+			<option value="洱源县">洱源县</option>
+			<option value="剑川县">剑川县</option>
+			<option value="鹤庆县">鹤庆县</option>
+			<option value="瑞丽市">瑞丽市</option>
+			<option value="潞西市">潞西市</option>
+			<option value="梁河县">梁河县</option>
+			<option value="盈江县">盈江县</option>
+			<option value="陇川县">陇川县</option>
+			<option value="泸水县">泸水县</option>
+			<option value="福贡县">福贡县</option>
+			<option value="贡山独龙族怒族自治县">贡山独龙族怒族自治县</option>
+			<option value="兰坪白族普米族自治县">兰坪白族普米族自治县</option>
+			<option value="香格里拉县">香格里拉县</option>
+			<option value="德钦县">德钦县</option>
+			<option value="维西傈僳族自治县">维西傈僳族自治县</option>
+			<option value="城关区">城关区</option>
+			<option value="林周县">林周县</option>
+			<option value="当雄县">当雄县</option>
+			<option value="尼木县">尼木县</option>
+			<option value="曲水县">曲水县</option>
+			<option value="堆龙德庆县">堆龙德庆县</option>
+			<option value="达孜县">达孜县</option>
+			<option value="墨竹工卡县">墨竹工卡县</option>
+			<option value="昌都县">昌都县</option>
+			<option value="江达县">江达县</option>
+			<option value="贡觉县">贡觉县</option>
+			<option value="类乌齐县">类乌齐县</option>
+			<option value="丁青县">丁青县</option>
+			<option value="察雅县">察雅县</option>
+			<option value="八宿县">八宿县</option>
+			<option value="左贡县">左贡县</option>
+			<option value="芒康县">芒康县</option>
+			<option value="洛隆县">洛隆县</option>
+			<option value="边坝县">边坝县</option>
+			<option value="乃东县">乃东县</option>
+			<option value="扎囊县">扎囊县</option>
+			<option value="贡嘎县">贡嘎县</option>
+			<option value="桑日县">桑日县</option>
+			<option value="琼结县">琼结县</option>
+			<option value="曲松县">曲松县</option>
+			<option value="措美县">措美县</option>
+			<option value="洛扎县">洛扎县</option>
+			<option value="加查县">加查县</option>
+			<option value="隆子县">隆子县</option>
+			<option value="错那县">错那县</option>
+			<option value="浪卡子县">浪卡子县</option>
+			<option value="日喀则市">日喀则市</option>
+			<option value="南木林县">南木林县</option>
+			<option value="江孜县">江孜县</option>
+			<option value="定日县">定日县</option>
+			<option value="萨迦县">萨迦县</option>
+			<option value="拉孜县">拉孜县</option>
+			<option value="昂仁县">昂仁县</option>
+			<option value="谢通门县">谢通门县</option>
+			<option value="白朗县">白朗县</option>
+			<option value="仁布县">仁布县</option>
+			<option value="康马县">康马县</option>
+			<option value="定结县">定结县</option>
+			<option value="仲巴县">仲巴县</option>
+			<option value="亚东县">亚东县</option>
+			<option value="吉隆县">吉隆县</option>
+			<option value="聂拉木县">聂拉木县</option>
+			<option value="萨嘎县">萨嘎县</option>
+			<option value="岗巴县">岗巴县</option>
+			<option value="那曲县">那曲县</option>
+			<option value="嘉黎县">嘉黎县</option>
+			<option value="比如县">比如县</option>
+			<option value="聂荣县">聂荣县</option>
+			<option value="安多县">安多县</option>
+			<option value="申扎县">申扎县</option>
+			<option value="索县">索县</option>
+			<option value="班戈县">班戈县</option>
+			<option value="巴青县">巴青县</option>
+			<option value="尼玛县">尼玛县</option>
+			<option value="普兰县">普兰县</option>
+			<option value="札达县">札达县</option>
+			<option value="噶尔县">噶尔县</option>
+			<option value="日土县">日土县</option>
+			<option value="革吉县">革吉县</option>
+			<option value="改则县">改则县</option>
+			<option value="措勤县">措勤县</option>
+			<option value="林芝县">林芝县</option>
+			<option value="工布江达县">工布江达县</option>
+			<option value="米林县">米林县</option>
+			<option value="墨脱县">墨脱县</option>
+			<option value="波密县">波密县</option>
+			<option value="察隅县">察隅县</option>
+			<option value="朗县">朗县</option>
+			<option value="新城区">新城区</option>
+			<option value="碑林区">碑林区</option>
+			<option value="莲湖区">莲湖区</option>
+			<option value="灞桥区">灞桥区</option>
+			<option value="未央区">未央区</option>
+			<option value="雁塔区">雁塔区</option>
+			<option value="阎良区">阎良区</option>
+			<option value="临潼区">临潼区</option>
+			<option value="长安区">长安区</option>
+			<option value="蓝田县">蓝田县</option>
+			<option value="周至县">周至县</option>
+			<option value="户县">户县</option>
+			<option value="高陵县">高陵县</option>
+			<option value="王益区">王益区</option>
+			<option value="印台区">印台区</option>
+			<option value="耀州区">耀州区</option>
+			<option value="宜君县">宜君县</option>
+			<option value="渭滨区">渭滨区</option>
+			<option value="金台区">金台区</option>
+			<option value="陈仓区">陈仓区</option>
+			<option value="凤翔县">凤翔县</option>
+			<option value="岐山县">岐山县</option>
+			<option value="扶风县">扶风县</option>
+			<option value="眉县">眉县</option>
+			<option value="陇县">陇县</option>
+			<option value="千阳县">千阳县</option>
+			<option value="麟游县">麟游县</option>
+			<option value="凤县">凤县</option>
+			<option value="太白县">太白县</option>
+			<option value="秦都区">秦都区</option>
+			<option value="杨凌区">杨凌区</option>
+			<option value="渭城区">渭城区</option>
+			<option value="三原县">三原县</option>
+			<option value="泾阳县">泾阳县</option>
+			<option value="乾县">乾县</option>
+			<option value="礼泉县">礼泉县</option>
+			<option value="永寿县">永寿县</option>
+			<option value="彬县">彬县</option>
+			<option value="长武县">长武县</option>
+			<option value="旬邑县">旬邑县</option>
+			<option value="淳化县">淳化县</option>
+			<option value="武功县">武功县</option>
+			<option value="兴平市">兴平市</option>
+			<option value="临渭区">临渭区</option>
+			<option value="华县">华县</option>
+			<option value="潼关县">潼关县</option>
+			<option value="大荔县">大荔县</option>
+			<option value="合阳县">合阳县</option>
+			<option value="澄城县">澄城县</option>
+			<option value="蒲城县">蒲城县</option>
+			<option value="白水县">白水县</option>
+			<option value="富平县">富平县</option>
+			<option value="韩城市">韩城市</option>
+			<option value="华阴市">华阴市</option>
+			<option value="宝塔区">宝塔区</option>
+			<option value="延长县">延长县</option>
+			<option value="延川县">延川县</option>
+			<option value="子长县">子长县</option>
+			<option value="安塞县">安塞县</option>
+			<option value="志丹县">志丹县</option>
+			<option value="吴旗县">吴旗县</option>
+			<option value="甘泉县">甘泉县</option>
+			<option value="富县">富县</option>
+			<option value="洛川县">洛川县</option>
+			<option value="宜川县">宜川县</option>
+			<option value="黄龙县">黄龙县</option>
+			<option value="黄陵县">黄陵县</option>
+			<option value="汉台区">汉台区</option>
+			<option value="南郑县">南郑县</option>
+			<option value="城固县">城固县</option>
+			<option value="洋县">洋县</option>
+			<option value="西乡县">西乡县</option>
+			<option value="勉县">勉县</option>
+			<option value="宁强县">宁强县</option>
+			<option value="略阳县">略阳县</option>
+			<option value="镇巴县">镇巴县</option>
+			<option value="留坝县">留坝县</option>
+			<option value="佛坪县">佛坪县</option>
+			<option value="榆阳区">榆阳区</option>
+			<option value="神木县">神木县</option>
+			<option value="府谷县">府谷县</option>
+			<option value="横山县">横山县</option>
+			<option value="靖边县">靖边县</option>
+			<option value="定边县">定边县</option>
+			<option value="绥德县">绥德县</option>
+			<option value="米脂县">米脂县</option>
+			<option value="佳县">佳县</option>
+			<option value="吴堡县">吴堡县</option>
+			<option value="清涧县">清涧县</option>
+			<option value="子洲县">子洲县</option>
+			<option value="汉滨区">汉滨区</option>
+			<option value="汉阴县">汉阴县</option>
+			<option value="石泉县">石泉县</option>
+			<option value="宁陕县">宁陕县</option>
+			<option value="紫阳县">紫阳县</option>
+			<option value="岚皋县">岚皋县</option>
+			<option value="平利县">平利县</option>
+			<option value="镇坪县">镇坪县</option>
+			<option value="旬阳县">旬阳县</option>
+			<option value="白河县">白河县</option>
+			<option value="商州区">商州区</option>
+			<option value="洛南县">洛南县</option>
+			<option value="丹凤县">丹凤县</option>
+			<option value="商南县">商南县</option>
+			<option value="山阳县">山阳县</option>
+			<option value="镇安县">镇安县</option>
+			<option value="柞水县">柞水县</option>
+			<option value="城关区">城关区</option>
+			<option value="七里河区">七里河区</option>
+			<option value="西固区">西固区</option>
+			<option value="安宁区">安宁区</option>
+			<option value="红古区">红古区</option>
+			<option value="永登县">永登县</option>
+			<option value="皋兰县">皋兰县</option>
+			<option value="榆中县">榆中县</option>
+			<option value="金川区">金川区</option>
+			<option value="永昌县">永昌县</option>
+			<option value="白银区">白银区</option>
+			<option value="平川区">平川区</option>
+			<option value="靖远县">靖远县</option>
+			<option value="会宁县">会宁县</option>
+			<option value="景泰县">景泰县</option>
+			<option value="秦城区">秦城区</option>
+			<option value="北道区">北道区</option>
+			<option value="清水县">清水县</option>
+			<option value="秦安县">秦安县</option>
+			<option value="甘谷县">甘谷县</option>
+			<option value="武山县">武山县</option>
+			<option value="张家川回族自治县">张家川回族自治县</option>
+			<option value="凉州区">凉州区</option>
+			<option value="民勤县">民勤县</option>
+			<option value="古浪县">古浪县</option>
+			<option value="天祝藏族自治县">天祝藏族自治县</option>
+			<option value="甘州区">甘州区</option>
+			<option value="肃南裕固族自治县">肃南裕固族自治县</option>
+			<option value="民乐县">民乐县</option>
+			<option value="临泽县">临泽县</option>
+			<option value="高台县">高台县</option>
+			<option value="山丹县">山丹县</option>
+			<option value="崆峒区">崆峒区</option>
+			<option value="泾川县">泾川县</option>
+			<option value="灵台县">灵台县</option>
+			<option value="崇信县">崇信县</option>
+			<option value="华亭县">华亭县</option>
+			<option value="庄浪县">庄浪县</option>
+			<option value="静宁县">静宁县</option>
+			<option value="肃州区">肃州区</option>
+			<option value="金塔县">金塔县</option>
+			<option value="安西县">安西县</option>
+			<option value="肃北蒙古族自治县">肃北蒙古族自治县</option>
+			<option value="阿克塞哈萨克族自治县">阿克塞哈萨克族自治县</option>
+			<option value="玉门市">玉门市</option>
+			<option value="敦煌市">敦煌市</option>
+			<option value="西峰区">西峰区</option>
+			<option value="庆城县">庆城县</option>
+			<option value="环县">环县</option>
+			<option value="华池县">华池县</option>
+			<option value="合水县">合水县</option>
+			<option value="正宁县">正宁县</option>
+			<option value="宁县">宁县</option>
+			<option value="镇原县">镇原县</option>
+			<option value="安定区">安定区</option>
+			<option value="通渭县">通渭县</option>
+			<option value="陇西县">陇西县</option>
+			<option value="渭源县">渭源县</option>
+			<option value="临洮县">临洮县</option>
+			<option value="漳县">漳县</option>
+			<option value="岷县">岷县</option>
+			<option value="武都区">武都区</option>
+			<option value="成县">成县</option>
+			<option value="文县">文县</option>
+			<option value="宕昌县">宕昌县</option>
+			<option value="康县">康县</option>
+			<option value="西和县">西和县</option>
+			<option value="礼县">礼县</option>
+			<option value="徽县">徽县</option>
+			<option value="两当县">两当县</option>
+			<option value="临夏市">临夏市</option>
+			<option value="临夏县">临夏县</option>
+			<option value="康乐县">康乐县</option>
+			<option value="永靖县">永靖县</option>
+			<option value="广河县">广河县</option>
+			<option value="和政县">和政县</option>
+			<option value="东乡族自治县">东乡族自治县</option>
+			<option value="积石山保安族东乡族撒拉族自治县">积石山保安族东乡族撒拉族自治县</option>
+			<option value="合作市">合作市</option>
+			<option value="临潭县">临潭县</option>
+			<option value="卓尼县">卓尼县</option>
+			<option value="舟曲县">舟曲县</option>
+			<option value="迭部县">迭部县</option>
+			<option value="玛曲县">玛曲县</option>
+			<option value="碌曲县">碌曲县</option>
+			<option value="夏河县">夏河县</option>
+			<option value="城东区">城东区</option>
+			<option value="城中区">城中区</option>
+			<option value="城西区">城西区</option>
+			<option value="城北区">城北区</option>
+			<option value="大通回族土族自治县">大通回族土族自治县</option>
+			<option value="湟中县">湟中县</option>
+			<option value="湟源县">湟源县</option>
+			<option value="平安县">平安县</option>
+			<option value="民和回族土族自治县">民和回族土族自治县</option>
+			<option value="乐都县">乐都县</option>
+			<option value="互助土族自治县">互助土族自治县</option>
+			<option value="化隆回族自治县">化隆回族自治县</option>
+			<option value="循化撒拉族自治县">循化撒拉族自治县</option>
+			<option value="门源回族自治县">门源回族自治县</option>
+			<option value="祁连县">祁连县</option>
+			<option value="海晏县">海晏县</option>
+			<option value="刚察县">刚察县</option>
+			<option value="同仁县">同仁县</option>
+			<option value="尖扎县">尖扎县</option>
+			<option value="泽库县">泽库县</option>
+			<option value="河南蒙古族自治县">河南蒙古族自治县</option>
+			<option value="共和县">共和县</option>
+			<option value="同德县">同德县</option>
+			<option value="贵德县">贵德县</option>
+			<option value="兴海县">兴海县</option>
+			<option value="贵南县">贵南县</option>
+			<option value="玛沁县">玛沁县</option>
+			<option value="班玛县">班玛县</option>
+			<option value="甘德县">甘德县</option>
+			<option value="达日县">达日县</option>
+			<option value="久治县">久治县</option>
+			<option value="玛多县">玛多县</option>
+			<option value="玉树县">玉树县</option>
+			<option value="杂多县">杂多县</option>
+			<option value="称多县">称多县</option>
+			<option value="治多县">治多县</option>
+			<option value="囊谦县">囊谦县</option>
+			<option value="曲麻莱县">曲麻莱县</option>
+			<option value="格尔木市">格尔木市</option>
+			<option value="德令哈市">德令哈市</option>
+			<option value="乌兰县">乌兰县</option>
+			<option value="都兰县">都兰县</option>
+			<option value="天峻县">天峻县</option>
+			<option value="兴庆区">兴庆区</option>
+			<option value="西夏区">西夏区</option>
+			<option value="金凤区">金凤区</option>
+			<option value="永宁县">永宁县</option>
+			<option value="贺兰县">贺兰县</option>
+			<option value="灵武市">灵武市</option>
+			<option value="大武口区">大武口区</option>
+			<option value="惠农区">惠农区</option>
+			<option value="平罗县">平罗县</option>
+			<option value="利通区">利通区</option>
+			<option value="盐池县">盐池县</option>
+			<option value="同心县">同心县</option>
+			<option value="青铜峡市">青铜峡市</option>
+			<option value="原州区">原州区</option>
+			<option value="西吉县">西吉县</option>
+			<option value="隆德县">隆德县</option>
+			<option value="泾源县">泾源县</option>
+			<option value="彭阳县">彭阳县</option>
+			<option value="沙坡头区">沙坡头区</option>
+			<option value="中宁县">中宁县</option>
+			<option value="海原县">海原县</option>
+			<option value="天山区">天山区</option>
+			<option value="沙依巴克区">沙依巴克区</option>
+			<option value="新市区">新市区</option>
+			<option value="水磨沟区">水磨沟区</option>
+			<option value="头屯河区">头屯河区</option>
+			<option value="达坂城区">达坂城区</option>
+			<option value="东山区">东山区</option>
+			<option value="乌鲁木齐县">乌鲁木齐县</option>
+			<option value="独山子区">独山子区</option>
+			<option value="克拉玛依区">克拉玛依区</option>
+			<option value="白碱滩区">白碱滩区</option>
+			<option value="乌尔禾区">乌尔禾区</option>
+			<option value="吐鲁番市">吐鲁番市</option>
+			<option value="鄯善县">鄯善县</option>
+			<option value="托克逊县">托克逊县</option>
+			<option value="哈密市">哈密市</option>
+			<option value="巴里坤哈萨克自治县">巴里坤哈萨克自治县</option>
+			<option value="伊吾县">伊吾县</option>
+			<option value="昌吉市">昌吉市</option>
+			<option value="阜康市">阜康市</option>
+			<option value="米泉市">米泉市</option>
+			<option value="呼图壁县">呼图壁县</option>
+			<option value="玛纳斯县">玛纳斯县</option>
+			<option value="奇台县">奇台县</option>
+			<option value="吉木萨尔县">吉木萨尔县</option>
+			<option value="木垒哈萨克自治县">木垒哈萨克自治县</option>
+			<option value="博乐市">博乐市</option>
+			<option value="精河县">精河县</option>
+			<option value="温泉县">温泉县</option>
+			<option value="库尔勒市">库尔勒市</option>
+			<option value="轮台县">轮台县</option>
+			<option value="尉犁县">尉犁县</option>
+			<option value="若羌县">若羌县</option>
+			<option value="且末县">且末县</option>
+			<option value="焉耆回族自治县">焉耆回族自治县</option>
+			<option value="和静县">和静县</option>
+			<option value="和硕县">和硕县</option>
+			<option value="博湖县">博湖县</option>
+			<option value="阿克苏市">阿克苏市</option>
+			<option value="温宿县">温宿县</option>
+			<option value="库车县">库车县</option>
+			<option value="沙雅县">沙雅县</option>
+			<option value="新和县">新和县</option>
+			<option value="拜城县">拜城县</option>
+			<option value="乌什县">乌什县</option>
+			<option value="阿瓦提县">阿瓦提县</option>
+			<option value="柯坪县">柯坪县</option>
+			<option value="阿图什市">阿图什市</option>
+			<option value="阿克陶县">阿克陶县</option>
+			<option value="阿合奇县">阿合奇县</option>
+			<option value="乌恰县">乌恰县</option>
+			<option value="喀什市">喀什市</option>
+			<option value="疏附县">疏附县</option>
+			<option value="疏勒县">疏勒县</option>
+			<option value="英吉沙县">英吉沙县</option>
+			<option value="泽普县">泽普县</option>
+			<option value="莎车县">莎车县</option>
+			<option value="叶城县">叶城县</option>
+			<option value="麦盖提县">麦盖提县</option>
+			<option value="岳普湖县">岳普湖县</option>
+			<option value="伽师县">伽师县</option>
+			<option value="巴楚县">巴楚县</option>
+			<option value="塔什库尔干塔吉克自治县">塔什库尔干塔吉克自治县</option>
+			<option value="和田市">和田市</option>
+			<option value="和田县">和田县</option>
+			<option value="墨玉县">墨玉县</option>
+			<option value="皮山县">皮山县</option>
+			<option value="洛浦县">洛浦县</option>
+			<option value="策勒县">策勒县</option>
+			<option value="于田县">于田县</option>
+			<option value="民丰县">民丰县</option>
+			<option value="伊宁市">伊宁市</option>
+			<option value="奎屯市">奎屯市</option>
+			<option value="伊宁县">伊宁县</option>
+			<option value="察布查尔锡伯自治县">察布查尔锡伯自治县</option>
+			<option value="霍城县">霍城县</option>
+			<option value="巩留县">巩留县</option>
+			<option value="新源县">新源县</option>
+			<option value="昭苏县">昭苏县</option>
+			<option value="特克斯县">特克斯县</option>
+			<option value="尼勒克县">尼勒克县</option>
+			<option value="塔城市">塔城市</option>
+			<option value="乌苏市">乌苏市</option>
+			<option value="额敏县">额敏县</option>
+			<option value="沙湾县">沙湾县</option>
+			<option value="托里县">托里县</option>
+			<option value="裕民县">裕民县</option>
+			<option value="和布克赛尔蒙古自治县">和布克赛尔蒙古自治县</option>
+			<option value="阿勒泰市">阿勒泰市</option>
+			<option value="布尔津县">布尔津县</option>
+			<option value="富蕴县">富蕴县</option>
+			<option value="福海县">福海县</option>
+			<option value="哈巴河县">哈巴河县</option>
+			<option value="青河县">青河县</option>
+			<option value="吉木乃县">吉木乃县</option>
+			<option value="石河子市">石河子市</option>
+			<option value="阿拉尔市">阿拉尔市</option>
+			<option value="图木舒克市">图木舒克市</option>
+			<option value="五家渠市">五家渠市</option>
+			<option value="中正区">中正区</option>
+			<option value="大同区">大同区</option>
+			<option value="中山区">中山区</option>
+			<option value="松山区">松山区</option>
+			<option value="大安区">大安区</option>
+			<option value="万华区">万华区</option>
+			<option value="信义区">信义区</option>
+			<option value="士林区">士林区</option>
+			<option value="北投区">北投区</option>
+			<option value="内湖区">内湖区</option>
+			<option value="南港区">南港区</option>
+			<option value="文山区">文山区</option>
+			<option value="中区">中区</option>
+			<option value="东区">东区</option>
+			<option value="南区">南区</option>
+			<option value="西区">西区</option>
+			<option value="北区">北区</option>
+			<option value="北屯区">北屯区</option>
+			<option value="西屯区">西屯区</option>
+			<option value="南屯区">南屯区</option>
+			<option value="中西区">中西区</option>
+			<option value="东区">东区</option>
+			<option value="南区">南区</option>
+			<option value="北区">北区</option>
+			<option value="安平区">安平区</option>
+			<option value="安南区">安南区</option>
+			<option value="新兴区">新兴区</option>
+			<option value="前金区">前金区</option>
+			<option value="芩雅区">芩雅区</option>
+			<option value="盐埕区">盐埕区</option>
+			<option value="鼓山区">鼓山区</option>
+			<option value="旗津区">旗津区</option>
+			<option value="前镇区">前镇区</option>
+			<option value="三民区">三民区</option>
+			<option value="左营区">左营区</option>
+			<option value="楠梓区">楠梓区</option>
+			<option value="小港区">小港区</option>
+			<option value="仁爱区">仁爱区</option>
+			<option value="信义区">信义区</option>
+			<option value="中正区">中正区</option>
+			<option value="中山区">中山区</option>
+			<option value="安乐区">安乐区</option>
+			<option value="暖暖区">暖暖区</option>
+			<option value="七堵区">七堵区</option>
+			<option value="东区">东区</option>
+			<option value="北区区">北区区</option>
+			<option value="香山区">香山区</option>
+			<option value="东区">东区</option>
+			<option value="西区">西区</option>
+			<option value="台北县">台北县</option>
+			<option value="宜兰县">宜兰县</option>
+			<option value="新竹县">新竹县</option>
+			<option value="桃园县">桃园县</option>
+			<option value="苗栗县">苗栗县</option>
+			<option value="台中县">台中县</option>
+			<option value="彰化县">彰化县</option>
+			<option value="南投县">南投县</option>
+			<option value="嘉义县">嘉义县</option>
+			<option value="屏东县">屏东县</option>
+			<option value="台东县">台东县</option>
+			<option value="花莲县">花莲县</option>
+			<option value="澎湖县">澎湖县</option>
+			<option value="中西区">中西区</option>
+			<option value="湾仔区">湾仔区</option>
+			<option value="东区">东区</option>
+			<option value="南区">南区</option>
+			<option value="黄大仙区">黄大仙区</option>
+			<option value="观塘区">观塘区</option>
+			<option value="九龙城区">九龙城区</option>
+			<option value="深水涉区">深水涉区</option>
+			<option value="油尖旺区">油尖旺区</option>
+			<option value="大埔区">大埔区</option>
+			<option value="沙田区">沙田区</option>
+			<option value="西贡区">西贡区</option>
+			<option value="北区">北区</option>
+			<option value="荃湾区">荃湾区</option>
+			<option value="屯门区">屯门区</option>
+			<option value="元朗区">元朗区</option>
+			<option value="葵青区">葵青区</option>
+			<option value="离岛区">离岛区</option>
+			<option value="花地玛堂区">花地玛堂区</option>
+			<option value="圣安多尼堂区">圣安多尼堂区</option>
+			<option value="大堂区">大堂区</option>
+			<option value="望德堂区">望德堂区</option>
+			<option value="风顺堂区">风顺堂区</option>
+			<option value="嘉模堂区">嘉模堂区</option>
+			<option value="圣方济各堂区">圣方济各堂区</option>
+			<option value="路氹城">路氹城</option>
+		</select>
+
+		<select name="yxdm" id="_yxdm">
+
+			<option value=""> =请选择= </option>
+
+			<option value="002"> 建筑学院 </option>
+
+			<option value="002J07"> 建学生组 </option>
+
+			<option value="002Y01"> 建研一历史、美术、技术支部 </option>
+
+			<option value="002Y02"> 建研二建筑支部 </option>
+
+			<option value="002Y03"> 建研2-04 </option>
+
+			<option value="002Y04"> 建研2-05 </option>
+
+			<option value="002Y05"> 建研三甲规划景观支部 </option>
+
+			<option value="002Y06"> 建研三规划景观支部 </option>
+
+			<option value="002Y08"> 建研2-03 </option>
+
+			<option value="002Y09"> 建研四空调支部 </option>
+
+			<option value="003"> 土木水利学院 </option>
+
+			<option value="003Y01"> 土研一（2） </option>
+
+			<option value="003Y02"> 土研2 </option>
+
+			<option value="003Y03"> 土研3 </option>
+
+			<option value="003Y04"> 土研4 </option>
+
+			<option value="003Y05"> 土研5 </option>
+
+			<option value="003Y06"> 建管研1 </option>
+
+			<option value="003Y07"> 水研1 </option>
+
+			<option value="003Y08"> 水研12 </option>
+
+			<option value="003Y09"> 水研2 </option>
+
+			<option value="003Y10"> 水研3 </option>
+
+			<option value="003Y11"> 水研4 </option>
+
+			<option value="003Y12"> 水研5 </option>
+
+			<option value="005"> 环境学院 </option>
+
+			<option value="005Y01"> 环研1 </option>
+
+			<option value="005Y02"> 环研21 </option>
+
+			<option value="005Y03"> 环研3 </option>
+
+			<option value="005Y04"> 环研4 </option>
+
+			<option value="005Y05"> 环研5 </option>
+
+			<option value="005Y06"> 环研6 </option>
+
+			<option value="005Y07"> 环研22 </option>
+
+			<option value="012"> 机械工程系 </option>
+
+			<option value="012Y01"> 机研11 </option>
+
+			<option value="012Y02"> 机研12 </option>
+
+			<option value="012Y03"> 机研13 </option>
+
+			<option value="012Y04"> 机研21 </option>
+
+			<option value="012Y05"> 机研22 </option>
+
+			<option value="012Y09"> 机研23 </option>
+
+			<option value="013"> 精密仪器与机械学系 </option>
+
+			<option value="013Y01"> 精研1党支部 </option>
+
+			<option value="013Y02"> 精研13 </option>
+
+			<option value="013Y04"> 精博2007支部 </option>
+
+			<option value="013Y05"> 精研22 </option>
+
+			<option value="013Y07"> 精研31 </option>
+
+			<option value="013Y08"> 精研32 </option>
+
+			<option value="013Y09"> 精研3党支部 </option>
+
+			<option value="013Y10"> 精硕20071支部 </option>
+
+			<option value="013Y11"> 精研44 </option>
+
+			<option value="013Y12"> 精博2004支部 </option>
+
+			<option value="013Y13"> 精硕20041 </option>
+
+			<option value="013Y14"> 精硕20042 </option>
+
+			<option value="013Y15"> 精博2005支部 </option>
+
+			<option value="013Y16"> 精硕2005支部 </option>
+
+			<option value="013Y17"> 精硕20052 </option>
+
+			<option value="014"> 热能工程系 </option>
+
+			<option value="014Y01"> 热研11 </option>
+
+			<option value="014Y02"> 热研2 </option>
+
+			<option value="014Y03"> 热研3 </option>
+
+			<option value="014Y04"> 热研4 </option>
+
+			<option value="014Y05"> 热研5 </option>
+
+			<option value="014Y06"> 热研12 </option>
+
+			<option value="015"> 汽车工程系 </option>
+
+			<option value="015Y03"> 汽研03 </option>
+
+			<option value="015Y04"> 汽研04 </option>
+
+			<option value="015Y05"> 汽研05 </option>
+
+			<option value="015Y06"> 汽博2 </option>
+
+			<option value="016"> 工业工程系 </option>
+
+			<option value="016Y01"> 工研5 </option>
+
+			<option value="016Y03"> 工研联合 </option>
+
+			<option value="016Y04"> 工业博 </option>
+
+			<option value="016Y07"> 工业硕 </option>
+
+			<option value="022"> 电机工程与应用电子技术系 </option>
+
+			<option value="022Y01"> 电研12（拆） </option>
+
+			<option value="022Y02"> 电博06 </option>
+
+			<option value="022Y05"> 电研2 </option>
+
+			<option value="022Y07"> 电研3 </option>
+
+			<option value="022Y09"> 电研4 </option>
+
+			<option value="022Y10"> 电研42 </option>
+
+			<option value="022Y11"> 电研5 </option>
+
+			<option value="023"> 电子工程系 </option>
+
+			<option value="023Y01"> 无研一一 </option>
+
+			<option value="023Y02"> 无研21 </option>
+
+			<option value="023Y03"> 无研三一 </option>
+
+			<option value="023Y04"> 无研三二 </option>
+
+			<option value="023Y05"> 无研三二 </option>
+
+			<option value="023Y06"> 无研四一 </option>
+
+			<option value="023Y07"> 无研5 </option>
+
+			<option value="023Y08"> 无研61 </option>
+
+			<option value="023Y09"> 无研一 </option>
+
+			<option value="023Y10"> 无研一三 </option>
+
+			<option value="023Y11"> 无研二 </option>
+
+			<option value="023Y12"> 无研三 </option>
+
+			<option value="023Y13"> 无研国防班 </option>
+
+			<option value="024"> 计算机科学与技术系 </option>
+
+			<option value="024Y01"> 计研11 </option>
+
+			<option value="024Y02"> 计研21 </option>
+
+			<option value="024Y03"> 计研22 </option>
+
+			<option value="024Y04"> 计研23 </option>
+
+			<option value="024Y05"> 计研31 </option>
+
+			<option value="024Y06"> 计研32 </option>
+
+			<option value="024Y07"> 计研41 </option>
+
+			<option value="024Y08"> 计研42 </option>
+
+			<option value="024Y09"> 计研43 </option>
+
+			<option value="024Y10"> 计研44 </option>
+
+			<option value="024Y11"> 计研51 </option>
+
+			<option value="024Y12"> 计研52 </option>
+
+			<option value="024Y13"> 计研53 </option>
+
+			<option value="024Y14"> 计研54 </option>
+
+			<option value="024Y16"> 计研61 </option>
+
+			<option value="024Y17"> 计研62 </option>
+
+			<option value="024Y18"> 计研63 </option>
+
+			<option value="024Y19"> 计研64 </option>
+
+			<option value="024Y20"> 计研65 </option>
+
+			<option value="024Y21"> 计研8 </option>
+
+			<option value="025"> 自动化系 </option>
+
+			<option value="025Y01"> 自研1 </option>
+
+			<option value="025Y02"> 自研21 </option>
+
+			<option value="025Y03"> 自研22 </option>
+
+			<option value="025Y04"> 自研31 </option>
+
+			<option value="025Y05"> 自研32 </option>
+
+			<option value="025Y06"> 自研41 </option>
+
+			<option value="025Y07"> 自研42 </option>
+
+			<option value="025Y08"> 自研51 </option>
+
+			<option value="025Y09"> 自研52 </option>
+
+			<option value="025Y10"> 自研53 </option>
+
+			<option value="025Y11"> 自研61 </option>
+
+			<option value="025Y12"> 自研62 </option>
+
+			<option value="032"> 工程物理系 </option>
+
+			<option value="032Y03"> 工物研11 </option>
+
+			<option value="032Y05"> 工物研12 </option>
+
+			<option value="032Y06"> 工物研14 </option>
+
+			<option value="032Y08"> 工物研2 </option>
+
+			<option value="032Y09"> 工物研3 </option>
+
+			<option value="033"> 航天航空学院 </option>
+
+			<option value="033Y01"> 航研1 </option>
+
+			<option value="033Y02"> 航研2 </option>
+
+			<option value="033Y03"> 航研22 </option>
+
+			<option value="033Y04"> 航研23 </option>
+
+			<option value="033Y05"> 航研3 </option>
+
+			<option value="033Y06"> 航研41 </option>
+
+			<option value="033Y07"> 航研42 </option>
+
+			<option value="033Y08"> 航博05 </option>
+
+			<option value="033Y09"> 航硕2005 </option>
+
+			<option value="034"> 化学工程系 </option>
+
+			<option value="034Y08"> 化工研1 </option>
+
+			<option value="034Y09"> 化工研2 </option>
+
+			<option value="034Y10"> 化工研3 </option>
+
+			<option value="034Y11"> 化工研4 </option>
+
+			<option value="034Y12"> 化工研5 </option>
+
+			<option value="034Y13"> 化工研6 </option>
+
+			<option value="035"> 材料科学与工程系 </option>
+
+			<option value="035Y01"> 材研1 </option>
+
+			<option value="035Y02"> 材博03 </option>
+
+			<option value="035Y03"> 材研3 </option>
+
+			<option value="035Y04"> 材研4 </option>
+
+			<option value="035Y05"> 材研5 </option>
+
+			<option value="035Y06"> 材研6 </option>
+
+			<option value="035Y07"> 材硕41 </option>
+
+			<option value="035Y08"> 材硕42 </option>
+
+			<option value="035Y09"> 材博04 </option>
+
+			<option value="035Y10"> 材硕05 </option>
+
+			<option value="035Y11"> 材硕52 </option>
+
+			<option value="035Y12"> 材博05 </option>
+
+			<option value="042"> 数学科学系 </option>
+
+			<option value="042Y01"> 数研1 </option>
+
+			<option value="042Y02"> 数研2 </option>
+
+			<option value="042Y03"> 数研3 </option>
+
+			<option value="043"> 物理系 </option>
+
+			<option value="043Y01"> 物研1 </option>
+
+			<option value="043Y02"> 物研2 </option>
+
+			<option value="043Y03"> 物研3 </option>
+
+			<option value="043Y04"> 物研4 </option>
+
+			<option value="043Y05"> 物研5 </option>
+
+			<option value="043Y06"> 物研6 </option>
+
+			<option value="044"> 化学系 </option>
+
+			<option value="044Y01"> 化研一（有机） </option>
+
+			<option value="044Y02"> 化研二（分析） </option>
+
+			<option value="044Y03"> 化研三（物化） </option>
+
+			<option value="044Y04"> 化研4(无机) </option>
+
+			<option value="044Y05"> 化研2005 </option>
+
+			<option value="045"> 生命科学学院 </option>
+
+			<option value="045B07"> 生物系研61支部 </option>
+
+			<option value="045Y01"> 生物系研1支部 </option>
+
+			<option value="045Y02"> 生博2 </option>
+
+			<option value="045Y03"> 生研33 </option>
+
+			<option value="045Y04"> 生物系研3支部 </option>
+
+			<option value="045Y05"> 生博06 </option>
+
+			<option value="045Y06"> 生物系研4支部 </option>
+
+			<option value="045Y07"> 生研42 </option>
+
+			<option value="051"> 经济管理学院 </option>
+
+			<option value="051Y01"> 经博1 </option>
+
+			<option value="051Y02"> 经博2 </option>
+
+			<option value="051Y03"> 经博3 </option>
+
+			<option value="051Y04"> 经博4 </option>
+
+			<option value="051Y05"> 经硕51 </option>
+
+			<option value="051Y06"> 经硕04 </option>
+
+			<option value="051Y07"> 经硕31 </option>
+
+			<option value="051Y08"> 经硕32 </option>
+
+			<option value="051Y09"> 经硕53 </option>
+
+			<option value="051Y10"> 经硕52 </option>
+
+			<option value="051Y11"> 04MBAF1 </option>
+
+			<option value="051Y12"> 04MBAF2 </option>
+
+			<option value="051Y14"> 04MBAI1 </option>
+
+			<option value="051Y15"> 05MBAF1 </option>
+
+			<option value="051Y16"> 05MBAF2 </option>
+
+			<option value="051Y18"> 05MBAI1 </option>
+
+			<option value="051Y19"> 05MBAI2 </option>
+
+			<option value="051Y20"> 04MBAI2 </option>
+
+			<option value="051Y23"> 经博5 </option>
+
+			<option value="051Y24"> 经博6 </option>
+
+			<option value="051Y26"> 经硕43 </option>
+
+			<option value="051Y27"> 经硕42 </option>
+
+			<option value="059"> 公共管理学院 </option>
+
+			<option value="059Y01"> 公管研11 </option>
+
+			<option value="059Y02"> 公管研21 </option>
+
+			<option value="059Y03"> 公管研31 </option>
+
+			<option value="059Y04"> 03MPA </option>
+
+			<option value="059Y05"> 公管研22 </option>
+
+			<option value="059Y06"> 公管硕05 </option>
+
+			<option value="059Y07"> 公管研32 </option>
+
+			<option value="059Y08"> 公管博05 </option>
+
+			<option value="059Y09"> 公管研13 </option>
+
+			<option value="059Y10"> 公管研12 </option>
+
+			<option value="060"> 五道口金融学院 </option>
+
+			<option value="061"> 人文社会科学学院 </option>
+
+			<option value="061Y01"> 文硕1(中文) </option>
+
+			<option value="061Y02"> 文硕2(外语) </option>
+
+			<option value="061Y03"> 文硕3(历史) </option>
+
+			<option value="061Y04"> 文硕4(哲学) </option>
+
+			<option value="061Y05"> 文硕5(经济) </option>
+
+			<option value="061Y06"> 文硕6(国关) </option>
+
+			<option value="061Y07"> 文硕71(教育) </option>
+
+			<option value="061Y08"> 文博1(中文) </option>
+
+			<option value="061Y09"> 文博2(哲学) </option>
+
+			<option value="061Y10"> 文硕8(社会) </option>
+
+			<option value="061Y11"> 文硕7(教育) </option>
+
+			<option value="061Y12"> 文博3 </option>
+
+			<option value="061Y13"> 文博4(历史、社会) </option>
+
+			<option value="066"> 法学院 </option>
+
+			<option value="066Y01"> 法研51 </option>
+
+			<option value="066Y02"> 法研05 </option>
+
+			<option value="066Y03"> 法研42 </option>
+
+			<option value="066Y04"> JM41 </option>
+
+			<option value="066Y05"> JM42 </option>
+
+			<option value="066Y06"> JM51 </option>
+
+			<option value="066Y07"> 法研13 </option>
+
+			<option value="066Y08"> 法研23 </option>
+
+			<option value="066Y09"> 法研41 </option>
+
+			<option value="066Y10"> JM52 </option>
+
+			<option value="067"> 新闻与传播学院 </option>
+
+			<option value="067Y01"> 新博 </option>
+
+			<option value="067Y02"> 新硕5 </option>
+
+			<option value="067Y03"> 新硕31 </option>
+
+			<option value="067Y04"> 新硕32 </option>
+
+			<option value="067Y05"> 新硕41 </option>
+
+			<option value="067Y06"> 新硕42 </option>
+
+			<option value="067Y07"> 新硕52 </option>
+
+			<option value="068"> 马克思主义学院 </option>
+
+			<option value="080"> 美术学院 </option>
+
+			<option value="080Y01"> 美研05 </option>
+
+			<option value="080Y02"> 美研04 </option>
+
+			<option value="080Y03"> 美研3 </option>
+
+			<option value="101"> 核能与新能源技术研究院 </option>
+
+			<option value="101Y01"> 核研03 </option>
+
+			<option value="101Y02"> 核研72 </option>
+
+			<option value="101Y03"> 核研05 </option>
+
+			<option value="101Y05"> 核博 </option>
+
+			<option value="102"> 微电子学研究所党委 </option>
+
+			<option value="102Y01"> 微研1.3党支部 </option>
+
+			<option value="102Y02"> 微研2党支部 </option>
+
+			<option value="102Y03"> 微研3 </option>
+
+			<option value="102Y04"> 微研4党支部 </option>
+
+			<option value="102Y05"> 深微4党支部 </option>
+
+			<option value="103"> 教育研究院 </option>
+
+			<option value="207"> 学生直属总支 </option>
+
+			<option value="207H02"> 代表队1 </option>
+
+			<option value="207H04"> 未就业研 </option>
+
+			<option value="290"> 软件学院 </option>
+
+			<option value="290Y01"> 信息系统与工程所第1党支部 </option>
+
+			<option value="290Y02"> 软件理论与系统所第1党支部 </option>
+
+			<option value="290Y03"> 图形学与辅助设计所第1党支部 </option>
+
+			<option value="290Y04"> 软件理论与系统所第4党支部 </option>
+
+			<option value="291"> 深圳研究生院 </option>
+
+			<option value="291Y01"> 深电机支部 </option>
+
+			<option value="291Y02"> 深微研5 </option>
+
+			<option value="291Y03"> JM53 </option>
+
+			<option value="291Y04"> JM54 </option>
+
+			<option value="291Y05"> JM43 </option>
+
+			<option value="291Y06"> JM44 </option>
+
+			<option value="291Y07"> JM45 </option>
+
+			<option value="291Y08"> 深电子支部 </option>
+
+			<option value="291Y09"> 深制研支部 </option>
+
+			<option value="291Y10"> 深文理支部 </option>
+
+			<option value="400"> 医学院 </option>
+
+			<option value="400Y01"> 医研1班第2党支部 </option>
+
+			<option value="400Y02"> 医研博士生支部 </option>
+
+			<option value="400Y03"> 医硕10党支部 </option>
+
+			<option value="dzz1082824"> 计研66 </option>
+
+			<option value="dzz1083759"> 计研67 </option>
+
+			<option value="dzz1112762"> 文艺社团1 </option>
+
+			<option value="dzz1113701"> 文艺社团2 </option>
+
+			<option value="dzz1116525"> 文艺社团3 </option>
+
+			<option value="dzz1117467"> 文艺社团4 </option>
+
+			<option value="dzz1185345"> 物研7 </option>
+
+			<option value="dzz1186292"> 物研8 </option>
+
+			<option value="dzz1585571"> 土研1 </option>
+
+			<option value="dzz1596395"> 数研3-1 </option>
+
+			<option value="dzz1597382"> 数研3-2 </option>
+
+			<option value="dzz1707190"> 核研04 </option>
+
+			<option value="dzz1808098"> 深微5 </option>
+
+			<option value="dzz1990608"> 美研6 </option>
+
+			<option value="dzz1992622"> 美研06 </option>
+
+			<option value="dzz2081941"> 公管研1 </option>
+
+			<option value="dzz2082964"> 公管研12 </option>
+
+			<option value="dzz2083988"> 公管研123 </option>
+
+			<option value="dzz2085013"> 公管博06 </option>
+
+			<option value="dzz2086039"> 公管硕061 </option>
+
+			<option value="dzz2087066"> 公管硕06 </option>
+
+			<option value="dzz2095261"> 工研07A </option>
+
+			<option value="dzz2121863"> JM61 </option>
+
+			<option value="dzz2122891"> JM62 </option>
+
+			<option value="dzz2124944"> 法研61 </option>
+
+			<option value="dzz2125972"> 法研06 </option>
+
+			<option value="dzz2127001"> 汽研06 </option>
+
+			<option value="dzz2153781"> 精博2006支部 </option>
+
+			<option value="dzz2158949"> 数研2006级 </option>
+
+			<option value="dzz2178626"> 精硕20061支部 </option>
+
+			<option value="dzz2181732"> 计研82 </option>
+
+			<option value="dzz2182768"> 精硕20062支部 </option>
+
+			<option value="dzz2183805"> 计研81 </option>
+
+			<option value="dzz2184851"> 深法硕61 </option>
+
+			<option value="dzz2187966"> 深法硕62 </option>
+
+			<option value="dzz2189006"> 深法硕63 </option>
+
+			<option value="dzz2190047"> 深微研61 </option>
+
+			<option value="dzz2191089"> 深微研62 </option>
+
+			<option value="dzz2193173"> 无研2006级 </option>
+
+			<option value="dzz2195261"> 无博2006级 </option>
+
+			<option value="dzz2196304"> 化研2006 </option>
+
+			<option value="dzz2197348"> 化研2006 </option>
+
+			<option value="dzz2200483"> 建研2-05 </option>
+
+			<option value="dzz2234879"> 经硕06-1 </option>
+
+			<option value="dzz2236981"> 经硕06-2 </option>
+
+			<option value="dzz2238027"> 经硕06-3 </option>
+
+			<option value="dzz2239074"> 经06MBAF1 </option>
+
+			<option value="dzz2251671"> 数研2-1 </option>
+
+			<option value="dzz2252721"> 数研2-2 </option>
+
+			<option value="dzz2253772"> 数研2-2 </option>
+
+			<option value="dzz2257971"> 核研06 </option>
+
+			<option value="dzz2291651"> 航硕06 </option>
+
+			<option value="dzz2293764"> 航博06 </option>
+
+			<option value="dzz2304281"> 新硕6 </option>
+
+			<option value="dzz2305328"> 新硕62 </option>
+
+			<option value="dzz2307431"> 材博06 </option>
+
+			<option value="dzz2308480"> 材硕06 </option>
+
+			<option value="dzz2309531"> 材硕4 </option>
+
+			<option value="dzz2324191"> 经06MBAI1 </option>
+
+			<option value="dzz2329421"> 经06MBAI2 </option>
+
+			<option value="dzz2330471"> 医研1班第3党支部 </option>
+
+			<option value="dzz2331518"> 工物研13 </option>
+
+			<option value="dzz2339911"> 机研6 </option>
+
+			<option value="dzz2409825"> 无研三五 </option>
+
+			<option value="dzz2410865"> 无研三二 </option>
+
+			<option value="dzz2420226"> 无研四 </option>
+
+			<option value="dzz2421268"> 无研43 </option>
+
+			<option value="dzz2423353"> 无研六 </option>
+
+			<option value="dzz2437951"> 建研四乙空调支部 </option>
+
+			<option value="dzz2472251"> 信息系统与工程所第2党支部 </option>
+
+			<option value="dzz2473289"> 软件理论与系统所第2党支部 </option>
+
+			<option value="dzz2474328"> 信息系统与工程所第4党支部 </option>
+
+			<option value="dzz2555811"> 电研一一 </option>
+
+			<option value="dzz2557871"> 电研31 </option>
+
+			<option value="dzz2571268"> 102Y03 </option>
+
+			<option value="dzz2592951"> 微研3党支部 </option>
+
+			<option value="dzz2696476"> 工物研12 </option>
+
+			<option value="dzz2922312"> 环研1 </option>
+
+			<option value="dzz4264101"> 深微6-1党支部 </option>
+
+			<option value="dzz4265107"> 深微6-2党支部 </option>
+
+			<option value="dzz4283257"> 深生命一支部 </option>
+
+			<option value="dzz4379802"> 研究生国防党支部 </option>
+
+			<option value="dzz4664527"> 化研2007 </option>
+
+			<option value="dzz4711034"> 汽研07 </option>
+
+			<option value="dzz4732821"> 法研71 </option>
+
+			<option value="dzz4733862"> 法研07 </option>
+
+			<option value="dzz4735947"> 材硕07 </option>
+
+			<option value="dzz4736991"> 材博07 </option>
+
+			<option value="dzz4763190"> 建研082建筑支部 </option>
+
+			<option value="dzz4819623"> 机研7 </option>
+
+			<option value="dzz4862068"> 经硕08 </option>
+
+			<option value="dzz4867253"> 经硕07-3 </option>
+
+			<option value="dzz4887946"> 工研06A </option>
+
+			<option value="dzz4900362"> 新硕71 </option>
+
+			<option value="dzz4901396"> 新硕72 </option>
+
+			<option value="dzz4903465"> 经硕07-2 </option>
+
+			<option value="dzz4904502"> 经07MBAI2 </option>
+
+			<option value="dzz4922163"> 经07MBAF1 </option>
+
+			<option value="dzz4928410"> 经07MBAI1 </option>
+
+			<option value="dzz4934669"> 美研07 </option>
+
+			<option value="dzz4935714"> 公管硕07 </option>
+
+			<option value="dzz4936760"> 公管博07 </option>
+
+			<option value="dzz4937807"> 航硕07 </option>
+
+			<option value="dzz4938855"> 航博07 </option>
+
+			<option value="dzz4939904"> 生研71支部 </option>
+
+			<option value="dzz4942005"> 生博07 </option>
+
+			<option value="dzz4949357"> 计研12 </option>
+
+			<option value="dzz4950409"> 计研12 </option>
+
+			<option value="dzz4959881"> 法博07 </option>
+
+			<option value="dzz4965154"> 电硕7B </option>
+
+			<option value="dzz4966210"> 电博7 </option>
+
+			<option value="dzz4967267"> 电硕7 </option>
+
+			<option value="dzz5106098"> 无研国防一党支部 </option>
+
+			<option value="dzz5107160"> 无研国防二党支部 </option>
+
+			<option value="dzz5110347"> 深法硕71支部 </option>
+
+			<option value="dzz5111411"> 深法硕72支部 </option>
+
+			<option value="dzz5112476"> 深法硕73支部 </option>
+
+			<option value="dzz5113542"> 深法硕74支部 </option>
+
+			<option value="dzz5114609"> 深法硕75支部 </option>
+
+			<option value="dzz5115677"> IC71 </option>
+
+			<option value="dzz5116746"> IC72 </option>
+
+			<option value="dzz5119954"> 计研83 </option>
+
+			<option value="dzz5127445"> 核研07 </option>
+
+			<option value="dzz5128517"> 自研5 </option>
+
+			<option value="dzz5129590"> 自研4 </option>
+
+			<option value="dzz5142412"> 环研2 </option>
+
+			<option value="dzz5248742"> 精博2007支部 </option>
+
+			<option value="dzz5250866"> 精博2007支部 </option>
+
+			<option value="dzz5258292"> 精硕20072支部 </option>
+
+			<option value="dzz5399028"> 生物系研1支部 </option>
+
+			<option value="dzz5864872"> 工物研4 </option>
+
+			<option value="dzz5872160"> 深微研71 </option>
+
+			<option value="dzz5873203"> 深微研72 </option>
+
+			<option value="dzz5893116"> 无研五 </option>
+
+			<option value="dzz5894167"> 无研五二 </option>
+
+			<option value="dzz5991361"> 文博5(外语) </option>
+
+			<option value="dzz5992419"> 文博6(国关、经济) </option>
+
+			<option value="dzz5993478"> 文博7(教育) </option>
+
+			<option value="dzz6764752"> 研究生新生 </option>
+
+			<option value="dzz7045053"> 软研第8支部 </option>
+
+			<option value="dzz7047196"> 图形学与辅助设计所第2党支部 </option>
+
+			<option value="dzz7612677"> 物研08级 </option>
+
+			<option value="dzz7630007"> 生硕08 </option>
+
+			<option value="dzz7631094"> 生博08 </option>
+
+			<option value="dzz7636530"> 汽研08 </option>
+
+			<option value="dzz7647403"> 材硕08 </option>
+
+			<option value="dzz7648493"> 材博08 </option>
+
+			<option value="dzz7658301"> 化硕2008 </option>
+
+			<option value="dzz7743781"> 美研08 </option>
+
+			<option value="dzz7750388"> 计研84 </option>
+
+			<option value="dzz7775717"> 经08MBAI2 </option>
+
+			<option value="dzz7776818"> 经08MBAI1 </option>
+
+			<option value="dzz7777920"> 经08MBAF1 </option>
+
+			<option value="dzz7779023"> 经08MBAF2 </option>
+
+			<option value="dzz7783436"> 电博8 </option>
+
+			<option value="dzz7791166"> 经硕081 </option>
+
+			<option value="dzz7792273"> 经硕082 </option>
+
+			<option value="dzz7793381"> 经硕083 </option>
+
+			<option value="dzz7976621"> 公管硕08 </option>
+
+			<option value="dzz7999943"> 汽博1 </option>
+
+			<option value="dzz8003274"> 电博8 </option>
+
+			<option value="dzz8004386"> 电硕081 </option>
+
+			<option value="dzz8005499"> 电硕08 </option>
+
+			<option value="dzz8012178"> 法硕81支部 </option>
+
+			<option value="dzz8013293"> 法硕82支部 </option>
+
+			<option value="dzz8015524"> 法硕83支部 </option>
+
+			<option value="dzz8016641"> 法硕84支部 </option>
+
+			<option value="dzz8018876"> 深IC81支部 </option>
+
+			<option value="dzz8019995"> 深IC82支部 </option>
+
+			<option value="dzz8023353"> 新硕82 </option>
+
+			<option value="dzz8043507"> JM63 </option>
+
+			<option value="dzz8044628"> 医研08班党支部 </option>
+
+			<option value="dzz8046871"> JM64 </option>
+
+			<option value="dzz8047994"> JM65 </option>
+
+			<option value="dzz8049118"> 法研81 </option>
+
+			<option value="dzz8050243"> 法研08 </option>
+
+			<option value="dzz8051369"> 法博08 </option>
+
+			<option value="dzz8071631"> 工业硕08 </option>
+
+			<option value="dzz8092821"> 新硕81 </option>
+
+			<option value="dzz8138340"> 核研08 </option>
+
+			<option value="dzz8139448"> 核研82 </option>
+
+			<option value="dzz8158265"> 中物院研究生 </option>
+
+			<option value="dzz8164911"> 航博08 </option>
+
+			<option value="dzz8166021"> 航硕08 </option>
+
+			<option value="dzz8189332"> 精硕20081支部 </option>
+
+			<option value="dzz8190444"> 精硕20082支部 </option>
+
+			<option value="dzz8191557"> 精博2008支部 </option>
+
+			<option value="dzz9483499"> 公管博08 </option>
+
+			<option value="dzz9646071"> 热研硕08 </option>
+
+			<option value="dzz9649381"> 热研博08 </option>
+
+			<option value="dzz9791069"> 土研6 </option>
+
+			<option value="dzzdm10008"> 能源所研究生 </option>
+
+			<option value="dzzdm10010"> 深微研81 </option>
+
+			<option value="dzzdm10011"> 深微研82 </option>
+
+			<option value="dzzdm10018"> 马克思主义学院博士生党支部 </option>
+
+			<option value="dzzdm10019"> 马克思主义学院硕士生支部 </option>
+
+			<option value="dzzdm10025"> 研14 </option>
+
+			<option value="dzzdm10037"> 09研究生 </option>
+
+			<option value="dzzdm10052"> 建研093规划景观支部 </option>
+
+			<option value="dzzdm10053"> 建研3横向支部 </option>
+
+			<option value="dzzdm10055"> 汽博09 </option>
+
+			<option value="dzzdm10056"> 汽研09 </option>
+
+			<option value="dzzdm10057"> 公管博09 </option>
+
+			<option value="dzzdm10058"> 公管硕09 </option>
+
+			<option value="dzzdm10059"> 土硕09 </option>
+
+			<option value="dzzdm10061"> 深IC92支部 </option>
+
+			<option value="dzzdm10062"> 深IC93支部 </option>
+
+			<option value="dzzdm10063"> 深IC93支部 </option>
+
+			<option value="dzzdm10064"> 材硕09 </option>
+
+			<option value="dzzdm10065"> 材博09 </option>
+
+			<option value="dzzdm10068"> 经硕09 </option>
+
+			<option value="dzzdm10069"> 经硕093 </option>
+
+			<option value="dzzdm10070"> 经硕092－1 </option>
+
+			<option value="dzzdm10071"> 经硕092－2 </option>
+
+			<option value="dzzdm10072"> 经07MBA </option>
+
+			<option value="dzzdm10076"> 工业研09 </option>
+
+			<option value="dzzdm10077"> 建研092建筑支部 </option>
+
+			<option value="dzzdm10078"> 建研094空调支部 </option>
+
+			<option value="dzzdm10079"> 数硕2008级 </option>
+
+			<option value="dzzdm10080"> 数硕2009级 </option>
+
+			<option value="dzzdm10081"> 数硕2009级 </option>
+
+			<option value="dzzdm10082"> 数博1 </option>
+
+			<option value="dzzdm10083"> 数博2 </option>
+
+			<option value="dzzdm10084"> 数博3 </option>
+
+			<option value="dzzdm10085"> 热博09 </option>
+
+			<option value="dzzdm10086"> 热研硕09 </option>
+
+			<option value="dzzdm10088"> 电硕091 </option>
+
+			<option value="dzzdm10089"> 电硕09 </option>
+
+			<option value="dzzdm10090"> 电博09 </option>
+
+			<option value="dzzdm10093"> 航硕09 </option>
+
+			<option value="dzzdm10094"> 航博09 </option>
+
+			<option value="dzzdm10095"> 新硕91 </option>
+
+			<option value="dzzdm10096"> 新硕92 </option>
+
+			<option value="dzzdm10097"> 精博20091党支部 </option>
+
+			<option value="dzzdm10098"> 化硕2009 </option>
+
+			<option value="dzzdm10099"> 医研09班党支部 </option>
+
+			<option value="dzzdm10100"> MBA09F </option>
+
+			<option value="dzzdm10101"> MBA09 </option>
+
+			<option value="dzzdm10102"> 软件理论与系统所第3党支部 </option>
+
+			<option value="dzzdm10104"> 精硕20091党支部 </option>
+
+			<option value="dzzdm10105"> 精硕20092党支部 </option>
+
+			<option value="dzzdm10106"> 生研9支部 </option>
+
+			<option value="dzzdm10107"> 精博20092党支部 </option>
+
+			<option value="dzzdm10108"> 水博09 </option>
+
+			<option value="dzzdm10109"> 水硕09 </option>
+
+			<option value="dzzdm10111"> MBA09I2 </option>
+
+			<option value="dzzdm10113"> 深环境支部 </option>
+
+			<option value="dzzdm10114"> 深电机支部 </option>
+
+			<option value="dzzdm10115"> 物研09 </option>
+
+			<option value="dzzdm10116"> 化研2008 </option>
+
+			<option value="dzzdm10121"> 微博09 </option>
+
+			<option value="dzzdm10122"> 微硕091 </option>
+
+			<option value="dzzdm10123"> 深材料支部 </option>
+
+			<option value="dzzdm10124"> 无研091 </option>
+
+			<option value="dzzdm10125"> 无研092 </option>
+
+			<option value="dzzdm10126"> 无研093 </option>
+
+			<option value="dzzdm10127"> 无研095 </option>
+
+			<option value="dzzdm10128"> 无研096 </option>
+
+			<option value="dzzdm10132"> 美研09 </option>
+
+			<option value="dzzdm10133"> JM91 </option>
+
+			<option value="dzzdm10134"> JM92 </option>
+
+			<option value="dzzdm10135"> JM93 </option>
+
+			<option value="dzzdm10136"> JM94 </option>
+
+			<option value="dzzdm10137"> JM95 </option>
+
+			<option value="dzzdm10140"> 经博09 </option>
+
+			<option value="dzzdm10141"> 法博09 </option>
+
+			<option value="dzzdm10142"> 法研91 </option>
+
+			<option value="dzzdm10143"> 法研09 </option>
+
+			<option value="dzzdm10146"> JM71 </option>
+
+			<option value="dzzdm10147"> JM72 </option>
+
+			<option value="dzzdm10148"> JM73 </option>
+
+			<option value="dzzdm10149"> JM74 </option>
+
+			<option value="dzzdm10150"> JM75 </option>
+
+			<option value="dzzdm10166"> 计研091 </option>
+
+			<option value="dzzdm10167"> 计研092 </option>
+
+			<option value="dzzdm10168"> 计研093 </option>
+
+			<option value="dzzdm10169"> 计研094 </option>
+
+			<option value="dzzdm10170"> 计研095 </option>
+
+			<option value="dzzdm10171"> 计研096 </option>
+
+			<option value="dzzdm10172"> 计研098 </option>
+
+			<option value="dzzdm10173"> 计研1 </option>
+
+			<option value="dzzdm10174"> 计研071 </option>
+
+			<option value="dzzdm10175"> 计研081 </option>
+
+			<option value="dzzdm10176"> 计研072 </option>
+
+			<option value="dzzdm10177"> 计研082 </option>
+
+			<option value="dzzdm10178"> 计研092 </option>
+
+			<option value="dzzdm10182"> 热硕11 </option>
+
+			<option value="dzzdm10183"> 计研073 </option>
+
+			<option value="dzzdm10184"> 计研083 </option>
+
+			<option value="dzzdm10185"> 计研3 </option>
+
+			<option value="dzzdm10186"> 计研4 </option>
+
+			<option value="dzzdm10187"> 计研084 </option>
+
+			<option value="dzzdm10188"> 计研074 </option>
+
+			<option value="dzzdm10189"> 计研5 </option>
+
+			<option value="dzzdm10190"> 计研075 </option>
+
+			<option value="dzzdm10191"> 计研5 </option>
+
+			<option value="dzzdm10192"> 新硕7 </option>
+
+			<option value="dzzdm10193"> 新硕7 </option>
+
+			<option value="dzzdm10194"> 新硕7 </option>
+
+			<option value="dzzdm10198"> 计研6 </option>
+
+			<option value="dzzdm10199"> 计研076 </option>
+
+			<option value="dzzdm10200"> 计研086 </option>
+
+			<option value="dzzdm10201"> 计研078 </option>
+
+			<option value="dzzdm10202"> 计研088 </option>
+
+			<option value="dzzdm10203"> 计研098 </option>
+
+			<option value="dzzdm10210"> 生硕09 </option>
+
+			<option value="dzzdm10211"> 核研91 </option>
+
+			<option value="dzzdm10215"> 深法硕74支部 </option>
+
+			<option value="dzzdm10216"> 深法硕75支部 </option>
+
+			<option value="dzzdm10217"> 核研92 </option>
+
+			<option value="dzzdm10218"> 核研93 </option>
+
+			<option value="dzzdm10219"> 生博09 </option>
+
+			<option value="dzzdm10220"> 生研深圳 </option>
+
+			<option value="dzzdm10230"> 机研091 </option>
+
+			<option value="dzzdm10231"> 机研092 </option>
+
+			<option value="dzzdm10244"> 微硕092 </option>
+
+			<option value="dzzdm10245"> 微硕093 </option>
+
+			<option value="dzzdm10252"> 医博10党支部 </option>
+
+			<option value="dzzdm10253"> 物研06 </option>
+
+			<option value="dzzdm10254"> 物研07 </option>
+
+			<option value="dzzdm10258"> 硕士一支部 </option>
+
+			<option value="dzzdm10259"> 教研博支部 </option>
+
+			<option value="dzzdm10266"> 研究生2010 </option>
+
+			<option value="dzzdm10274"> 化硕2010 </option>
+
+			<option value="dzzdm10276"> 研究生 </option>
+
+			<option value="dzzdm10283"> 公管硕10 </option>
+
+			<option value="dzzdm10284"> 公管博10 </option>
+
+			<option value="dzzdm10285"> 自博101 </option>
+
+			<option value="dzzdm10286"> 深管理 </option>
+
+			<option value="dzzdm10287"> 深管理支部 </option>
+
+			<option value="dzzdm10288"> 自硕101 </option>
+
+			<option value="dzzdm10289"> 法硕10级（临时） </option>
+
+			<option value="dzzdm10290"> 热硕10 </option>
+
+			<option value="dzzdm10305"> 建研102建筑党支部 </option>
+
+			<option value="dzzdm10306"> 建研103规划景观党支部 </option>
+
+			<option value="dzzdm10307"> 建研104空调党支部 </option>
+
+			<option value="dzzdm10309"> 汽研10 </option>
+
+			<option value="dzzdm10310"> 汽博10 </option>
+
+			<option value="dzzdm10313"> 经硕102 </option>
+
+			<option value="dzzdm10314"> 航硕101 </option>
+
+			<option value="dzzdm10315"> 航硕102 </option>
+
+			<option value="dzzdm10316"> 航博101 </option>
+
+			<option value="dzzdm10317"> 航博102 </option>
+
+			<option value="dzzdm10318"> 材硕10 </option>
+
+			<option value="dzzdm10319"> 材博10 </option>
+
+			<option value="dzzdm10320"> 材博10党支部-1 </option>
+
+			<option value="dzzdm10322"> 物研10 </option>
+
+			<option value="dzzdm10323"> 化博2010 </option>
+
+			<option value="dzzdm10326"> 化研2006 </option>
+
+			<option value="dzzdm10327"> 化研2007 </option>
+
+			<option value="dzzdm10328"> 化研2008 </option>
+
+			<option value="dzzdm10329"> 化博2009 </option>
+
+			<option value="dzzdm10331"> 经硕103 </option>
+
+			<option value="dzzdm10334"> 工业研10 </option>
+
+			<option value="dzzdm10335"> 深JM01支部 </option>
+
+			<option value="dzzdm10336"> 深JM02支部 </option>
+
+			<option value="dzzdm10337"> 深JM03支部 </option>
+
+			<option value="dzzdm10338"> 深JM04支部 </option>
+
+			<option value="dzzdm10339"> 深JM05支部 </option>
+
+			<option value="dzzdm10340"> 微硕102党支部 </option>
+
+			<option value="dzzdm10343"> 深JM01支部 </option>
+
+			<option value="dzzdm10344"> JM101 </option>
+
+			<option value="dzzdm10345"> JM102 </option>
+
+			<option value="dzzdm10346"> JM103 </option>
+
+			<option value="dzzdm10347"> JM104 </option>
+
+			<option value="dzzdm10348"> JM105 </option>
+
+			<option value="dzzdm10349"> 电博10 </option>
+
+			<option value="dzzdm10350"> 电硕101 </option>
+
+			<option value="dzzdm10351"> 电硕102 </option>
+
+			<option value="dzzdm10353"> 公管博10 </option>
+
+			<option value="dzzdm10355"> 土硕10 </option>
+
+			<option value="dzzdm10356"> 水硕10 </option>
+
+			<option value="dzzdm10357"> 微硕103党支部 </option>
+
+			<option value="dzzdm10358"> 深生命二支部 </option>
+
+			<option value="dzzdm10362"> MBA 10F </option>
+
+			<option value="dzzdm10363"> 经硕101 </option>
+
+			<option value="dzzdm10364"> 美研10 </option>
+
+			<option value="dzzdm10365"> 经硕104 </option>
+
+			<option value="dzzdm10366"> 精硕20101党支部 </option>
+
+			<option value="dzzdm10367"> 精硕20102党支部 </option>
+
+			<option value="dzzdm10369"> 微博10党支部 </option>
+
+			<option value="dzzdm10370"> 微硕101党支部 </option>
+
+			<option value="dzzdm10372"> 精博20102党支部 </option>
+
+			<option value="dzzdm10374"> MBA10I1 </option>
+
+			<option value="dzzdm10375"> MBA10I2 </option>
+
+			<option value="dzzdm10376"> 自硕102 </option>
+
+			<option value="dzzdm10380"> 经博10 </option>
+
+			<option value="dzzdm10381"> 热博11 </option>
+
+			<option value="dzzdm10382"> 精博20101党支部 </option>
+
+			<option value="dzzdm10383"> 法研101 </option>
+
+			<option value="dzzdm10384"> 法研102 </option>
+
+			<option value="dzzdm10385"> 法博10 </option>
+
+			<option value="dzzdm10386"> 无研101 </option>
+
+			<option value="dzzdm10387"> 无研103 </option>
+
+			<option value="dzzdm10390"> 无研105 </option>
+
+			<option value="dzzdm10391"> 无研102 </option>
+
+			<option value="dzzdm10392"> 无研106 </option>
+
+			<option value="dzzdm10393"> 新硕101 </option>
+
+			<option value="dzzdm10394"> 新硕102 </option>
+
+			<option value="dzzdm10395"> 新硕103 </option>
+
+			<option value="dzzdm10396"> 新硕8 </option>
+
+			<option value="dzzdm10401"> 化工研1硕 </option>
+
+			<option value="dzzdm10402"> 化工研1博 </option>
+
+			<option value="dzzdm10403"> 化工研2硕 </option>
+
+			<option value="dzzdm10404"> 化工研2博 </option>
+
+			<option value="dzzdm10405"> 化工研4硕 </option>
+
+			<option value="dzzdm10406"> 化工研4博 </option>
+
+			<option value="dzzdm10411"> 生博10-1 </option>
+
+			<option value="dzzdm10412"> 生博10-2 </option>
+
+			<option value="dzzdm10413"> 生硕10 </option>
+
+			<option value="dzzdm10414"> 数硕2010级 </option>
+
+			<option value="dzzdm10419"> 计研103 </option>
+
+			<option value="dzzdm10420"> 计研105 </option>
+
+			<option value="dzzdm10421"> 计研106 </option>
+
+			<option value="dzzdm10429"> 信息系统与工程所第3党支部 </option>
+
+			<option value="dzzdm10430"> 核研01支部 </option>
+
+			<option value="dzzdm10431"> 核研02支部 </option>
+
+			<option value="dzzdm10432"> 核研03支部 </option>
+
+			<option value="dzzdm10439"> 代表队3 </option>
+
+			<option value="dzzdm10441"> 计研102 </option>
+
+			<option value="dzzdm10442"> 计研104 </option>
+
+			<option value="dzzdm10443"> 计研108 </option>
+
+			<option value="dzzdm10444"> 计研101 </option>
+
+			<option value="dzzdm10462"> 机研091 </option>
+
+			<option value="dzzdm10463"> 机研092 </option>
+
+			<option value="dzzdm10464"> 机研101 </option>
+
+			<option value="dzzdm10465"> 机研102 </option>
+
+			<option value="dzzdm10466"> 机研1 </option>
+
+			<option value="dzzdm10467"> 机研2 </option>
+
+			<option value="dzzdm10471"> 美研10-1 </option>
+
+			<option value="dzzdm10472"> 美研10-2 </option>
+
+			<option value="dzzdm10473"> 美研10-3 </option>
+
+			<option value="dzzdm10475"> 深计自支部 </option>
+
+			<option value="dzzdm10496"> 航9国防定向 </option>
+
+			<option value="dzzdm10507"> 公管博11 </option>
+
+			<option value="dzzdm10508"> 物研11 </option>
+
+			<option value="dzzdm10509"> 生硕11 </option>
+
+			<option value="dzzdm10510"> 公管硕11 </option>
+
+			<option value="dzzdm10511"> 研究生 </option>
+
+			<option value="dzzdm10514"> 自硕111 </option>
+
+			<option value="dzzdm10515"> 经博11 </option>
+
+			<option value="dzzdm10516"> 经硕114 </option>
+
+			<option value="dzzdm10517"> 经硕112 </option>
+
+			<option value="dzzdm10518"> 经硕113 </option>
+
+			<option value="dzzdm10519"> 经硕111 </option>
+
+			<option value="dzzdm10520"> 经硕111 </option>
+
+			<option value="dzzdm10537"> 建研111 </option>
+
+			<option value="dzzdm10539"> 自博111 </option>
+
+			<option value="dzzdm10540"> 工业研11 </option>
+
+			<option value="dzzdm10541"> 汽博11 </option>
+
+			<option value="dzzdm10542"> 汽研11 </option>
+
+			<option value="dzzdm10543"> 材博11 </option>
+
+			<option value="dzzdm10544"> 材硕11 </option>
+
+			<option value="dzzdm10546"> 化博2011 </option>
+
+			<option value="dzzdm10547"> 化硕2011 </option>
+
+			<option value="dzzdm10550"> 电硕111 </option>
+
+			<option value="dzzdm10551"> 热研11新 </option>
+
+			<option value="dzzdm10552"> 无研111 </option>
+
+			<option value="dzzdm10553"> 深JM11 </option>
+
+			<option value="dzzdm10554"> 深JM12 </option>
+
+			<option value="dzzdm10555"> 深JM13 </option>
+
+			<option value="dzzdm10556"> 深JM14 </option>
+
+			<option value="dzzdm10557"> 深JM15 </option>
+
+			<option value="dzzdm10558"> 微硕112党支部 </option>
+
+			<option value="dzzdm10559"> 微硕113党支部 </option>
+
+			<option value="dzzdm10560"> 深金融11 </option>
+
+			<option value="dzzdm10561"> 深金融12 </option>
+
+			<option value="dzzdm10563"> 无研112 </option>
+
+			<option value="dzzdm10565"> 水硕11 </option>
+
+			<option value="dzzdm10566"> 航博111 </option>
+
+			<option value="dzzdm10567"> 精硕20112党支部 </option>
+
+			<option value="dzzdm10568"> 精博20111党支部 </option>
+
+			<option value="dzzdm10569"> 精硕20111党支部 </option>
+
+			<option value="dzzdm10570"> 精博20112党支部 </option>
+
+			<option value="dzzdm10571"> 新硕111 </option>
+
+			<option value="dzzdm10572"> 新硕112 </option>
+
+			<option value="dzzdm10573"> 新硕113 </option>
+
+			<option value="dzzdm10579"> 建研113 </option>
+
+			<option value="dzzdm10580"> 建研112 </option>
+
+			<option value="dzzdm10581"> 建研114 </option>
+
+			<option value="dzzdm10582"> 土硕11 </option>
+
+			<option value="dzzdm10584"> 深工研1 </option>
+
+			<option value="dzzdm10585"> 深信研2 </option>
+
+			<option value="dzzdm10586"> 深物研1 </option>
+
+			<option value="dzzdm10587"> 深机研1 </option>
+
+			<option value="dzzdm10588"> 电博11 </option>
+
+			<option value="dzzdm10590"> 深自动化支部 </option>
+
+			<option value="dzzdm10591"> 深工研21 </option>
+
+			<option value="dzzdm10592"> 深制研 </option>
+
+			<option value="dzzdm10593"> 深工研3 </option>
+
+			<option value="dzzdm10594"> 法博11 </option>
+
+			<option value="dzzdm10595"> 法研112 </option>
+
+			<option value="dzzdm10596"> 法研111 </option>
+
+			<option value="dzzdm10601"> 航硕112 </option>
+
+			<option value="dzzdm10605"> 计研111 </option>
+
+			<option value="dzzdm10606"> 无研113 </option>
+
+			<option value="dzzdm10607"> 无研114 </option>
+
+			<option value="dzzdm10608"> 深计算机支部 </option>
+
+			<option value="dzzdm10609"> 无研116 </option>
+
+			<option value="dzzdm10610"> 计研112 </option>
+
+			<option value="dzzdm10611"> 计研112 </option>
+
+			<option value="dzzdm10612"> 计研112 </option>
+
+			<option value="dzzdm10613"> 计研111 </option>
+
+			<option value="dzzdm10614"> 计研113 </option>
+
+			<option value="dzzdm10615"> 计研114 </option>
+
+			<option value="dzzdm10616"> 计研115 </option>
+
+			<option value="dzzdm10617"> 计研116 </option>
+
+			<option value="dzzdm10618"> 计研118 </option>
+
+			<option value="dzzdm10619"> 微硕111党支部 </option>
+
+			<option value="dzzdm10620"> 微博11党支部 </option>
+
+			<option value="dzzdm10621"> 航硕111 </option>
+
+			<option value="dzzdm10622"> 医硕11党支部 </option>
+
+			<option value="dzzdm10623"> 医硕11党支部 </option>
+
+			<option value="dzzdm10624"> 医博11党支部 </option>
+
+			<option value="dzzdm10625"> 生博11-1 </option>
+
+			<option value="dzzdm10626"> 生博11-2 </option>
+
+			<option value="dzzdm10627"> 生硕11 </option>
+
+			<option value="dzzdm10629"> 美研11-1支部 </option>
+
+			<option value="dzzdm10630"> 美研11-2支部 </option>
+
+			<option value="dzzdm10631"> 美研11-3支部 </option>
+
+			<option value="dzzdm10632"> MBA11I2 </option>
+
+			<option value="dzzdm10633"> MBA11F2 </option>
+
+			<option value="dzzdm10634"> MBA11F1 </option>
+
+			<option value="dzzdm10635"> MBA11I1 </option>
+
+			<option value="dzzdm10637"> 航博112 </option>
+
+			<option value="dzzdm10638"> 新硕9 </option>
+
+			<option value="dzzdm10639"> 美研11-4支部 </option>
+
+			<option value="dzzdm10640"> 深生命三支部 </option>
+
+			<option value="dzzdm10642"> 机研111 </option>
+
+			<option value="dzzdm10643"> 机研112 </option>
+
+			<option value="dzzdm10646"> 微研2.4党支部 </option>
+
+			<option value="dzzdm10649"> 深文研1 </option>
+
+			<option value="dzzdm10668"> 核研13党支部 </option>
+
+			<option value="dzzdm10669"> 核研13党支部 </option>
+
+			<option value="dzzdm10670"> 核研12党支部 </option>
+
+			<option value="dzzdm10671"> 核研11党支部 </option>
+
+			<option value="dzzdm10672"> 核研12党支部 </option>
+
+			<option value="dzzdm10673"> 核研9党支部 </option>
+
+			<option value="dzzdm10674"> 核研9党支部 </option>
+
+			<option value="dzzdm10678"> 硕士二支部 </option>
+
+			<option value="dzzdm10683"> 无研094 </option>
+
+			<option value="dzzdm10684"> 无研104 </option>
+
+			<option value="dzzdm10691"> 数硕2011级 </option>
+
+			<option value="dzzdm10694"> 自硕112 </option>
+
+			<option value="dzzdm10710"> 微硕112党支部 </option>
+
+			<option value="dzzdm10711"> 微硕112党支部 </option>
+
+			<option value="dzzdm10712"> 微硕113党支部 </option>
+
+			<option value="dzzdm10725"> 环研1-1 </option>
+
+			<option value="dzzdm10726"> 环研1-2 </option>
+
+			<option value="dzzdm10727"> 环研2-1 </option>
+
+			<option value="dzzdm10728"> 环研2-2 </option>
+
+			<option value="dzzdm10729"> 环研4-1 </option>
+
+			<option value="dzzdm10730"> 环研4-2 </option>
+
+			<option value="dzzdm10731"> 环研5-1 </option>
+
+			<option value="dzzdm10732"> 环研5-2 </option>
+
+			<option value="dzzdm10733"> 环研6-1 </option>
+
+			<option value="dzzdm10734"> 环研6-2 </option>
+
+			<option value="dzzdm10735"> 地研1 </option>
+
+			<option value="dzzdm10739"> 交叉信息研究院研究生党支部 </option>
+
+			<option value="dzzdm10741"> 研究生2010级党支部 </option>
+
+			<option value="dzzdm10745"> 研究生2009级党支部 </option>
+
+			<option value="dzzdm10746"> 2011级硕士生货币经济学党支 </option>
+
+			<option value="dzzdm10756"> 2011级硕士生金融经济学党支 </option>
+
+			<option value="dzzdm10757"> 无研115 </option>
+		</select>
+	</body>
+</html>
